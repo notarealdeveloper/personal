@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source ~/.bashrc
+
+# Use the old "o" style template
+ONAME=$(basename "$0")
+
+if   [[ $ONAME == 'reowncloud' ]]; then
+    killall owncloud; sleep 1; owncloud
+elif [[ $ONAME == 'redropbox' ]]; then
+    killall dropbox; sleep 1; dropbox
+elif [[ $ONAME == 'reconky' ]]; then
+    killall conky; sleep 1; conky-smart-start
+elif [[ $ONAME == 'renemo' ]]; then
+    nemo-desktop -q; nemo -q; sleep 0.5; nemo-desktop; nemo;
+elif [[ $ONAME == 'recinnamon' ]]; then
+    cinnamon --replace
+fi
