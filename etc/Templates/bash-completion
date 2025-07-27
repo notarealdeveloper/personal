@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# This is arguably the paradigmatic minimal bash completion.
+_my() {
+    local things=($(my --list))
+    local cur_word="${COMP_WORDS[COMP_CWORD]}"
+    local prev_word="${COMP_WORDS[COMP_CWORD - 1]}"
+    COMPREPLY=( $(compgen -W "${things[*]}" -- ${cur_word}) )
+}
+complete -F _my my
+
+# A more detailed template
+_program() {
+    local longopts=($(program --list-long))
+    local shortopts=($(program --list-short))
+    local actions=($(program --list-actions))
+    local type_subopts=($(program --list-type-subopts))
+    local name_subopts=($(program --list-name-subopts))
+
+    local cur_word="${COMP_WORDS[COMP_CWORD]}"
+    local prev_word="${COMP_WORDS[COMP_CWORD-1]}"
+
+    # Complete to module names when the previous word is an option
+    case $prev_word in
+        --name|-n) COMPREPLY=( $(compgen -W "${name_subopts[*]}" -- ${cur_word}) ); return;;
+        --type|-t) COMPREPLY=( $(compgen -W "${type_subopts[*]}" -- ${cur_word}) ); return;;
+    esac
+
+    # Completions for everything else
+    case $cur_word in
+        --*)    COMPREPLY=( $(compgen -W "${longopts[*]}"   -- ${cur_word}) ); return;;
+        -*)     COMPREPLY=( $(compgen -W "${shortopts[*]}"  -- ${cur_word}) ); return;;
+        *)      COMPREPLY=( $(compgen -W "${actions[*]}" -- ${cur_word}) ); return;;
+    esac
+}
+
+complete -F _program program

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+
+  <!-- Javascript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://asciitomouth.com/lib/underscore.js"></script>
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="https://asciitomouth.com/lib/reset.css"> -->
+  <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" /> -->
+  <!-- <link rel="icon" type="image/png" href="favicon.png" /> -->
+
+<style>
+
+/* Lots of awesome info on pseudo-classes and pseudo-elements! */
+/* http://www.w3schools.com/css/css_pseudo_classes.asp */
+
+body > * > dl > dt::first-letter {
+  color: #08b;
+  font-weight: bold;
+  font-size:125%;
+}
+
+aside .cupcakes ~ dd::first-letter {
+  color: #b04;
+  font-weight: bold;
+  font-family: cursive;
+  font-size:125%;
+}
+
+a:hover :first-letter {
+  color: red;
+}
+
+::selection {
+  color: lightblue;
+  background-color: #b04;
+}
+
+</style>
+
+<script>
+  var url = "https://google.com/index.php?name=jason&age=30";
+
+  var a = escape(url);
+  var b = unescape(escape(url));
+
+  console.log(a);
+  console.log(b);
+</script>
+
+</head>
+
+<body>
+  <header>
+    <a href="/">This Is A Website</a>
+    <div id="slogan">That's right, it's a website.</div>
+
+    <nav>
+      <!-- <?php include("inc/main-menu.php"); ?> -->
+    </nav>
+  </header>
+
+  <section class="container">
+    <article>
+      <h1>Article Title</h1>
+    </article>
+  </section>
+
+  <aside>
+    <aside>
+      <h3>This Is An Aside</h3>
+      <dl>
+        <span class="cupcakes"></span>
+        <dt>Link</dt>
+        <dd>Explanation</dd>
+
+        <dt>Link</dt>
+        <dd>Explanation</dd>
+
+        <dt>Link</dt>
+        <dd>Explanation</dd>
+      </dl>
+    </aside>
+  </aside>
+
+  <aside>
+    <h3>This Is An Aside</h3>
+    <dl>
+      <dt>Link</dt>
+      <dd>Explanation</dd>
+
+      <dt>Link</dt>
+      <dd>Explanation</dd>
+
+      <dt>Link</dt>
+      <dd>Explanation</dd>
+    </dl>
+  </aside>
+
+  <footer class="container">
+    <h4>Things I Enjoy</h4>
+    <ul class="col">
+      <li><a href="https://www.google.com">Link 1</li>
+      <li><a href="https://www.google.com">Link 2</li>
+      <li><a href="https://www.google.com">Link 3</li>
+    </ul>
+    <ul class="col">
+      <li><a href="https://www.google.com">Link 4</li>
+      <li><a href="https://www.google.com">Link 5</li>
+      <li><a href="https://www.google.com">Link 6</li>
+    </ul>
+
+    <h4>Sandwiches</h4>
+    <ul class="col container" id="sandwich-list">
+      <li><a href="https://www.google.com">Sandwich Place 1</li>
+      <li><a href="https://www.google.com">Sandwich Place 2</li>
+      <li><a href="https://www.google.com">Sandwich Place 3</li>
+    </ul>
+  </footer>
+
+</body>
+</html>

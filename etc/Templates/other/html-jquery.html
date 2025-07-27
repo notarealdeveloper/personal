@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+
+    <!-- js -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+    <!-- css -->
+    <link
+        rel="stylesheet"
+        href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css"
+    />
+
+    <style>
+        .main-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .ui-widget-content {
+            width: 150px;
+            height: 150px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <div class="draggable ui-widget-content">
+            <p>Strategy #1</p>
+        </div>
+
+        <div class="draggable ui-widget-content">
+            <p>Strategy #2</p>
+        </div>
+
+        <div class="draggable ui-widget-content">
+            <p>Strategy #3</p>
+        </div>
+
+    </div>
+
+    <script>
+        $(function() {
+            $(".draggable").draggable();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+\documentclass[12pt]{article}
+
+%%% DOCUMENTATION
+% Line breaking: http://www.personal.ceu.hu/tex/breaking.htm
+
+%%% PACKAGES
+\usepackage{amsthm,amsfonts,amssymb,amsmath}
+\usepackage{graphicx}
+\usepackage{ulem}
+\usepackage{wasysym,marvosym}
+\usepackage{framed}
+\usepackage{xcolor}
+\usepackage{placeins}                        % For the \FloatBarrier command. Keeps figures from floating too far.
+\usepackage{fontspec}                        % Requires XeLaTex
+
+%%% PAGE GEOMETRY
+\usepackage[centering,includeheadfoot,margin=1in]{geometry}
+
+%%% HYPERREF (LIKES TO BE THE LAST PACKAGE IMPORTED)
+\usepackage{hyperref}                        % See https://www.sharelatex.com/learn/Hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+%%% FONT
+% \setmainfont[Ligatures=TeX]{DejaVu Babel Proto Semitic}
+\setmainfont{DejaVu Babel Proto Semitic}
+\newfontfamily\protosemitic{DejaVu Babel Proto Semitic}
+\newfontfamily\paleohebrew{Hebrew Paleo Gezer}
+\newfontfamily\phoenician{Phoenician Ahiram}
+\newfontfamily\scrollhebrew{Hebrew Square BenKosba}
+\newfontfamily\modernhebrew{SBL Hebrew}
+\newfontfamily\hansans{Source Han Sans}
+\newfontfamily\mono{DejaVu Sans Mono}
+
+%%% COLORS
+\definecolor{quotecolor}{HTML}{008686}
+
+%%% COMMANDS, DEFINITIONS, OPERATORS
+\newcommand{\skipline}[1][1.0]{\par\vspace{#1\baselineskip}\noindent}
+\newcommand{\hs}[1][0.1]{\ensuremath{\hspace{#1\tw}}}                   % Do hspace by a fraction of the textwidth.
+\def\qc{\color{quotecolor}}
+\def\ni{\noindent}
+\def\sl{\skipline}
+\def\sh{\skipline[0.5]}
+\def\tw{\textwidth}
+\def\th{\textheight}
+\DeclareMathOperator*{\fo}{\stackrel{Force}{=}}                         % Forcing
+\DeclareMathOperator*{\de}{\hspace{0.5em} \equiv \hspace{0.5em}}        % Abbreviations
+\DeclareRobustCommand*{\ChapterN}{\ensuremath{N}}
+\DeclareRobustCommand*{\ChapterAleph}{\ensuremath{\aleph}}
+\DeclareRobustCommand{\stuff}{\ensuremath{\mathit{stuff}}}
+% \DeclareRobustCommand{\stuff}{\ensuremath{\hspace{-0.1em}\mathit{stuff}\hspace{-0.1em}}}
+\DeclareRobustCommand*{\sq}{\ensuremath{\textrm'}}                      % To make a proper apostrophe / single quote in math mode
+% \def\dotsfour{\hbox{.\hspace{.25em}.\hspace{.25em}.\hspace{.25em}}. }
+% \newcommand*{\bigChi}{\scalebox{2.5}{\ensuremath{\chi}}}
+
+%%% FOOTNOTE SPACING
+% This sort of works, but I don't really like it.
+% \usepackage[bottom,norule,hang]{footmisc}
+% \setlength{\footnotemargin}{0.5em}
+
+% TURNS OFF PAGE NUMBERING UNTIL WE GET TO THE PREFACE
+% \pagenumbering{gobble}
+
+\title{\LaTeX\ Document}
+\author{Jason Wilkes}
+\date{}
+
+%% Add Acts to the table of contents.
+%\makeatletter
+%\@addtoreset{section}{part}
+%\makeatother
+%\newlength\mylen
+%\renewcommand\thepart{\arabic{part}}
+%\renewcommand\cftpartpresnum{Act~}
+%\settowidth\mylen{\bfseries\cftpartpresnum\cftpartaftersnum}
+%\addtolength\cftpartnumwidth{\mylen}
+
+\begin{document}
+
+\maketitle
+% \tableofcontents
+
+%%% PAGE NUMBERING
+% \thispagestyle{empty}
+% \pagenumbering{arabic}
+% \setcounter{page}{0}
+
+\section{Introduction}
+Hey there! This is some \stuff.
+
+%%% HYPERREF EXAMPLE
+\section{Using \texttt{hyperref}}
+It is possible to link directly to any word or \hyperlink{mylink}{any sentence} in your document.
+For instance \hypertarget{mylink}{this sentence}
+
+%%% XCOLOR EXAMPLE
+\section{Using \texttt{xcolor}}
+These colors usually work with any driver: white, black, yellow, green, blue, purple, cyan, and magenta.
+
+%% Here's how to define colors
+\colorlet{MyColor1}{green!70!blue!90!}
+\definecolor{MyColor2}{HTML}{00ADAD}
+
+\begin{itemize}
+\color{blue} \item First item
+\color{MyColor1}\item Second item
+\color{MyColor2}\item Third item
+\end{itemize}
+
+\noindent
+And he said {\protosemitic{אבגדהוזחטיכלמנסעפצקרשת}} and it was good.
+
+\noindent
+And he said {\paleohebrew{אבגדהוזחטיכלמנסעפצקרשת}} and it was good.
+
+\noindent
+And he said {\fontsize{15pt}{15pt}\selectfont\phoenician{אבגדהוזחטיכלמנסעפצקרשת}} and it was good.
+
+\noindent
+And he said {\scrollhebrew{אבגדהוזחטיכלמנסעפצקרשת}} and it was good.
+
+\noindent
+And he said {\modernhebrew{אבגדהוזחטיכלמנסעפצקרשת}} and it was good.
+
+%% To change the page color, just do this:
+% \pagecolor{black}
+% \color{white}
+
+\ni
+And we're back to black.
+
+\ni
+{\color{red} \rule{\linewidth}{0.1em}}
+
+\end{document}

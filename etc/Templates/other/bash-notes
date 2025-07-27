@@ -1,0 +1,34 @@
+#!/bin/bash
+
+cattail_self() {
+    cat "$0" | pcregrep -M '^#{10,}\n(.|\n)*' | tail -n +3
+}
+
+get_editor() {
+    [[ -e "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
+    local editor=
+    [[ -z ${editor:=$EDITOR} ]] && [[ -z ${editor:=$VISUAL} ]] && [[ -z ${editor:=vim} ]] && echo "Need to specify an editor" && exit 1
+    echo "$editor"  
+}
+
+# If given no arguments, just print out the notes section.
+if [[ -z "$1" ]]; then
+    cattail_self
+    exit 0
+
+# If passed the [-e|--edit] flag, edit ourselves.
+elif grep -E '^(-e|--edit)$' <<< "$1"; then
+    "$(get_editor)" "$0"
+    exit 0
+
+fi
+
+# The typical use case.
+cattail_self | grep --color=auto -P "$@"
+
+exit 0
+
+############################################
+
+# Begin Notes
+Hey there!

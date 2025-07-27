@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# CONFIG
+HOST='meta4shadowing.com'
+URI='/spoofing/sendmail.php'
+
+RAW_POST_PARAMETERS=
+RAW_POST_PARAMETERS+='fromname=Sakura Arai'
+RAW_POST_PARAMETERS+='&fromemail=arais.torp.513@gmail.com'
+RAW_POST_PARAMETERS+='&toemail=arais.torp.513@gmail.com'
+RAW_POST_PARAMETERS+='&subject=Hehehe'
+RAW_POST_PARAMETERS+='&message='
+
+# The POST Request below only seems to work if newlines are represented by <br>
+# To make it easier to edit our messages, let's write them like this, and then
+# run sed on them afterwards.
+
+message="
+Dear Bagel,
+
+Ra!
+
+Love,
+Bagel.
+
+P.S. ;/
+"
+
+RAW_POST_PARAMETERS+="$(echo "$message" | sed -rz 's@\n@<br>@g')"
+
+RAW_POST_PARAMETERS+='&comment=c3VwZXJzZWNyZXR0b2tlbgo='
+RAW_POST_PARAMETERS+='&Submit=Send'
+
+POST_PARAMETERS="$(node <<< "console.log(encodeURI(\"${RAW_POST_PARAMETERS}\"))")"
+
+CONTENT_LENGTH="$(echo -n "$POST_PARAMETERS" | wc -c)"
+
+echo "${POST_PARAMETERS}"
+
+# BUILD THAT SHIT
+build_post_request() {
+sed -rz -e 's@\n@\r\n@g' << EOF
+POST ${URI} HTTP/1.1
+Host: ${HOST}
+Accept-Encoding: identity
+Content-Type: application/x-www-form-urlencoded
+Content-Length: ${CONTENT_LENGTH}
+
+${POST_PARAMETERS}
+EOF
+}
+
+# POST METHODS
+do_post_openssl_grep() {
+    regex="$1"
+    build_post_request \
+        |openssl s_client -ign_eof -connect "${HOST}":443 2>&1 \
+        |tee >(grep -m1 "$regex" && killall openssl) &>/dev/null
+}
+
+do_post_openssl_quiet() {
+    local TIMEOUT=1
+    build_post_request \
+        |openssl s_client -ign_eof -connect "${HOST}":443 2>&1 \
+        |tee >(sleep "$TIMEOUT" && killall openssl) \
+        | pcregrep -Mo 'HTTP/(.|\n)+'
+}
+
+do_post_openssl() {
+    local TIMEOUT=1
+    build_post_request \
+        |openssl s_client -ign_eof -connect "${HOST}":443 2>&1 \
+        |tee >(sleep "$TIMEOUT" && killall openssl)
+}
+
+do_post_socat() {
+    build_post_request | socat - OPENSSL:"${HOST}":443
+}
+
+do_post_ncat() {
+    build_post_request | ncat "${HOST}" 80
+}
+
+#do_post_openssl_grep "php_time"
+#do_post_openssl_quiet
+#do_post_openssl
+#do_post_socat
+do_post_ncat

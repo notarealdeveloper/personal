@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+source colors.sh
+
+die   () { printf "${red}ERROR${whi}: ${1}${end}\n"; exit 1;  }
+log   () { printf "${blu}[${whi}*${blu}]${whi} ${1}${end}\n"; }
+usage () {
+    # We can optionally pass in an explanation of what went wrong.
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [OPTIONS]
+OPTIONS
+    -n, --name      Set filename
+    -h, --help      Show this help
+FILE TYPES
+    (b)ash          New bash script
+    (p)ython        New python program
+    (c)             New c program
+EOF
+    exit 1
+}
+
+auto_create_filename() {
+    if [[ ! -e "$1" ]]; then
+        echo "$1"
+        return
+    fi
+    name_full="$1"
+    name_stem="${name_full%.*}"
+    if ! grep -cq '[.]' <<< "${name_full}"; then
+        name_ext=""
+    else
+        name_ext=."${name_full##*.}"
+    fi
+
+    i=1
+    finished=false
+    while [[ "$finished" == false ]]; do
+        candidate="${name_stem}-${i}${name_ext}"
+        if [[ ! -e "$candidate" ]]; then
+            finished=true
+        else
+            ((i++))
+        fi
+    done
+    echo "$candidate"
+}
+
+list_options() {
+    # This is for bash completion.
+    # It works, but I'm choosing not to use it, since it's honestly just cluttered and not helpful
+    cat "$0" | grep -Po '^\s+\w[|][-\w]+(?=[)])' | sed -r -e 's/^\s+//' -e 's@\w[|]@@g' | sed -zr 's@\n@ @g'; printf '\n'
+    exit 0
+}
+
+[[ -z "$1" ]] && usage
+
+TEMPLATE=
+raw_filename=
+while [[ -n "$1" ]]; do
+    case "$1" in
+        b|bash)             TEMPLATE="bash";;
+        p|python)           TEMPLATE="python.py";;
+        a|argparse)         TEMPLATE="python-argparse.py";;
+        c|c)                TEMPLATE="c.c";;
+        m|makefile)         TEMPLATE="Makefile";;
+        -n|--name)          shift; raw_filename="$1";;
+        -l|--list)          list_options;;
+        -h|--help)          usage;;
+        *)                  if   [[ -z "$TEMPLATE" && -f "${HOME}/Templates/$1" ]]; then
+                                TEMPLATE="$1"
+                            elif [[ -n $TEMPLATE ]]; then
+                                raw_filename="$1"
+                            else
+                                die "What?"
+                            fi
+                            ;;
+    esac
+    shift
+done
+
+[[ -z "$TEMPLATE" ]] && usage "Need a template"
+
+filename="$(auto_create_filename "${raw_filename:-$TEMPLATE}")"
+
+cp -nv "$HOME/Templates/$TEMPLATE" "$filename"

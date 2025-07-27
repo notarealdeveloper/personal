@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Web Components</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+      :root {
+        --nice-red: #f1356d;
+      }
+      html {
+        font-family: "Quicksand";
+      }
+      h1 {
+        color: var(--nice-red);
+      }
+    </style>
+
+    <script type="module">
+      const template = document.createElement('template');
+      template.innerHTML = `
+        <style>
+
+          main {
+            display: inline-flex;
+            justify-content: space-between;
+            border: 1px solid gray;
+            padding: 10px;
+          }
+
+          .btn {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: start;
+          }
+
+          button {
+            border: none;
+            border-radius: 10px;
+            background-color: seagreen;
+            color: white;
+            height: 75%;
+            min-width: 3rem;
+            font-size: 2rem;
+          }
+
+          .label {
+            font-size: 1rem;
+            height: 25%;
+          }
+
+          .counter {
+            font-size: 3rem;
+            min-width: 4rem;
+            text-align: center;
+          }
+
+        </style>
+
+        <main>
+          <div class="btn">
+            <button id="decrease">-</button>
+            <span class="label">
+              <span class="label-key">min: </span>
+              <span class="label-val" id="min"></span>
+            </span>
+          </div>
+
+          <div class="counter">
+            <span id="count"></span>
+          </div>
+
+          <div class="btn">
+            <button id="increase">+</button>
+            <span class="label">
+              <span class="label-key">max: </span>
+              <span class="label-val" id="max"></span>
+            </span>
+          </div>
+        </main>
+      `;
+
+      class MyCounter extends HTMLElement {
+        constructor() {
+          super();
+          this.attachShadow({mode: 'open'});
+          this.count = this.getAttribute('count') || 0;
+          this.min = this.getAttribute('min') || -Infinity;
+          this.max = this.getAttribute('max') || +Infinity;
+        }
+
+        connectedCallback() {
+          this.shadowRoot.appendChild(template.content.cloneNode(true));
+      
+          // event handlers
+          this.shadowRoot.getElementById('increase').onclick = () => this.increase();
+          this.shadowRoot.getElementById('decrease').onclick = () => this.decrease();
+
+          // 
+          this.shadowRoot.getElementById('min').innerText = (this.min == -Infinity) ? '-∞' : this.min;
+          this.shadowRoot.getElementById('max').innerText = (this.max == +Infinity) ? '+∞' : this.max;
+
+          this.setComponentStyles();
+          this.update(this.count);
+        }
+
+        setComponentStyles() {
+          // parse `selector:key=value` style attributes
+          for (let i = 0; i < this.attributes.length; i++) {
+            let attr = this.attributes[i];
+            if (attr.specified) {
+                let match = /(.+):(.+)/.exec(attr.name);
+                if (!match) {
+                  continue
+                }
+                let [fullMatch, cssSelector, cssKey] = match;
+                let cssValue = attr.value;
+                console.log(`Setting counter subcomponent: ${cssSelector} { ${cssKey} : ${cssValue} }`);
+                this.shadowRoot.querySelectorAll(`${cssSelector}`).forEach(e => e.style[cssKey] = cssValue)
+            }
+          }
+        }
+
+        increase() {
+          if (this.count + 1 > this.max) {
+            return;
+          }
+          this.update(++this.count);
+        }
+
+        decrease() {
+          if (this.count - 1 < this.min) {
+            return;
+          }
+          this.update(--this.count);
+        }
+
+        update(count) {
+          this.shadowRoot.getElementById('count').innerHTML = count;
+        }
+      }
+
+      customElements.define('my-counter', MyCounter);
+    </script>
+</head>
+
+<body>
+  <style>
+    /* The above web component's CSS is local to itself!
+     * That means we can add conflicting styles here, and
+     * it won't affect the color of the component. */
+    button {
+      background-color: red;
+    }
+  </style>
+
+  <h1>Web Components</h1>
+  <h2>Counters</h2>
+  <p>We can add a counter to the page with the <code>&lt;my-counter&gt;</code> tag</p>
+  <my-counter></my-counter>
+  <my-counter max=5></my-counter>
+  <my-counter count=3 min=0 max=7 .label:color=cornflowerblue></my-counter>
+  <my-counter
+    #decrease:background-color=navy
+    #increase:background-color=maroon
+    .counter:color=seagreen
+    .label-key:color=var(--nice-red)
+    .label-val:color=cornflowerblue
+  ></my-counter>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+source log.sh
+
+usage() {
+    # We can optionally pass in an explanation of what went wrong.
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [OPTIONS]
+
+OPTIONS
+    --help, -h      Show this help
+
+EOF
+    exit 1
+}
+
+[[ -z "$1" ]] && usage
+
+while [[ -n "$1" ]]; do
+    case "$1" in
+        -h|--help)          usage;;
+        -*)                 usage "Unrecognized option: ${1}";;
+        *)                  show_thing "${1}";;
+    esac
+    shift
+done

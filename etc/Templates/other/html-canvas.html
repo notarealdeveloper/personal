@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style>
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        ctx.shadowColor = 'black';
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.shadowBlur = 25;
+
+        ctx.fillStyle = 'rebeccapurple';
+        ctx.fillRect(10, 10, 100, 100);
+    </script>
+
+</body>
+</html>

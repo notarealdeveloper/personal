@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <style>
+    </style>
+
+    <!-- Load React. -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- Load our React component. -->
+    <!-- <script src="like_button.js"></script> -->
+
+</body>
+</head>
+
+<body>
+
+    <div id="like_button_container"></div>
+
+    <script>
+    'use strict';
+
+    const e = React.createElement;
+
+    class LikeButton extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {liked: false};
+        }
+
+        render() {
+            if (this.state.liked) {
+                return 'You liked this.';
+            }
+
+            return e(
+                'button',
+                {
+                    class: "good",
+                    onClick: () => this.setState({liked: true})
+                },
+                'Like'
+            );
+        }
+    }
+
+    const domContainer = document.querySelector('#like_button_container');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(e(LikeButton));
+    </script>
+
+</body>
+</html>
