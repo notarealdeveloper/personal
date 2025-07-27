@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Commands needed for transparency in conky.
+# This is the method that works for every window manager.
+#
+# If you don't have them:
+# install: xcompmgr transset-df
+
+source ~/.bashrc
+
+killall conky &>/dev/null
+
+CONKY_CONFIG="/tmp/conkyrc"
+conky-mkconfig > "${CONKY_CONFIG}"
+
+if [[ ! -e "$CONKY_CONFIG" ]]; then
+    die "File does not exist: \$CONKY_CONFIG = $CONKY_CONFIG"
+fi
+
+conky -d -c "${CONKY_CONFIG}"
+
+_handle_xmobar_if_present() {
+    # If we have xdotool and xmobar is running, raise xmobar
+    # so we can use any overlapping clickable regions
+    if ps aux | grep -v grep | grep -cq xmobar; then
+        which xdotool &>/dev/null &&
+        sleep 0.5 &&
+        xdotool windowraise $(xdotool search --name xmobar | tail -n 1)
+    fi
+}
+# _handle_xmobar_if_present

@@ -1,0 +1,319 @@
+#!/usr/bin/env python
+
+# NOTE: Unlike most of the other things in this repo,
+# this one is fairly dependent on my specific conky setup.
+
+# TODO: Make this more general somehow, or just toss it out
+
+# external depends: conky, findmnt, acpi, free, hostname, xcowsay
+# internal depends: gmail, temperature, getresolution, $HOME/.face, some disklabels
+
+import os
+import re
+
+def notify(msg):
+    os.system(f"""xcowsay "{msg}";""")
+
+def shell(cmd):
+    return os.popen(cmd).read().strip()
+
+def hostname():
+    return shell("hostname").lower()
+
+def get_cpu_count():
+    n = os.cpu_count()
+    return f"{n}"
+
+def get_total_memory():
+    return shell("free -h --giga | grep '^Mem' | tr -s ' ' | cut -f2 -d' '")
+
+def get_battery_percent():
+    return shell("acpi | head -1 | grep -o '[0-9]*%'")
+
+def get_battery_hours_remaining():
+    hours_colon_minutes = shell("acpi | head -1 | grep -Po '[0-9]+:[0-9]+(?=:[0-9][0-9] remaining)'")
+    hours, minutes = hours_colon_minutes.split(':')
+    hours = int(hours)
+    minutes = int(minutes)
+    return hours + (minutes/60)
+
+def get_battery_string():
+
+    def on_battery_power():
+        return shell("acpi | head -1 | grep remaining")
+
+    if on_battery_power():
+        hours = get_battery_hours_remaining()
+        if hours >= 4:
+            time_remaining = f"{hours:.0f}h"
+        elif 1 < hours < 4:
+            time_remaining = f"{hours:.1f}h"
+        else:
+            time_remaining = f"{60*hours:.0f}m"
+        return f"Battery ({time_remaining})"
+    else:
+        return f"Charging"
+
+def get_net_dev():
+    devices = os.listdir('/sys/class/net')
+    for char in ('w', 'e'):
+        matched_devices = [d for d in devices if d.startswith(char)]
+        if not matched_devices:
+            continue
+        elif len(matched_devices) > 1:
+            notify(f"You seem to have multiple {char} devices: {matched_devices}")
+        else:
+            return matched_devices[0]
+    return "Couldn't find net device"
+
+def get_partitions_turing():
+    dct = dict(
+        root = shell("mount | grep ' on / ' | cut -f1 -d' '"),
+    )
+    return dct
+
+def getresolution():
+    return shell("getresolution")
+
+# set VARIABLES based on hostname
+USER = os.getenv('USER')
+HOME = os.getenv('HOME')
+DESKTOP = f'{HOME}/Desktop'
+FACE_IMAGE_PATH = f'{HOME}/.face-small.png'
+FACE_IMAGE_PATH = f'{HOME}/.face'
+GRAPH_LIGHT_COLOR = 'AFCCDE'
+GRAPH_DARK_COLOR = 'E60000'
+NETDEV = get_net_dev()
+CPU_COUNT = get_cpu_count()
+TOTAL_MEMORY = get_total_memory()
+BATTERY_STRING = get_battery_string()
+GAP_X = '10'
+GAP_Y = '120'
+MAXIMUM_WIDTH = '375'
+BAR_H = '4'   # bar height small
+GRAPH_H = '25'
+CPUGRAPH_W = '367'
+NETGRAPH_W = '180'
+DISKGRAPH_W = '180'
+FONT_NAME = 'DejaVu Sans Mono'
+FONT_SIZE_SMALL = '9'
+FONT_SIZE_DEFAULT = '11'
+FACE_IMAGE_SIZE = '30x30'
+
+distro = os.popen("getdistro").read().strip().capitalize()
+dev_disk_by_label = f'/dev/disk/by-label/{distro}'
+
+PRIMARY_DRIVE_NAME = '/'
+
+if os.path.exists(dev_disk_by_label):
+    PRIMARY_DRIVE_PATH = os.popen(f"realpath {dev_disk_by_label}").read().strip()
+else:
+    PRIMARY_DRIVE_PATH = '(Primary drive path unknown)'
+
+SECONDARY_DRIVE_NAME = 'Desktop'
+SECONDARY_DRIVE_PATH = os.popen(f"realpath /dev/disk/by-label/Desktop").read().strip()
+
+# hostname specific overrides
+if hostname() == 'shannon':
+    GAP_Y = '80'
+    FONT_SIZE_DEFAULT = '9'
+    if getresolution() == '2560x1440':
+        pass
+        # This used to be required for hidpi,
+        # and now it scales things 2x as big.
+        #GAP_Y = '220'
+        #BAR_H   = str(2*int(BAR_H))
+        #GRAPH_H = str(2*int(GRAPH_H))
+        #CPUGRAPH_W = str(2*int(CPUGRAPH_W))
+        #NETGRAPH_W = str(2*int(NETGRAPH_W))
+        #DISKGRAPH_W = str(2*int(DISKGRAPH_W))
+        #MAXIMUM_WIDTH = str(2*int(MAXIMUM_WIDTH))
+        #FACE_IMAGE_SIZE = '60x60'
+
+
+elif hostname() == 'turing':
+    GAP_Y = '200'
+
+elif hostname() == 'godel':
+    if getresolution() == '3840x2160':
+        GAP_X = '20'
+        GAP_Y = '140'
+        MAXIMUM_WIDTH = '580'
+        BAR_H = '8'   # bar height small
+        GRAPH_H = '50'
+        CPUGRAPH_W = '560'
+        NETGRAPH_W = '275'
+        DISKGRAPH_W = '275'
+        FONT_NAME = 'DejaVu Sans Mono'
+        FONT_SIZE_SMALL = '12'
+        FONT_SIZE_DEFAULT = '14'
+        FACE_IMAGE_SIZE = '60x60'
+
+PRIMARY_DRIVE_BASE = os.path.basename(PRIMARY_DRIVE_PATH)
+SECONDARY_DRIVE_BASE = os.path.basename(SECONDARY_DRIVE_PATH)
+
+RECORDING = False
+if RECORDING:
+    PUBLICIP = 'echo 175.45.176.81' # North Korean IP block
+    LOCATION = 'echo "The Hidden City"'
+else:
+    PUBLICIP = 'publicip'
+    LOCATION = 'geoip --city'
+
+VARIABLES = dict(
+    USER = USER,
+    HOME = HOME,
+    DESKTOP = DESKTOP,
+    GAP_X = GAP_X,
+    GAP_Y = GAP_Y,
+    NETDEV = NETDEV,
+    FACE_IMAGE_PATH = FACE_IMAGE_PATH,
+    PRIMARY_DRIVE_PATH = PRIMARY_DRIVE_PATH,
+    PRIMARY_DRIVE_BASE = PRIMARY_DRIVE_BASE,
+    PRIMARY_DRIVE_NAME = PRIMARY_DRIVE_NAME,
+    SECONDARY_DRIVE_PATH = SECONDARY_DRIVE_PATH,
+    SECONDARY_DRIVE_BASE = SECONDARY_DRIVE_BASE,
+    SECONDARY_DRIVE_NAME = SECONDARY_DRIVE_NAME,
+    GRAPH_LIGHT_COLOR = GRAPH_LIGHT_COLOR,
+    GRAPH_DARK_COLOR = GRAPH_DARK_COLOR,
+    TOTAL_MEMORY = TOTAL_MEMORY,
+    BATTERY_STRING = BATTERY_STRING,
+    MAXIMUM_WIDTH = MAXIMUM_WIDTH,
+    BAR_H = BAR_H,
+    GRAPH_H = GRAPH_H,
+    CPUGRAPH_W = CPUGRAPH_W,
+    NETGRAPH_W = NETGRAPH_W,
+    DISKGRAPH_W = DISKGRAPH_W,
+    FONT_NAME = FONT_NAME,
+    FONT_SIZE_SMALL = FONT_SIZE_SMALL,
+    FONT_SIZE_DEFAULT = FONT_SIZE_DEFAULT,
+    FACE_IMAGE_SIZE = FACE_IMAGE_SIZE,
+    CPU_COUNT = CPU_COUNT,
+    PUBLICIP = PUBLICIP,
+    LOCATION = LOCATION,
+)
+
+# end of setting variables
+
+
+
+conkrc_template = r"""
+conky.config = {
+-- Configuration for Conky System Monitor
+-- See /etc/conky/conky.conf for defaults
+
+-- For syntax tips, see:
+-- http://www.ifxgroup.net/conky.htm
+
+-- CONKY OPTIONS
+
+-- Window-manager specific options
+	alignment = 'top_right',-- {top,bot,mid}{lef,rig,mid}, none
+
+	background = true,
+	border_width = 0,
+	cpu_avg_samples = 2,
+	default_color = 'lightblue',
+	default_outline_color = 'white',
+	default_shade_color = 'white',
+	double_buffer = true,
+	draw_borders = false,
+    draw_shades = false,
+	draw_graph_borders = true,
+	draw_outline = false,
+	draw_shades = false,
+	extra_newline = true, -- good for awesome's wiboxes
+	gap_x = GAP_X,
+	gap_y = GAP_Y,
+	minimum_width = 5,
+	minimum_height = 500, -- may require restarting conky
+	maximum_width = MAXIMUM_WIDTH,
+	net_avg_samples = 2,
+	no_buffers = false,
+	out_to_console = false,
+	out_to_stderr = false,
+	short_units = true,
+	show_graph_scale = true,
+	show_graph_range = false,
+	stippled_borders = 0,
+	update_interval = 2.0,
+	uppercase = false,
+	use_spacer = 'none',
+	use_xft = true,
+	font = 'FONT_NAME:size=FONT_SIZE_DEFAULT',
+
+    -- Transparency in all window managers
+	own_window = true,
+	own_window_class = 'Conky',
+	own_window_type = 'desktop',
+    own_window_argb_value = 0,
+    own_window_argb_visual = true,
+    own_window_transparent = yes,
+
+    -- Transparency in all window managers (deprecated)
+	--own_window_colour = '#000000',
+	--own_window_argb_visual = false,
+	--own_window_argb_value = 110,
+	--own_window_argb_visual = true,
+	--own_window_argb_value = 110,
+	--own_window_transparent = true, -- Neither required nor prohibited
+};
+
+conky.text = [[
+${if_existing FACE_IMAGE_PATH}${image FACE_IMAGE_PATH -p 0,20 -s FACE_IMAGE_SIZE}${endif}
+${color grey}${alignc}${time %a %b %e, %l:%M %p}
+${color lightblue}     ${execi 300 temperature}\
+${color lightgreen}${alignr}${execi 300 gmail}
+${color lightblue}$hr
+${color lightblue}BATTERY_STRING: ${color lightgreen}${battery_percent}% ${battery_bar BAR_H}
+${color}Memory (TOTAL_MEMORY): ${color lightgreen}${memperc}% ${membar BAR_H}
+${color}CPU Count: ${color lightgreen}CPU_COUNT ${alignr}\
+${color}${color lightblue}CPU Freq: ${color lightgreen}${freq_g} GHz${color lightblue}
+${color}ACPI Temp: ${color lightgreen}${acpitemp}°C ${alignr}\
+#${color lightblue}Bitcoin: ${color lightgreen}$$${execi 600 getbtcprice}
+${color}${color lightblue}${cpugraph cpu0 GRAPH_H,CPUGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t}
+${if_existing PRIMARY_DRIVE_PATH}\
+${font FONT_NAME:size=FONT_SIZE_SMALL}${color pink}PRIMARY_DRIVE_NAME
+${color lightblue}Disk reads: ${diskio_read PRIMARY_DRIVE_BASE} ${alignr}\
+${color lightblue}Disk writes: ${diskio_write PRIMARY_DRIVE_BASE}
+${color lightblue}${diskiograph_read PRIMARY_DRIVE_BASE GRAPH_H,DISKGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t} \
+${color lightblue}${diskiograph_write PRIMARY_DRIVE_BASE GRAPH_H,DISKGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t}\
+${endif}
+${if_existing SECONDARY_DRIVE_PATH}\
+${font FONT_NAME:size=FONT_SIZE_SMALL}${color pink}SECONDARY_DRIVE_NAME
+${color lightblue}Disk reads: ${diskio_read SECONDARY_DRIVE_BASE} ${alignr}\
+${color lightblue}Disk writes: ${diskio_write SECONDARY_DRIVE_BASE}
+${color lightblue}${diskiograph_read SECONDARY_DRIVE_BASE GRAPH_H,DISKGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t} \
+${color lightblue}${diskiograph_write SECONDARY_DRIVE_BASE GRAPH_H,DISKGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t}\
+${endif}
+${font FONT_NAME:size=FONT_SIZE_DEFAULT}\
+\
+${color}File systems
+${color}/       ${color lightgreen}${fs_used /}/${fs_size /}  ${fs_bar BAR_H /}
+${color}desktop ${color lightgreen}${fs_used DESKTOP}/${fs_size DESKTOP}   ${fs_bar BAR_H DESKTOP}
+
+${color}${color lightblue}Public: ${color lightgreen}${execi 3600 PUBLICIP} \
+${font FONT_NAME:size=FONT_SIZE_SMALL}${color pink}(${execi 3600 LOCATION})${font FONT_NAME:size=FONT_SIZE_DEFAULT}
+${if_existing /sys/class/net/NETDEV/operstate up}\
+${color pink} * ${color lightblue}NETDEV ${color lightgreen}${addr NETDEV}
+${color lightblue}${upspeedgraph NETDEV GRAPH_H,NETGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t} \
+${color lightblue}${downspeedgraph NETDEV GRAPH_H,NETGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t}\
+${endif}
+\
+${color}Top Processes       CPU%   MEM%
+${color lightgrey} ${top name 1} ${top cpu 1} ${top mem 1}
+${color lightgrey} ${top name 2} ${top cpu 2} ${top mem 2}
+${color lightgrey} ${top name 3} ${top cpu 3} ${top mem 3}
+${color lightgrey} ${top name 4} ${top cpu 4} ${top mem 4}
+]];
+"""
+
+conkrc_template = conkrc_template.strip()
+
+for key, value in VARIABLES.items():
+    # trying out the an rf string so we can add the word boundary \b.
+    conkrc_template = re.sub(rf"\b{key}\b", value, conkrc_template)
+    # revert to this if the above borks
+    # conkrc_template = re.sub(key, value, conkrc_template)
+
+print(conkrc_template)
