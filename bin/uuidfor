@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+[[ -z "$1" ]] && echo "Usage: $(basename $0) <partition>" && exit 1
+
+PARTITION=$1
+ls -l /dev/disk/by-uuid/                \
+    | cut -d ' ' -f 9-11                \
+    | grep --color=never ${PARTITION}$  \
+    | sed s@../../@@
+
+# The opposite command is called findfs.
+# It works with either LABEL or UUID, 
+# the end result of which is that we can do 
+# totally pointless stuff like this:
+# sudo findfs UUID=$(uuidfor sda3 | cut -d ' ' -f 1)
+
+# I fucking love bash...
