@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# Terminal color codes.
+bla='\033[01;30m' red='\033[01;31m' gre='\033[01;32m'
+yel='\033[01;33m' blu='\033[01;34m' pur='\033[01;35m'
+cya='\033[01;36m' gra='\033[01;37m' whi='\033[01;39m'
+end='\033[00m'
+
+usage() {
+    sed -r 's@^\s{4}@@' << EOF
+    NAME
+        git grepman - searches all git man pages for a regex.
+
+    SYNOPSIS
+        git grepman [grep-args]
+
+    EXAMPLES
+        git grepman -C5 plumbing
+EOF
+    exit 1
+}
+
+[[ -z $1 ]] && usage
+
+# build array of git man pages
+git_man_pages=("$(
+    man -k --regex '^git' | while read line; do
+        echo "$line" | cut -f1 -d ' '
+    done
+)")
+
+echo "${git_man_pages[@]}" | while read prog; do
+    unset match
+    match="$(man "$prog" | grep "$@")"
+    if [[ -n "$match" ]]; then
+        printf "${gre}${prog}${end} ::\n"
+        man "$prog" | grep --color=auto "$@"
+        printf "\n=======================================\n"
+    fi
+done
+
