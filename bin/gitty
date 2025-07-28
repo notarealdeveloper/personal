@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+
+cattail_self() {
+    cat "$0" | after '^###' | tail -n +3
+}
+
+if [[ -z "$1" ]]; then
+    cattail_self
+    exit 0
+fi
+
+# Otherwise:
+cattail_self | grep --color=auto -Ei "^$@.*" | awk '{print "git clone " $2}'
+
+exit 0
+
+############################################
+
+# gnu
+gcc             git://sourceware.org/git/gcc
+glibc           git://sourceware.org/git/glibc
+binutils        git://sourceware.org/git/binutils
+coreutils       git://git.sv.gnu.org/coreutils
+bash            git://git.sv.gnu.org/bash
+
+
+# tiny
+toybox          https://github.com/landley/toybox
+musl            https://git.musl-libc.org/git/musl
+tcc             git://repo.or.cz/tinycc
+busybox         git://git.busybox.net/busybox
+uclibc          git://git.busybox.net/uClibc
+uclibc-ng       git://uclibc-ng.org/git/uclibc-ng
+asmutils        https://github.com/leto/asmutils
+
+# window managers
+dwm             https://git.suckless.org/dwm
+dwl             https://codeberg.org/dwl/dwl
+awesome         https://github.com/awesomeWM/awesome
+
+# system tools
+ltrace          https://gitlab.com/cespedes/ltrace
+strace          https://github.com/strace/strace
+
+# unix & linux
+linux-0.01      https://github.com/zavg/linux-0.01
+unix-history    https://github.com/dspinellis/unix-history-repo
+minix           https://github.com/Stichting-MINIX-Research-Foundation/minix
+linux           git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
+
+# python
+cpython         https://github.com/python/cpython
+numpy           https://github.com/numpy/numpy
+scipy           https://github.com/scipy/scipy
+scikit-learn    https://github.com/scikit-learn/scikit-learn
+pandas          https://github.com/pandas-dev/pandas
+numba           https://github.com/numba/numba
+requests        https://github.com/psf/requests
+pip             https://github.com/pypa/pip
+sly             https://github.com/dabeaz/sly
+ipython         https://github.com/ipython/ipython
+
+# python ssh library
+paramiko        https://github.com/paramiko/paramiko
+
+# python: enhanced regex module
+mrab-regex      https://bitbucket.org/mrabarnett/mrab-regex
+
+# python: bfd ("big fucking deal)
+python-bfd      https://github.com/syscall7/python-bfd
+
+# concurrency, better concurrent.futures: pebble
+pebble          https://github.com/noxdafox/pebble
+
+# concurrency, better multiprocessing, pathos project: multiprocess
+multiprocess    https://github.com/uqfoundation/multiprocess
+
+# concurrency, better asyncio (dabeaz): curio
+curio           https://github.com/dabeaz/curio
+
+# concurrency, better threads (dabeaz): thredo
+thredo          https://github.com/dabeaz/thredo
+
+# concurrency, crazy c stack hacks: greenlet
+greenlet        https://github.com/python-greenlet/greenlet
+
+# concurrency: nogil!
+nogil           https://github.com/colesbury/nogil
+
+# gentoo ebuilds
+gentoo          https://gitweb.gentoo.org/repo/gentoo
+
+# arch pkgbuilds
+arch            https://gitlab.archlinux.org/archlinux/packaging/packages
+
+# nixos nixpkgs
+nix             https://github.com/NixOS/nixpkgs
+
+# hacks
+rop-demos       https://github.com/finallyjustice/security
+key-logger      https://github.com/gsingh93/simple-key-logger
+wcc             https://github.com/endrazine/wcc
+x86-bare-metal  https://github.com/cirosantilli/x86-bare-metal-examples
+
+# hacks: nsa tempest implementation using gnu radio
+gr-tempest      https://github.com/git-artes/gr-tempest
+
+# cryopid: freeze and resume a process, possibly on another machine.
+# for wayback machine's version of berlios.de website, see:
+# https://web.archive.org/web/20120118192531/http://cryopid.berlios.de/
+cryopid         https://github.com/maaziz/cryopid
+
+# desktop
+conky           https://github.com/brndnmtthws/conky
+nemo            https://github.com/linuxmint/nemo
+cinnamon        https://github.com/linuxmint/cinnamon
+numix           https://github.com/numixproject/numix-icon-theme-circle
+numix-cinnamon  https://github.com/zagortenay333/numix-cinnamon
+vlc             https://github.com/videolan/vlc
+yt-dlp          https://github.com/yt-dlp/yt-dlp
+prospect-mail   https://github.com/julian-alarcon/prospect-mail
+
+# terminals
+tmux            https://github.com/tmux/tmux
+tmux.confg      https://github.com/gpakosz/.tmux
+powerline       https://github.com/powerline/powerline
+
+# cryptography et al
+tor             https://git.torproject.org/tor
+bitcoin         https://github.com/bitcoin/bitcoin
+bitcoin-v1      https://github.com/trottier/original-bitcoin
+btcpayserver    https://github.com/btcpayserver/btcpayserver
+
+# repair mp4 file moov atom
+untrunc         https://github.com/ponchio/untrunc
+
+# fbcat lets us take screenshots of a tty via the framebuffer
+fbcat           https://github.com/jwilk/fbcat
+
+# xcowsay
+xcowsay         https://github.com/nickg/xcowsay
+
+# xclip
+xclip           https://github.com/milki/xclip
+
+# cd into a linux kernel source tree, run one command, and get a qemu vm with busybox
+runlinux        https://github.com/cirosantilli/runlinux
+
+# vitaly pavlenko's repo about how to be gay
+so-gay          https://github.com/vpavlenko/so-gay
+
+# fizzbuzz in tensorflow
+fizz-buzz-tf    https://github.com/joelgrus/fizz-buzz-tensorflow
+
+# cjklib is incredible
+cjklib          git://github.com/cburgmer/cjklib
+
+# github datasets
+datasets        https://github.com/datasets
+
+# james powell's "rwatch" runtime patch to python
+rwatch          https://github.com/dutc/rwatch
+
+# omniglot dataset
+omniglot        https://github.com/brendenlake/omniglot
+
+# openai gym
+gym             https://github.com/openai/gym
+
+# ptan
+ptan            https://github.com/Shmuma/ptan
+
+# open source recipes
+openyourmouth   https://github.com/rikai/OpenYourMouth
+
+# google keep api (unofficial)
+gkeepapi        https://github.com/kiwiz/gkeepapi
+
+# grothendieck ega in english lol
+ega             https://github.com/ryankeleti/ega
+
+# grothendieck "pursuing stacks"
+pursuingstacks  https://github.com/thescrivener/PursuingStacks
+
+# pysheaf: sheaf theory in python!
+pysheaf         https://github.com/kb1dds/pysheaf
+
+# emojicode: lord have mercy
+emojicode       https://github.com/emojicode/emojicode
+
+# i2p: the invisible internet project
+i2p             https://github.com/i2p/i2p.i2p
+
+# zsh
+zsh             https://github.com/zsh-users/zsh
+
+# meson build system
+meson           https://github.com/mesonbuild/meson
+
+brave-browser   https://github.com/brave/brave-browser
+
+# stepmania!
+stepmania       https://github.com/stepmania/stepmania
+
+# stepmania: all ddr courses for stepmania
+ddrcourses      https://github.com/MadkaT182/DDRCourses
+
+# stepmania: the most widely used stepmania theme is apparently by my old friend laura
+simplylove      https://github.com/quietly-turning/Simply-Love-SM5
+
+# fsr ddr pad guide!
+fsr-pad-guide   https://github.com/Sereni/fsr-pad-guide
+
+# fsr ddr pad firmware! references the pad guide above.
+fsr             https://github.com/teejusb/fsr
+
+# heisig components
+rtk-dicts       https://github.com/Yomin/rtk-dicts
+
+# functional
+ghc             https://github.com/ghc/ghc
+xmonad          https://github.com/xmonad/xmonad
+xmonad-contrib  https://github.com/xmonad/xmonad-contrib
+idris2          https://github.com/idris-lang/Idris2
+coq             https://github.com/coq/coq
+
+# rust
+rust            https://github.com/rust-lang/rust
+redox           https://github.com/redox-os/redox
+blog_os         https://github.com/phil-opp/blog_os
+uutils          https://github.com/uutils/coreutils
+
+# ai
+jax             https://github.com/google/jax
+flax            https://github.com/google/flax
+transformers    https://github.com/huggingface/transformers
+pytorch         https://github.com/pytorch/pytorch
+rome            https://github.com/kmeng01/rome
+memit           https://github.com/kmeng01/memit
+ai-cli-lib      https://github.com/dspinellis/ai-cli-lib
+
+# lean
+lean            https://github.com/leanprover/lean4
+mathlib         https://github.com/leanprover-community/mathlib4
