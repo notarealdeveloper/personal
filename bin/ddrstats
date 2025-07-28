@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import bs4
+from collections import defaultdict
+
+def read_xml(pathname):
+    content = open(pathname).read()
+    xml = bs4.BeautifulSoup(content, 'lxml')
+    return xml
+
+
+SM_ROOT_DIR = os.path.join(os.getenv('HOME'), '.stepmania-5.1')
+SM_SCORES_DIR = os.path.join(SM_ROOT_DIR, 'Save', 'Upload')
+SM_STATS_XML_PATH = os.path.join(SM_ROOT_DIR, 'Save', 'MachineProfile', 'Stats.xml')
+SM_SCORES_XML_PATHS = sorted(glob.glob(f"{SM_SCORES_DIR}/*.xml"))
+
+scores = {path: read_xml(path) for path in SM_SCORES_XML_PATHS}
+stats = read_xml(SM_STATS_XML_PATH)
+
+plays = defaultdict(list)
+for path, xml in scores.items():
+    song_tags = xml.find_all('song')
+    if len(song_tags) == 0:
+        continue
+    elif len(song_tags) > 1:
+        print(song_tags)
+        raise ValueError
+    [song] = song_tags
+    dirname = song.attrs['dir']
+    songs_str, edition_name, song_name = dirname.strip('/').split('/')
+    assert songs_str == 'Songs'
+    song_path = f"{edition_name}/{song_name}"
+    plays[song_path] = xml
+
+print(plays)
