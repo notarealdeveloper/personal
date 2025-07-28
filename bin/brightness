@@ -1,0 +1,128 @@
+#!/usr/bin/env python
+
+# My laptop brightness buttons are (edit: were) fucked. Let's fix that.
+# This needs to be run as root, but since filesystem permissions
+# only work if the whole path leading up to a given file is safe,
+# we have to move this to /usr/bin or somewhere before we can
+# use it safely. Then set it as runnable without a password
+# in the sudoers file. Okay, let's go try this out.
+#
+# Install it like this:
+# 
+# (1) sudo cp ~/bin/brightness /usr/bin/brightness
+# (2) Add this to /etc/sudoers: yourname ALL=NOPASSWD: /usr/bin/brightness
+# (3) Alias brightness to 'sudo /usr/bin/brightness'
+
+# I think that's all. Have fun :)
+
+import os, sys, re, glob
+
+colors = dict(
+    black='\033[01;30m',
+    red='\033[01;31m',
+    green='\033[01;32m',
+    yellow='\033[01;33m',
+    blue='\033[01;34m',
+    purple='\033[01;35m',
+    cyan='\033[01;36m',
+    gray='\033[01;37m', 
+    white='\033[01;39m',
+    end='\033[00m'
+)
+
+def die(msg):
+    print("{red}ERROR{white}: {msg}{end}".format(msg = msg, **colors))
+    sys.exit(1)
+
+def log(msg):
+    print("{blue}[{white}*{blue}]{white} {msg}{end}".format(
+        msg = msg, **colors)
+    )
+
+def usage(msg = ""):
+    log(msg) if msg else None
+    usage_msg = """\
+USAGE
+    {progname} [OPTIONS]
+OPTIONS
+    -i, --increment PERCENT         Increment brightness by some percentage
+    -d, --decrement PERCENT         Decrement brightness by some percentage
+    -h, --help                      Show this help
+""".strip('\n').format(progname = os.path.basename(sys.argv[0]))
+    print(usage_msg)
+    sys.exit(1)
+
+# Where the brightness values are stored
+vendor = 'nvidia_0'
+vendor = 'acpi_video0'
+#vendor = 'intel_backlight'
+brightness_file = f"/sys/class/backlight/{vendor}/brightness"
+max_brightness_file = f"/sys/class/backlight/{vendor}/max_brightness"
+
+def get_max_brightness():
+    max_brightness = int(open(max_brightness_file, "r").read().strip())
+    return max_brightness
+
+def get_current_brightness():
+    brightness = int(open(brightness_file, "r").read().strip())
+    return brightness
+
+def get_current_brightness_percent():
+    max_brightness = get_max_brightness()
+    brightness = int(open(brightness_file, "r").read().strip())
+    return 100*brightness/max_brightness
+
+def set_new_brightness_raw(new_brightness):
+    fp = open(brightness_file, "w")
+    fp.write(str(int(new_brightness)))
+    fp.close()
+
+def set_new_brightness_percent(percent):
+    new_brightness = (float(percent)/100) * get_max_brightness()
+    set_new_brightness_raw(new_brightness)
+
+def set_new_brightness_by_percent_change(percent_change):
+    current_percent = get_current_brightness_percent()
+    desired_percent = current_percent + percent_change
+    if desired_percent > 100:
+        new_percent = 100
+    elif desired_percent < 0:
+        new_percent = 0
+    else:
+        new_percent = desired_percent
+    set_new_brightness_percent(new_percent)
+
+
+################################
+### Parsing the Command Line ###
+################################
+
+# If no arguments, just print the brightness
+if len(sys.argv) == 1:
+    print(round(get_current_brightness_percent()))
+
+# If only one argument, and it's numerical, assume it's a
+# percentage and set the brightness to that percent of the max.
+elif (len(sys.argv) == 2) and sys.argv[1].isnumeric():
+    set_new_brightness_percent(sys.argv[1])
+
+# If called as: brightness (-i|-d) (number), then increment
+# or decrement the brightness by the requested percentage.
+elif (len(sys.argv) == 3) and (sys.argv[1] in ['-i', '-d']):
+    user_wants_increment = (sys.argv[1] == '-i')
+    sign = 1 if user_wants_increment else -1
+
+    if not sys.argv[2].isnumeric():
+        usage("Increment / Decrement not numeric.")
+
+    percent_change = (sign) * float(sys.argv[2])
+    set_new_brightness_by_percent_change(percent_change)
+
+else:
+    usage("Unknown error. Command line was: {0}{1}{2}".format(
+        colors["blue"],
+        ' '.join(sys.argv[1:]),
+        colors["end"]
+    ))
+
+
