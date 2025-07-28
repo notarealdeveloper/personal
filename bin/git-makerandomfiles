@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import time
+import random
+import argparse
+
+from jlib import is_git_repo
+
+def parse_command_line(args):
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-n",
+        "--num-files",
+        type = int,
+        default = 1,
+        help = "Number of input files to create."
+    )
+    parser.add_argument(
+        "-a",
+        "--add",
+        action = 'store_true',
+        default = False,
+        help = "Add each change."
+    )
+
+    parser.add_argument(
+        "-c",
+        "--commit",
+        action = 'store_true',
+        default = False,
+        help = "Commit each change. Implies --add."
+    )
+
+    parser.add_argument(
+        "-m",
+        "--mode",
+        type = str,
+        default = 'a',
+        choices = ['w', 'a'],
+        help = "Mode to open files in."
+    )
+
+    config = parser.parse_args(args)
+
+    if config.commit and not config.add:
+        config.add = True
+
+    return config
+
+
+def main():
+
+    if not is_git_repo():
+        print("ERROR: Not a git repo. Dying for safety.", file=sys.stderr)
+        sys.exit(1)
+
+    config = parse_command_line(sys.argv[1:])
+
+    for n in range(config.num_files):
+        random_number = random.randrange(0, 10**6)
+        filename = f"file-{n:05d}.txt"
+        content = f"{random_number:06d}"
+        with open(filename, config.mode) as fp:
+            fp.write(content + '\n')
+        if config.add:
+            os.system(f"""git add {filename}""")
+        if config.commit:
+            os.system(f"""git commit -m "Added {content} to {filename}";""")
+        time.sleep(0.1)
+
+if __name__ == "__main__":
+    main()
+
