@@ -2,14 +2,14 @@
 
 profile="$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")"
 
-dconf load / <<- EOF
-	[org/gnome/terminal/legacy/profiles:/:${profile}]
+dconf load /org/gnome/terminal/legacy/profiles:/ <<- EOF
+	[:${profile}]
 	audible-bell=false
 	background-color='rgb(34,34,34)'
 	bold-color-same-as-fg=true
 	bold-is-bright=true
 	default-size-columns=80
-	font='Monospace 13'
+	font='Monospace 14'
 	foreground-color='rgb(255,255,255)'
 	use-system-font=false
 	use-theme-colors=true
