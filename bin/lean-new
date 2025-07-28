@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[[ -z "$1" ]] && echo "usage: $(basename $0) <name>" && exit 1
+
+name="$1"
+shift
+lake new "${name}" "$@".lean
