@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Start a new tmux session
+tmux new-session -d -s my_tui
+
+# Split the window vertically to create two panes
+tmux split-window -v -t my_tui:.1
+tmux split-window -h -t my_tui
+
+# Initialize n to 0 in tmux session variables
+tmux set -g @n 1
+
+# Function to update both panes
+update_panes() {
+    n=$(tmux show -vg @n)
+    tmux send-keys -t my_tui:.1 "PS1=''; clear; git log -n 1 HEAD~\$n" C-m
+    tmux send-keys -t my_tui:.2 "PS1=''; clear; git ls HEAD~\$n" C-m
+}
+
+# Run the initial update
+update_panes
+
+# Bind the Enter key to increment n and update panes
+tmux bind-key -n Enter run-shell "
+n=\$(tmux show -vg @n)
+n=\$((n+1))
+tmux set -g @n \$n
+tmux send-keys -t my_tui:.1 q C-m 'clear; git log -n 1 HEAD~'\$n C-m
+tmux send-keys -t my_tui:.2   C-m 'clear; git ls HEAD~'\$n C-m
+"
+
+# Bind the 'q' key to exit the tmux session
+tmux bind-key -n q run-shell "
+tmux unbind-key -n Enter
+tmux unbind-key -n q
+tmux kill-session -t my_tui
+"
+
+# Attach to the tmux session
+tmux attach-session -t my_tui 2>/dev/null
+
+# Optional cleanup after session ends
+tmux unbind-key -n Enter
+tmux unbind-key q
+tmux set -ug @n
+
