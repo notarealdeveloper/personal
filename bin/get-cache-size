@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# getconf LEVEL1_DCACHE_LINESIZE            # 64
+# cat /proc/cpuinfo | grep cache_alignment  # 64 (8 times)
+
+# From stackoverflow
+bol='\033[1m'
+end='\033[0m'
+gre='\033[01;32m'
+blu='\033[01;34m'
+whi='\033[01;38m'
+
+log () {
+    printf "${blu}[*] ${end}${whi}$@${end}\n"
+}
+
+# QUESTION:
+# I'm trying to get the size of different cache level in my system.
+# I tried two techniques.
+# a) Using information from /sys/device. Here is the output.
+# $ cat /sys/devices/system/cpu/cpu0/cache/index1/size
+# 32K
+# $ cat /sys/devices/system/cpu/cpu0/cache/index2/size
+# 256K
+# $ cat /sys/devices/system/cpu/cpu0/cache/index3/size
+# 8192K
+# b) Using information from dmidecode
+# Cache Information
+#   Socket Designation: CPU Internal L1
+#   Configuration: Enabled, Not Socketed, Level 1
+#   Operational Mode: Write Through
+#   Location: Internal
+#   Installed Size: 256 KB
+#   Maximum Size: 256 KB
+#   (...Lots more...)
+
+# ANSWER:
+# A few things:
+# You have a quad-core CPU
+# The index<n> name in /sys/devices/system/cpu/cpu<n>/cache does not 
+# correspond to L1/L2/L3 etc. There is a .../index<n>/level file that 
+# will tell you the level of the cache.
+# Your L1 cache is split into two caches (likely index0 and index1), one 
+# for data, and one for instructions (see .../index<n>/type), per core. 
+# 4 cores * 2 halves * 32K matches the 256K that dmidecode reports.
+# The L2 cache is split per-core. 4 cores * 256K (from index2) = 1024K,
+# which matches dmidecodes L2 number.
+
+numcores=$(($(ls -d /sys/devices/system/cpu/cpu[[:digit:]] | wc -l)/2))
+L1=$(cat /sys/devices/system/cpu/cpu0/cache/index1/size)
+L2=$(cat /sys/devices/system/cpu/cpu0/cache/index2/size)
+L3=$(cat /sys/devices/system/cpu/cpu0/cache/index3/size)
+
+linesize="$(cat /proc/cpuinfo | grep cache_alignment \
+          | head -n 1 | grep -Po '(?<=\s:\s).+$')"
+log "The size of a cache line is ${linesize} bytes\n"
+
+log "Our per-core L1 cache for code is ${L1}"
+log "Our per-core L1 cache for data is ${L1}"
+log "Our per-core L1 cache for both is $((2*${L1%K}))K"
+log "Our total L1 cache for code is $((${L1%K}*${numcores}))K"
+log "Our total L1 cache for data is $((${L1%K}*${numcores}))K"
+log "Our total L1 cache for both is $((2*${L1%K}*${numcores}))K\n"
+
+log "Our per-core L2 cache is ${L2}"
+log "Our total L2 cache is $((${L2%K}*${numcores}))K\n"
+
+log "Our per-core L3 cache is ${L3}"
+log "Our total L3 cache is $((${L3%K}*${numcores}))K"
+
+# sudo dmidecode -t cache
+
