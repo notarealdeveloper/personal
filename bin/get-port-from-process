@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+[[ -z "$1" ]] && echo "usage: $(basename $0) <regex>" && exit 1
+
+regex="$1"
+pids=($(ps aux | grep -i "$regex" | grep -v grep | tr -s ' ' | cut -d ' ' -f 2))
+for pid in "${pids[@]}"; do
+    /usr/sbin/ss -l -p -n | grep -P "\D${pid}," | tr -s ' ' | cut -d ' ' -f 5 | cut -d ':' -f2 | grep . | sort | uniq
+done
+
