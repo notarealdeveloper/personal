@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+print_one_commit() {
+    hash="$1"
+    parent_tree="$2"
+    git show -s --format="%as" "$hash"
+    git cat-file -p "$parent_tree"
+}
+
+set_cursor_invisible() {
+    tput civis
+}
+
+set_cursor_visible() {
+    tput cnorm
+}
+
+set_cursor_topleft() {
+    tput cup 0 0
+}
+
+clear_until_end_of_display() {
+    tput ed
+}
+
+clear_until_end_of_line() {
+    tput el
+}
+
+handle_sigint() {
+    set_cursor_visible
+    clear
+    exit 1
+}
+
+print_full_history() {
+
+    [[ -d LOGS ]] && echo "Directory already exists: LOGS. Dying out of safety." && exit 1
+
+    mkdir LOGS
+
+    i=0
+    hash=$(git rev-parse HEAD)
+
+    INVIS=$(set_cursor_invisible)
+    TOPLEFT=$(set_cursor_topleft)
+    ED=$(clear_until_end_of_display)
+    EL=$(clear_until_end_of_line)
+    ROWS=$(tput lines)
+    COLS=$(tput cols)
+
+    trap handle_sigint SIGINT
+
+    printf '%s%s%s' "$TOPLEFT" "$INVIS" "$ED"
+
+    while true; do
+
+        #printf '%s%s%s' "$HOME" "$ED" "$INVIS"
+        #printf '%s%s' "$HOME" "$INVIS"
+
+        filename=$(printf "%08d\n" $i)
+        parent=$(git rev-parse "${hash}"^) || break
+        parent_tree=$(git rev-parse "${parent}"^{tree})
+
+        content="$(print_one_commit "$hash" "$parent_tree")"
+        echo "$content" > "LOGS/$filename"
+        echo "$content" \
+        | head -n $ROWS | while IFS= read LINE; do
+            # printf '%-*.*s' should be thought of as % + (minus star) + (dot star) + s,
+            # the (minus star) part lets us specify a minimum length.
+            # the (dot star) part lets us specify a maximim length.
+            # the s is a string that will be formatted that way.
+            # so the command
+            # printf '%-*.*s%s' $COLS $COLS "$LINE" "$EL"
+            # will print *exactly* $COLS columns of $LINE, and then $EL.
+            #printf '%-*.*s%s' $COLS $COLS "$LINE" "$EL"
+            printf '%s%s\n' "$LINE" "$EL"
+        done
+        printf '%s%s' "$ED" "$TOPLEFT"
+
+        hash="$parent"
+        ((i++))
+    done
+
+    set_cursor_visible
+
+    trap - SIGINT   # unset SIGINT trap handler
+}
+
+print_full_history
