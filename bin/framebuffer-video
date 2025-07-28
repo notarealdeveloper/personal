@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# DEPENDS: mplayer or vlc
+
+# Framebuffer video! :D
+# =====================
+# For the impractical nerd in all of us.
+# Because sometimes you just need to watch videos in a linux tty.
+
+opts=()
+videos=()
+PLAYER="mplayer"
+ROTATION="0"
+
+# Prevent the tty cursor from blinking over the video
+setterm --cursor off
+
+# Change this to all=1 to shut it up even more
+# mplayer -msglevel all=2 -vo fbdev2 -vf scale -fs -zoom -x 2560 -y 1440 "$@"
+
+# trap "setterm --cursor on" SIGINT SIGTERM
+# setterm --cursor off
+
+# Rotate it
+# mplayer -vo fbdev2 -vf scale -vf rotate=1 -fs -zoom -x 1440 -y 800 video.mp4
+
+set_rotation_opts() {
+    angle="$1"
+    if [[ "$PLAYER" == vlc ]]; then
+        opts+=(--video-filter="rotate{angle=${angle}}")
+    elif [[ "$PLAYER" == mplayer ]]; then
+        opts+=()
+        # NOTE: 2560/1440 == 1440/810, so this is the biggest we can make it when we rotate
+        case "$angle" in
+            0)      opts+=(-x 2560 -y 1440);;
+            90)     opts+=(-x 1440 -y 810 -vf rotate=2);;
+            180)    opts+=(-x 2560 -y 1440 -vf flip,mirror);;
+            270)    opts+=(-x 1440 -y 810 -vf rotate=1);;
+        esac
+    else
+        echo "Unknown player: $PLAYER"
+    fi
+}
+
+while [[ -n $1 ]]; do
+    case $1 in
+        -v|--vlc)           PLAYER="vlc";;
+        -m|--mplayer)       PLAYER="mplayer";;
+        -p|--player)        shift; PLAYER="$1";;
+        -r|--rotate)        shift; ROTATION="$1";;
+        *)                  videos+=("$1");;
+    esac
+    shift
+done
+
+set_rotation_opts "$ROTATION"
+
+
+if [[ "$PLAYER" == vlc ]]; then
+    # I think this is actually quite a bit better.
+    vlc -I ncurses --vout fb --avcodec-hw vaapi_drm "${opts[@]}" "${videos[@]}"
+elif [[ "$PLAYER" == mplayer ]]; then
+    # But this works pretty well too
+    mplayer -msglevel all=2 -vo fbdev2 -vf scale -fs -zoom "${opts[@]}" "${videos[@]}"
+else
+    echo "Unknown player: $PLAYER"
+fi
+
+reset
+clear
