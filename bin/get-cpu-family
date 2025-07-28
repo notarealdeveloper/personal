@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+gcc -march=native -Q --help=target | grep -P '^\s+-march.*'
