@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+while :; do clear && tree -a .git/"$1" && sleep 1; done
+
