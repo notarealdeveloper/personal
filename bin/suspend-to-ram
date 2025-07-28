@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+sudo true
+echo mem | sudo tee /sys/power/state
