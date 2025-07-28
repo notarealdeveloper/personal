@@ -36,6 +36,15 @@ dconf_gedit() {
 	EOF
 }
 
+dconf_cinnamon() {
+
+    cat <<- EOF
+		[org/cinnamon]
+		theme-name='Numix'
+		icon-theme='Numix‑Circle'
+	EOF
+}
+
 dconf_cinnamon_keybindings () {
     cat <<- EOF
 		[/]
@@ -191,6 +200,11 @@ dconf_load_gedit() {
 	dconf load /org/gnome/gedit/preferences/ < <(dconf_gedit)
 }
 
+dconf_load_cinnamon() {
+
+	dconf load /org/cinnamon/ < <(dconf_cinnamon)
+}
+
 dconf_load_cinnamon_keybindings() {
 
 	dconf load /org/cinnamon/desktop/keybindings/ < <(dconf_cinnamon_keybindings)
@@ -199,17 +213,19 @@ dconf_load_cinnamon_keybindings() {
 dconf_load_all() {
     dconf_load_nemo
     dconf_load_gedit
+	dconf_load_cinnamon
     dconf_load_cinnamon_keybindings
 }
 
 dconf_show_all() {
     dconf_load_nemo
     dconf_load_gedit
+	dconf_load_cinnamon
     dconf_load_cinnamon_keybindings
 }
 
-if [[ "$1" == "-i" ]]; then
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     dconf_load_all
-else
-    dconf_show_all
 fi
+
