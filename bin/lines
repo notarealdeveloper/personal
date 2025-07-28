@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+name="$(basename "$0")"
+
+if [[ $name == lines ]]; then
+    sed -E 's@\s+@\n@g' <&0
+elif [[ $name == unlines ]]; then
+    if [[ -z "$1" ]]; then
+        sed -Ez "s@\n+@ @g" <&0
+    elif [[ "$1" = '-s' ]]; then
+        sed -Ez "s@\n+@@g" <&0
+    elif [[ "$1" = '-t' ]]; then
+        # tab doesn't work well with double quotes o_O
+        sed -Ez 's@\n+@\t@g' <&0
+    else
+        sed -Ez "s@\n+@${1}@g" <&0
+    fi
+    echo
+else
+    echo "$name: error"
+fi
