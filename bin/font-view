@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+
+#######################################################################################
+# "There was Eɾu, the One, who in Arda is called Ilúvatar; and he made first the Ainur"
+# "          ..                     þ            ..                               𐤏 .."
+#######################################################################################
+
+font="ProtoCanaanite"
+size="222"
+font="SourceHanSerif"
+
+text=()
+while [[ -n $1 ]]; do
+    case $1 in
+        -f|--font)  font="$1";;
+        *)          text+=($1);;
+    esac
+    shift
+done
+
+# Without Markup
+# pango-view --text "$PHOENICIAN" --font "ProtoCanaanite 50"
+# pango-view --text "$PHOENICIAN" --font "HebrewPaleoGezer 50"
+
+# Expanded out
+# pango-view --markup --text "<span font='ProtoCanaanite 50'>𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>"
+
+# For Obsidian
+# pango-view --foreground=#d3c48e --background=#2f383e --markup --output=proto-sinaitic.png --text "<span font='ProtoCanaanite 50'>𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>"
+
+span="<span font='$font $size'>${text}</span>"
+pango-view --markup --text "${span}" 2>/dev/null
