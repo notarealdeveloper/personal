@@ -1,0 +1,126 @@
+#######################
+### personal bashrc ###
+#######################
+
+export PERSONAL="$(readlink -f "${BASH_SOURCE[0]}" | xargs dirname | xargs dirname)"
+export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
+
+######################
+### the dirs array ###
+######################
+
+export DESKTOP="$HOME/Desktop"
+export STUFF="$DESKTOP/stuff"
+export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
+export PERSONAL="${PREFIXES}/personal"
+
+export OBSIDIAN="${STUFF}/obsidian"
+export DROPBOX="${STUFF}/Dropbox"
+export PKG="${STUFF}/pkg"
+export IH="${STUFF}/ih"
+export CODE="${STUFF}/code"
+export LEAN="${CODE}/lean"
+export GITHUB='https://github.com/notarealdeveloper'
+
+dirs+=(
+
+    [personal]="${PERSONAL}"
+    [personal/bin]="${PERSONAL}/bin"
+    [personal/lib]="${PERSONAL}/lib"
+    [personal/etc]="${PERSONAL}/etc"
+
+    # stuff
+    [stuff]="${STUFF}"
+    [prefixes]="${PREFIXES}"
+    [personal]="${PERSONAL}"
+    [legacy]="${PREFIXES}/legacy"
+    [obsidian]="${OBSIDIAN}"
+    [dropbox]="${DROPBOX}"
+    [pkg]="${PKG}"
+    [ih]="${IH}"
+
+    # code
+    [code]="${CODE}"
+    [linux]="${CODE}/linux"
+    [python]="${CODE}/python"
+
+    # code/lean
+    [lean]="${CODE}/lean"
+    [leancode]="${LEAN}/code"
+    [lean4]="${LEAN}/lean4"
+    [mathlib]="${LEAN}/mathlib4"
+
+    # code/nix
+    [nix]="${CODE}/nix"
+    [nixos]="/etc/nixos"
+    [hm]="$HOME/.config/home-manager"
+    [home-manager]="$HOME/.config/home-manager"
+
+    # documents
+    [documents]="${DOCUMENTS}"
+    [me]="${DOCUMENTS}/me"
+
+)
+
+if [[ -d "$PKG" ]]; then
+    for dir in "${PKG}/"*; do
+        [[ ! -d "$dir" ]] && continue
+        name="$(basename "$dir")"
+        dirs+=([$name]="$PKG/$name")
+    done
+fi
+
+############
+### PATH ###
+############
+
+add_to_path        "${PERSONAL}/bin/o"
+add_to_path        "${PERSONAL}/lib/bash"
+add_to_python_path "${PERSONAL}/lib/python"
+
+for completion in "${PERSONAL}/lib/bash/completions"/*.sh; do
+    source "$completion"
+done
+
+###################
+### PS1 and PS2 ###
+###################
+
+if which emerge &>/dev/null; then
+    if [[ ${EUID} == 0 ]]; then
+        export PS1="${_red}root${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_blu} \w #${_end} "
+    else
+        export PS1="${_red}j${_yel}a${_cya}s${_blu}o${_pur}n${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_pur} \w ${_blu}\$${_end} "
+    fi
+fi
+
+###############
+### aliases ###
+###############
+alias brightness='sudo /usr/bin/brightness'
+alias b0='brightness 0'
+
+###################
+### os specific ###
+###################
+
+is_linux && {
+    export TERMINAL='gnome-terminal'
+}
+
+is_mac && {
+
+    export CLICOLOR=1
+    export LSCOLORS=ExFxBxDxCxegedabagacad
+    unalias ls
+    unalias grep
+    alias ls='ls -GFh'
+    alias grep='grep -E --color'
+
+    # enable bash-completions on osx if we're running bash and have it installed
+    is_bash && {
+        if [[ -f /usr/local/etc/bash_completion ]]; then
+            source /usr/local/etc/bash_completion
+        fi
+    }
+}
