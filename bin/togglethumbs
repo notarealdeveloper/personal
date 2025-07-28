@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+current=$(dconf read /org/nemo/preferences/show-image-thumbnails)
+
+if   [[ "$current" == "'never'"  ]]; then
+    echo "old: thumbs off"
+    echo "new: thumbs on"
+    dconf write /org/nemo/preferences/show-image-thumbnails "'always'"
+elif [[ "$current" == "'always'" ]]; then
+    echo "old: thumbs on"
+    echo "new: thumbs off"
+    dconf write /org/nemo/preferences/show-image-thumbnails "'never'"
+else
+    echo "$(basename $0): A weird fuckup occurred..."
+fi
+
