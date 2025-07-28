@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+adb shell mv -v /sdcard/DCIM/Camera/* /sdcard/stuff/neo/camera/ 
+adb shell mv -v /sdcard/DCIM/Screenshots/* /sdcard/stuff/neo/screenshots/
+adb shell mv -v /sdcard/Pictures/WeChat/* /sdcard/stuff/neo/wechat/
+adb shell mv -v /sdcard/Pictures/WhatsApp/* /sdcard/stuff/neo/whatsapp/
+adb shell mv -v /sdcard/Movies/WhatsApp/* /sdcard/stuff/neo/whatsapp-videos/
