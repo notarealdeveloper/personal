@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+bla='\033[01;30m' red='\033[01;31m' gre='\033[01;32m'
+yel='\033[01;33m' blu='\033[01;34m' pur='\033[01;35m'
+cya='\033[01;36m' gra='\033[01;37m' whi='\033[01;39m'
+end='\033[00m'
+
+die   () { printf "${red}ERROR${whi}: ${1}${end}\n"; exit 1;  }
+log   () { printf "${blu}[${whi}*${blu}]${whi} ${1}${end}\n"; }
+usage () {
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [OPTIONS] <text>
+OPTIONS
+    --c2e, -c      Translate from Chinese to English (Default)
+    --e2c          Translate from English to Chinese
+    --j2e, -j      Translate from Japanese to English
+    --e2j, -e      Translate from English to Japanese
+EOF
+    exit 1
+}
+
+generate_html_code() {
+    printf "$@" \
+        | hexdump -C \
+        | sed -r -e 's/^[0-9a-f]+\s*//' -e 's/\s+[|.]+$//' -e 's/\s+/ /g' -e '/^$/d' \
+        | sed -z -e 's/\n/ /' \
+        | sed -r -e 's/^/%/' -e 's/ /%/g' -e 's/%$//'
+}
+
+words=()
+
+# See if we're running in a terminal or not so we can hopefully run after a pipe.
+# This is sort of a hack (I think) but it seems to work as desired.
+# i.e., after adding this bit, we can pipe the output of the heisig code's hh alias 
+# (the one that only outputs characters) into our translation aliases like "j" and "c" and etc...
+if [[ ! -t 0 ]]; then
+    words=($(cat))
+fi
+
+direction='#zh-CN/en'
+
+# See if we were called as j2e or e2j, and set the appropriate flags.
+progname="$(basename "$0")"
+if   [[ "$progname" == 'e2j' ]]; then
+    direction='#en/ja'
+elif [[ "$progname" == 'j2e' ]]; then
+    direction='#ja/en'
+elif [[ "$progname" == 'c2e' ]]; then
+    direction='#zh-CN/en'
+elif [[ "$progname" == 'e2c' ]]; then
+    direction='#en/zh-TW'
+fi
+
+while [[ -n "$1" ]]; do
+    case "$1" in
+        --j2e|-j)           direction='#ja/en';;
+        --e2j|-e)           direction='#en/ja';;
+        --c2e|-c)           direction='#zh-CN/en';;
+        --e2c)              direction='#en/zh-TW';;
+        -*)                 usage "Unrecognized option: ${1}";;
+        *)                  words+=("$1")
+    esac
+    shift
+done
+
+# TODO: This is a kludge. Fix it to make it work for english or japanese.
+if [[ "$direction" == '#ja/en' || "$direction" == '#zh-CN/en' || "$direction" == '#zh-TW/en' ]]; then
+    html_code="$(generate_html_code "${words[@]}")"
+elif [[ "$direction" == '#en/ja' || "$direction" == '#en/zh-TW' || "$direction" == '#en/zh-CN' ]]; then
+    html_code="${words[@]}"
+else
+    zenity --info --text "The html_code figurer-outer is confused\n(html_code = \"$html_code\")" 2>/dev/null
+fi
+
+url="https://translate.google.com/${direction}/${html_code}"
+
+xdg-open "${url}" &> /dev/null
