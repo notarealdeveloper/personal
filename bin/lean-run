@@ -1,0 +1,7 @@
+#!/bin/bash
+
+package="$(lake query | xargs basename)"
+lake exe "$package"
+
+## hacky way
+# ./.lake/build/bin/*
