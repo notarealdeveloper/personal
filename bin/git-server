@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# make sure <repo> is a directory in $PWD
+git daemon --base-path=. --export-all --reuseaddr --verbose --enable=receive-pack
+
+# Then you can run:
+# git clone git://127.0.0.1/<repo>
