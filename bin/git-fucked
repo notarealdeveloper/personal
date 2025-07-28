@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Example of how we can extend git by adding an executable
+# called `git-anything` (for any value of anything) anywhere
+# in path
+
+cowsay "Git fucked"
