@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+die() { echo "$1" && exit 1; }
+
+# won't really know how to do this in the most general case until
+# i decide what other use cases matter most here. for now, we have
+# the illusion of arbitrary option processing, but it's only really
+# doing the exact right thing for a single file, clipboard wise.
+# given our current use pattern however, that's perfect for now.
+
+copy_to_clipboards() {
+    DATE="$1"
+    printf "${DATE}" | xc
+}
+
+[[ -z $1 ]] && echo "USAGE: $(basename "$0") [-(-l)ong|-(-s)hort] Xor [filename]"
+
+while [[ -n "$1" ]]; do
+
+    if [[ -e "$1" ]]; then
+        FILE="$1"
+        STAT="$(stat -c %y "$FILE")" # get the file's last modified time
+        DATE="$(date +%Y%m%d-%H%M%S -d "$STAT")"
+        printf "${DATE} \t${FILE}\n"
+        copy_to_clipboards "$DATE"
+        shift    # don't forget this
+        continue # next round of the while loop
+    fi
+
+    case "$1" in
+        -l|--long)
+            DATE="$(date +%Y%m%d-%H%M%S)"
+            copy_to_clipboards "$DATE"
+            ;;
+        -s|--short)
+            DATE="$(date +%Y%m%d)"
+            copy_to_clipboards "$DATE"
+            ;;
+        *)
+            die "usage: $(basename "$0") [-(-l)ong|-(-s)hort]"
+            ;;
+    esac
+
+    shift
+
+done
