@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+root_commits=($(git rev-list --max-parents=0 ${1:-HEAD}))
+if [[ ${#root_commits[@]} -gt 1 ]]; then
+    echo "This project has multiple root commits:"
+    for hash in ${root_commits[@]}; do
+        echo " * ${hash}"
+    done
+    echo "You can select one and check it out manually with:"
+    echo "git checkout -b root-commit <commit-id>"
+    exit 1
+fi
+
+git checkout -b root-commit "${root_commits[0]}"
