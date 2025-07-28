@@ -12,7 +12,6 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 export DESKTOP="$HOME/Desktop"
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
-export PERSONAL="${PREFIXES}/personal"
 
 export OBSIDIAN="${STUFF}/obsidian"
 export DROPBOX="${STUFF}/Dropbox"
