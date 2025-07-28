@@ -1,0 +1,268 @@
+#!/usr/bin/env bash
+
+bla='\033[01;30m' red='\033[01;31m' gre='\033[01;32m'
+yel='\033[01;33m' blu='\033[01;34m' pur='\033[01;35m'
+cya='\033[01;36m' gra='\033[01;37m' whi='\033[01;39m'
+end='\033[00m'
+
+die   () { printf "${red}ERROR${whi}: ${1}${end}\n"; exit 1;  }
+log   () { printf "${blu}[${whi}*${blu}]${whi} ${1}${end}\n"; }
+usage () {
+    OPTS="$(show_opts | sed -zr 's@\n(.)@|\1@g')"
+    echo "Usage: $(basename $0) [${OPTS}]" && exit 1;
+}
+
+show_opts() {
+    cat "$0" | grep -Po "^goddammit_[^ ()]+" | sed -r 's@goddammit_@@'
+    exit 0
+}
+
+goddammit_vpn() {
+    # remove the ppp0 default route from routing table
+    sudo ip route del default dev ppp0
+}
+
+goddammit_headset() {
+    set-input-to-headset-mic
+}
+
+goddammit_gimp() {
+    
+    cat << EOF
+    Making Gimp tolerable.
+
+    0. To figure out how to script a given change, run idrop on ~/.config/GIMP,
+
+       The subfolder is determined by the version, which you can determine
+       programatically using:
+
+       gimp_version="\$(gimp --version | grep -Po '\d+[.]\d+')"
+
+       For example, most changes are stored in
+
+       ~/.config/GIMP/\$gimp_version/gimprc
+
+    I won't try to make the following fixes automatically at the moment,
+    but I can tell you what to do.
+
+    1. For hidpi displays, change the icon size.
+    Edit > Preferences > Interface > Icon Theme > Custom Icon Size > Huge
+
+    2. Change the icon theme to Symbolic.
+
+EOF
+}
+
+goddammit_touchpad() {
+    xinput --list |
+        grep -i touchpad |
+        grep -Po '(?<=id=)\d+' |
+        while read id
+        do
+            xinput disable "$id"
+            xinput enable "$id"
+        done
+}
+
+goddammit_mouse() {
+    mouse
+}
+
+#goddammit_touchpad() {
+#    synclient TapButton2=2
+#    synclient TapButton3=3
+#}
+#
+#goddammit_hid() {
+#    goddammit mouse
+#    goddammit touchpad
+#}
+
+
+goddammit_brave_icons() {
+    cd /usr/share/icons/Numix-Circle/48/apps
+    sudo cp -v brave-browser-dev.svg brave-browser-beta.svg
+    sudo cp -v brave-dev.svg brave-beta.svg
+    sed -r -i 's@Icon=brave-browser-beta@Icon=/usr/share/icons/Numix-Circle/48/apps/brave-browser-beta.svg@g' ~/Desktop/brave.desktop
+    sudo sed -r -i 's@Icon=brave-browser-beta@Icon=/usr/share/icons/Numix-Circle/48/apps/brave-browser-beta.svg@g' /usr/share/applications/brave-browser-beta.desktop
+}
+
+goddammit_mime() {
+    #xdg-mime default google-chrome-beta.desktop text/html
+    xdg-mime default brave-browser-beta.desktop text/html
+}
+
+goddammit_tor () {
+    desktop_file="$DESKTOP/tor.desktop"
+    sed -i -r "s@^Icon=.*@Icon=$DESKTOP/linux/linux-icons/tor.svg@g" "$desktop_file"
+}
+
+goddammit_vim () {
+    sudo true
+    log "Improving vim"
+    # Fix a few bugs in the vim binary ;)
+    # Note, since we're sed'ing a binary directly, 
+    # the replacement messages have to be the exact same length.
+    sudo sed -i 's|by Bram Moolenaar et al.|Holy fucking balls! Vim!|' $(which vim)
+    sudo sed -i 's|by Bram Moolenaar et al.|Holy fucking balls! Vim!|' $(which gvim)
+    sudo sed -i 's|Help poor children in Uganda!|Vim: The text editor for men!|' $(which vim)
+    sudo sed -i 's|Help poor children in Uganda!|Vim: The text editor for men!|' $(which gvim)
+}
+
+goddammit_tty () {
+    sudo true
+    log "Fixing the TTYs"
+    for n in {2..6}; do
+        sudo systemctl restart "getty@tty${n}.service"
+    done
+}
+
+goddammit_ssh () {
+    log "Moving ssh known hosts file"
+    mv $HOME/.ssh/known_hosts{,.goddammit}
+}
+
+goddammit_xmonad () {
+    sudo sed -i 's@Exec=xmonad@Exec=/home/jason/.xsession-mine/Xsession@' /usr/share/xsessions/xmonad.desktop
+}
+
+# Removed this from the cmdline interface for now. I never use it.
+goddammit_virtualbox () {
+    sudo modprobe vboxdrv
+    sudo modprobe vboxnetadp
+    sudo modprobe vboxnetflt
+    sudo modprobe vboxpci
+}
+
+goddammit_nm() {
+    sudo true
+    log  "Restarting networkmanager service"
+    sudo systemctl restart NetworkManager
+}
+
+goddammit_wifi () {
+    sudo true
+    log  "Reloading wireless drivers"
+    sudo modprobe -r iwlmvm         &&
+    sudo modprobe -r iwlwifi        &&
+    sudo modprobe -r mac80211       &&
+    sudo modprobe -r cfg80211       &&
+    sudo modprobe    cfg80211       &&
+    sudo modprobe    mac80211       &&
+    sudo modprobe    iwlwifi        &&
+    sudo modprobe    iwlmvm         &&
+    log  "Restarting wpa_supplicant service"
+    sudo systemctl restart wpa_supplicant.service
+    [[ $1 == '--no-nm' ]] || goddammit_nm
+}
+
+goddammit_calendar() {
+    CAL=$(echo $HOME/.cinnamon/configs/calendar@cinnamon.org/*.json)
+    log "Attempting to fix the json file: ${CAL}"
+    sed -i s_'"value": "%A %B %e, %H:%M"'_'"value": "%a %b %e, %l:%M %p"'_ $CAL
+    sed -i '14s_false_true_' $CAL
+}
+
+goddammit_ether () {
+    etherdrv=$(
+        lspci -mvk \
+        | pcregrep -M 'Class:[\s]*Ethernet controller(.|\n)*atl1c' \
+        | grep -Po '(?<=Module:\t).*')
+    # echo "Ethernet driver: $etherdrv"
+    log  "Reloading ethernet drivers"
+    sudo modprobe -r "$etherdrv"    &&
+    sudo modprobe    "$etherdrv"
+    [[ $1 == '--no-nm' ]] || goddammit_nm
+}
+
+goddammit_net () {
+    sudo true
+    # The --no-nm flag makes sure we only restart networkmanager once
+    # goddammit_ether --no-nm
+    goddammit_wifi  --no-nm
+    goddammit_nm
+}
+
+goddammit_inotify() {
+    sudo true
+    local max=$((8192 * 64))
+    log "Increasing the max number of inotify watches to ${max}"
+    echo "$max" | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+}
+
+goddammit_cinnamon() {
+    sudo true
+    local xsession="/usr/share/xsessions/cinnamon2d.desktop"
+    [ -f "$xsession" ] || { log "Nothing to do" && exit 0; }
+    log "Removing unnecessary xsession"
+    sudo rm -v "$xsession"
+}
+
+# baobab takes over the directory mimetype. stop that shit.
+goddammit_baobab() {
+    sudo true
+    log "Trying to take back the directory mimetype from baobab"
+    sudo sed -i -r 's@(MimeType=).*@\1@' /usr/share/applications/org.gnome.baobab.desktop
+    # Not sure if all these are needed, but add them to be safe.
+    # Running the last two commands with sudo gives a warning message
+    # saying that /home/jason/.local/share/applications/ isn't in the
+    # search path set by the XDG_DATA_HOME and XDG_DATA_DIRS variables.
+    # This isn't relevant at the moment, but it may be in the future!
+    # Maybe this is why xdg stuff seems so non-deterministic.
+    sudo update-desktop-database /usr/share/applications/
+    sudo update-mime-database /usr/share/mime/
+    update-desktop-database ~/.local/share/applications/
+    update-mime-database ~/.local/share/mime/
+}
+
+goddammit_libre () {
+    sudo true
+    log "Fixing libreoffice icons"
+    sudo mv -v /usr/lib64/libreoffice/share/config/images_hicontrast.zip{,.gay}
+}
+
+goddammit_wallpaper() {
+    if   [[ "$(getdistro)" == 'gentoo' ]]; then
+        dconf write /org/cinnamon/desktop/background/picture-uri \
+            "'file://${LINUX}/distros-gentoo/pictures/wallpapers/gentoo-01.png'"
+    elif [[ "$(getdistro)" == 'arch' ]]; then
+        dconf write /org/cinnamon/desktop/background/picture-uri \
+            "'file://${LINUX}/distros-arch/arch-pictures/arch-01.jpg'"
+    else
+        die "Not sure what to do for this distro. Add code, yo."
+    fi
+}
+
+goddammit_numpy_c_headers() {
+    pv=$(python -c "import sys; v=sys.version_info; print(f'{v.major}.{v.minor}')")
+    [[ -e '/usr/include/numpy' ]] && sudo rm -v /usr/include/numpy # fail unless this is a symlink
+    sudo ln -svf /usr/lib/python${pv}/site-packages/numpy/core/include /usr/include/numpy
+}
+
+goddammit_screen_resolution() {
+    # screen resolution:
+    ## HOW TO FIX YOUR FUCKING LAPTOP'S SCREEN RESOLUTION CHANGING ON SUSPEND!!
+    dconf write /org/cinnamon/settings-daemon/plugins/xrandr/default-monitors-setup "'clone'"
+}
+
+goddammit_tws_java_segfault() {
+    sudo true
+    echo 1 | sudo tee /proc/sys/vm/overcommit_memory
+}
+
+[[ -z "$1" ]] && usage
+
+while [[ -n $1 ]]; do
+    case $1 in
+        --show|-s)                                              show_opts;;
+        --help|-h)                                              usage;;
+        ssh|vim|xmonad|libre|wifi|ether|net|baobab|cinnamon)    goddammit_${1};;
+        inotify|tty|wallpaper|calendar|mouse|tor|mime)          goddammit_${1};;
+        brave_icons|headset|touchpad|numpy_c_headers)           goddammit_${1};;
+        vpn|screen_resolution|tws_java_segfault)                goddammit_${1};;
+        *)                                                      usage;;
+    esac
+    shift
+done
+
+exit 0
