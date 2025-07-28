@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+[[ (-z "$1") || (-z "$2") ]] && echo "Usage: $(basename $0) <dir1> <dir2>"
+[[ (! -d "$1") ]] && echo "Argument \$1 isn't a directory."
+[[ (! -d "$2") ]] && echo "Argument \$2 isn't a directory."
+
+# Here we go!
+diff -u <(cd "$1" && find | sort | uniq) <(cd "$2" && find | sort | uniq)
+if [[ $? != 0 ]]; then
+    echo "[*] Found name differences. See above."
+    exit 1
+fi
+
+# If they didn't differ by name, see if their sizes differed
+# diff -u <(/bin/du -d0 "$1" | cut -f1) <(/bin/du -d0 "$2" | cut -f1) &>/dev/null
+# diff -u <(/bin/du "$1" | cut -f1 | sort | uniq) <(/bin/du "$2" | cut -f1 | sort | uniq) &>/dev/null
+diff -u <(/bin/du -h "$1" | sed -r -e "s@$1@@" -e '/[0-9]+\s+$/d' | sort -k 1 -n | uniq) \
+        <(/bin/du -h "$2" | sed -r -e "s@$2@@" -e '/[0-9]+\s+$/d' | sort -k 1 -n | uniq) &>/dev/null
+if [[ $? != 0 ]]; then
+    echo "[*] Found size differences:"
+    # /bin/du -d0 "$1" "$2"
+
+    # output the recursive size diff, adjusting the diff header with sed magic, so
+    # we get the directory names instead of the /dev/fd/blah caused by our process substitution
+    # note: If we needed to make the sed regex below simpler, we could just use addresses:
+    # i.e., just use a simpler '1s/old/new/' regex for the former and '2s/old/new/' for the latter
+    # The final insane sed command just truncates the final digit of the size, to kludgily prevent a few false positives.
+    # We can remove those last crazy regexes without much difference in functionality.
+    # Actually, yeah... I'm going to remove them. To put them back, add this to each sed command below 
+    # (except for the final one after the pipe) -e 's@([^0-9]?[0-9]+)[0-9](\s)@\10\2@'
+    diff -u <(/bin/du -h "$1" | sed -r -e "s@$1@@" -e '/[0-9]+\s+$/d' | sort -k 1 -n | uniq) \
+            <(/bin/du -h "$2" | sed -r -e "s@$2@@" -e '/[0-9]+\s+$/d' | sort -k 1 -n | uniq) \
+            | sed -r -e "s@^[-]{3} ([^ ]+) .*@--- ${1} @" -e "s@^[+]{3} ([^ ]+) .*@+++ ${2} @"
+    exit 1 
+fi
+
+# If they didn't differ by name or size, let the user know
+echo "[*] No differences by name or by size!"
+exit 0
+
