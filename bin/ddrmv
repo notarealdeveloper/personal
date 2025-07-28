@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [[ $1 == 's' ]]; then
+    dst='/home/jason/Desktop/DDR/my-records-new/'
+else
+    dst='/home/jason/Desktop/DDR/my-records-new-doubles/'
+fi
+
+if [[ ! -d "$dst" ]]; then
+    echo "Destination does not exist: $dst"
+    exit 1
+fi
+
+mv -v ~/*.png "$dst"
