@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+# http://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+#
+# In a post by ninjagecko
+#
+# EDIT: Though initially I thought these methods were really bad
+# (unless you use many fallbacks, the code may be irrelevant many
+# years from now), it does pose the question "what is the internet?"
+# A computer may have many interfaces pointing to many different networks.
+# For a more thorough description of the topic, google for gateways
+# and routes. A computer may be able to access an internal network
+# via an internal gateway, or access the world-wide web via a gateway
+# on for example a router (usually the case). The local IP address
+# that the OP asks about is only well-defined with respect to a single
+# link layer, so you have to specify that ("is it the network card,
+# or the ethernet cable, which we're talking about?"). There may be
+# multiple non-unique answers to this question as posed. However the
+# global IP address on the world-wide web is probably well-defined
+# (in the absence of massive network fragmentation): probably the
+# return path via the gateway which can access the TLDs.
+
+def get_ip_address():
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 0))
+    return s.getsockname()[0]
+
+def get_ip_address_from_ifname(ifname):
+    import socket
+    import fcntl
+    import struct
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    ioctl_gifaddr = fcntl.ioctl(
+        s.fileno(),
+        0x8915, # SIOCGIFADDR, in /usr/include/bits/ioctls.h
+        struct.pack('256s', bytes(ifname[:15], 'utf8'))
+        # ^ ifname is just like 'wlo1' but as a bytestring.
+    )
+    ip_as_bytes = ioctl_gifaddr[20:24]
+    ip_as_string = socket.inet_ntoa(ip_as_bytes)
+    return ip_as_string
+
+# get_ip_address_from_ifname('wlo1')  # 192.168.0.6
+# get_ip_address_from_ifname('lo')    # 127.0.0.1
+
+if __name__ == "__main__":
+    print(get_ip_address())
