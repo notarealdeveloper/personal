@@ -97,8 +97,7 @@ fi
 ###############
 ### aliases ###
 ###############
-alias brightness='sudo /usr/bin/brightness'
-alias b0='brightness 0'
+alias brcp="${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${PERSONAL}/etc/bashrc"
 
 ###################
 ### os specific ###
