@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+route -n | tr -s ' ' | cut -f 2 -d ' ' | head -n 3 | tail -1
+
