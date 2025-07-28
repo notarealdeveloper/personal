@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# DEPENDS: arp-scan
+
+# Not strictly necessary, but gives us a log message.
+get_device_ip() {
+    ip -4 -o addr show "${1}" 2>/dev/null | sed -r 's@.*inet ([^/]+).*@\1@'
+}
+
+# NOTE: The "macs" command here is optional.
+# If it exists, it should return a set of lines of the form
+# 
+# mac_address  alias_for_mac_address
+#
+# e.g.,
+#
+# ff:ee:dd:cc:bb:aa  yourmom.router
+# ff:ee:dd:cc:bb:ab  yourmom.laptop
+# 
+# or whatever naming scheme you like
+# 
+mac_filter() {
+    # Take input from </dev/stdin
+    # Build a fake file of substitution commands and do a search and replace with each.
+    sed </dev/stdin -f <(macs | sed -r -e "s@(^|$| )@/@g" -e "s@^@s@" -e "s@.*@&g@")
+}
+
+# Place the preferred device first
+# Needed when you have both a wifi and ethernet card
+
+unset ip
+wdevices=($(ls /sys/class/net/ | grep -Pm1 '^w')) # prioritize wifi
+edevices=($(ls /sys/class/net/ | grep -Pm1 '^e'))
+for dev in ${wdevices[@]} ${edevices[@]}; do
+    ip=$(get_device_ip "$dev")
+    if [[ -n $ip ]]; then
+        # echo "$dev $ip"
+        break
+    fi
+done
+
+# -x suppresses the banner
+if $(which macs &>/dev/null); then
+    tabs 24
+    sudo arp-scan -x -r 2 -I "$dev" --localnet $@ | mac_filter
+else
+    sudo arp-scan -x -r 2 -I "$dev" --localnet $@
+fi
+
