@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/menu@cinnamon.org/0.json"
+	dict = json.load(open(file))
+	dict['menu-custom']['value'] = True
+	dict['menu-icon']['value'] = 'nix'
+	json.dump(dict, open(file, 'w'))
+EOF
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/calendar@cinnamon.org/13.json"
+	dict = json.load(open(file))
+	dict['use-custom-format']['value'] = True
+	dict['custom-format']['value'] = '%a, %b %e, %-I:%M %p'
+	json.dump(dict, open(file, 'w'))
+EOF
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/panel-launchers@cinnamon.org/15.json"
+	dict = json.load(open(file))
+	dict['launcherList']['value'] = [
+		"nemo.desktop",
+		"google-chrome.desktop",
+		"org.gnome.Terminal.desktop",
+		"obsidian.desktop",
+		"cinnamon-settings.desktop"
+	]
+	json.dump(dict, open(file, 'w'))
+EOF
