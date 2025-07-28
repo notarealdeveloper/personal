@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+if [[ $USER != jason ]]; then
+    echo "ERROR: $(basename $0) is not useful for you, $USER"
+    exit 1
+fi
+
+# FOR STUFF ENVIRONMENT VARIABLE
+source ~/.bashrc
+
+usage () {
+    # We can optionally pass in an explanation of what went wrong.
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [$(syncall --list-hosts | sed 's@ @|@g')]
+EOF
+    exit 1
+}
+
+myhosts=(jaynes butter crypt simpledrive mistress master wifey)
+target='butter' # default target if we just run 'syncall' with no arguments.
+
+target_in_myhosts() {
+    for host in ${myhosts[@]}; do
+        if [[ $host == "$1" ]]; then
+            return 0 # 0 us truthy! welcome to unix ;)
+        fi
+    done
+    return 1
+}
+
+RSYNC_OPTS=()
+while [[ -n "$1" ]]; do
+    case "$1" in
+        --list-hosts)   echo ${myhosts[@]} && exit 0;;
+        -h|--help)      usage;;
+        -n|--dry-run)   RSYNC_OPTS+=("$1");;
+        -*)             die "Unrecognized option: ${1}";;
+        *)              if target_in_myhosts "$1"; then target="$1"; else die "What?"; fi;;
+    esac
+    shift
+done
+
+CMD=(rsync -av --delete -P) # -P is equivalent to --partial --progress
+
+for rsync_opt in ${RSYNC_OPTS[@]}; do
+    CMD+=("$rsync_opt")
+done
+
+# If syncing to a remote host, assume the local paths and the remote paths
+# are the same. Otherwise we would just be using rsync directly.
+if   [[ "$target" =~ "jaynes" ]]; then
+
+    # Directories to sync
+    SYNCDIRS=(
+        "${STUFF}/"
+    )
+
+    REMOTEHOST="jason@jaynes"
+    PORT=22
+
+    # NOTE: Surrounding the array variable with quotes as in "${CMD[@]}" 
+    # and executing it as a command *does* actually work,
+    # even with arguments that are quoted strings containing spaces.
+    # This is a subtlety of bash I didn't quite understand until now.
+    # This can definitely be used to simplify some of my bash scripts.
+    for syncdir in ${SYNCDIRS[@]}; do
+        # "${CMD[@]}" "${RSYNC_OPTS[@]}" "${syncdir}" "${REMOTEHOST}:${syncdir}"
+        log "Syncing: ${syncdir}"
+        "${CMD[@]}" "${syncdir}" "${REMOTEHOST}:${syncdir}"
+    done
+
+    # Let the user know we're done
+    MESSAGE="Done rsyncing everything!"
+
+    # Alert them, and try to be fun
+    if [ $(which xcowsay 2>/dev/null) ]; then
+        xcowsay "$MESSAGE"
+    else
+        log "$MESSAGE"
+    fi
+
+    exit 0
+
+elif [[ "$target" =~ "butter" || "$target" =~ "crypt" || "$target" =~ simpledrive ]]; then
+
+    cap_name="$(python3 -c "print('$target'.capitalize())")"
+
+    # Being overly paranoid here. Still, I'm allowed to be. Backups are important.
+    [[ ! -d "/run/media/jason/${cap_name}/" ]]           && die "${cap_name} doesn't seem to be mounted. Dying for safety."
+    [[ ! -d "/run/media/jason/${cap_name}/stuff/" ]]     && die "${cap_name} doesn't seem to have stuff. Dying for safety."
+    [[ ! -d "/run/media/jason/${cap_name}/stuff/ih/" ]]  && die "${cap_name} doesn't seem to have stuff/ih. Dying for safety."
+    [[ ! -d "/run/media/jason/${cap_name}/eu/" ]]        && die "${cap_name} doesn't seem to have eu. Dying for super-safety."
+    [[ ! -d "${STUFF}/" ]]                          && die "Desktop doesn't seem to have stuff. Dying for safety."
+    [[ ! -d "${STUFF}/ih/" ]]                       && die "Desktop doesn't seem to have stuff/ih. Dying for safety."
+    [[ ! -d "${STUFF}/documents" ]]                 && die "Desktop doesn't seem to have stuff/documents. Dying for safety."
+    [[ ! -d "${STUFF}/pictures/miscellaneous" ]]    && die "Desktop doesn't seem to have stuff/pictures/miscellaneous. Dying for safety."
+
+    "${CMD[@]}" "${STUFF}/" "/run/media/jason/${cap_name}/stuff/"
+
+    exit 0
+
+elif [[ "$target" =~ "mistress" || "$target" =~ "master" || "$target" =~ "wifey" ]]; then
+
+    if [[ $(hostname) == turing ]]; then
+
+        cap_name="$(python3 -c "print('$target'.capitalize())")"
+
+        # Being overly paranoid here. Still, I'm allowed to be. Backups are important.
+        [[ ! -d "/run/media/jason/${cap_name}/butter-clone/" ]]          && die "${cap_name} doesn't seem to be mounted. Dying for safety."
+        [[ ! -d "${STUFF}/" ]]                                           && die "Desktop doesn't seem to have stuff. Dying for safety."
+        [[ ! -d "${STUFF}/obsidian" ]]                                   && die "Desktop doesn't seem to have stuff/obsidian. Dying for safety."
+        [[ ! -d "${STUFF}/private" ]]                                    && die "Desktop doesn't seem to have stuff/private. Dying for safety."
+
+        "${CMD[@]}" "${STUFF}/" "/run/media/jason/${cap_name}/butter-clone/stuff/"
+
+        exit 0
+
+    else
+
+        cap_name="$(python3 -c "print('$target'.capitalize())")"
+
+        # Being overly paranoid here. Still, I'm allowed to be. Backups are important.
+        [[ ! -d "/run/media/jason/${cap_name}/butter-clone/" ]]          && die "${cap_name} doesn't seem to be mounted. Dying for safety."
+        [[ ! -d "/run/media/jason/${cap_name}/butter-clone/stuff/" ]]    && die "${cap_name} doesn't seem to have stuff. Dying for safety."
+        [[ ! -d "/run/media/jason/${cap_name}/butter-clone/stuff/ih/" ]] && die "${cap_name} doesn't seem to have stuff/ih. Dying for safety."
+        [[ ! -d "/run/media/jason/${cap_name}/butter-clone/eu/" ]]       && die "${cap_name} doesn't seem to have eu. Dying for super-safety."
+        [[ ! -d "${STUFF}/" ]]                                           && die "Desktop doesn't seem to have stuff. Dying for safety."
+        [[ ! -d "${STUFF}/ih/" ]]                                        && die "Desktop doesn't seem to have stuff/ih. Dying for safety."
+        [[ ! -d "${STUFF}/documents" ]]                                  && die "Desktop doesn't seem to have stuff/documents. Dying for safety."
+        [[ ! -d "${STUFF}/pictures/miscellaneous" ]]                     && die "Desktop doesn't seem to have stuff/pictures/miscellaneous. Dying for safety."
+
+        "${CMD[@]}" "${STUFF}/" "/run/media/jason/${cap_name}/butter-clone/stuff/"
+
+        exit 0
+
+    fi
+
+else
+
+    die "Unknown target: ${target}. Dying."
+
+fi
+
