@@ -33,6 +33,10 @@ dirs+=(
     [personal/lib]="${PERSONAL}/lib"
     [personal/etc]="${PERSONAL}/etc"
 
+    # home
+    [src]="$HOME/src"
+    [desktop]="${DESKTOP}"
+
     # stuff
     [stuff]="${STUFF}"
     [prefixes]="${PREFIXES}"
