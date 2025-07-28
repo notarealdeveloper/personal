@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+
+# moral of the story
+# ==================
+#
+# from a feature branch, use:
+# git rebase master
+#
+# from master (or any destination branch), use:
+# git merge feature
+#
+# they result in the same code on disk,
+# but they don't result in the same list of commits or the same history.
+# 
+# if you make sure to rebase from feature to keep up to date with master,
+# then master will see your changes as a unified block when it's time to
+# merge your branch into theirs.
+#
+# if you merge from feature to keep up to date with master,
+# then master's history will be a disorganized mess of what *happened* when,
+# rather than a coherent story of what was *merged* when.
+
+if [[ -z "$1" ]]; then
+    echo "usage: $(basename $0) [merge|rebase|nothing]"
+    exit 1
+fi
+
+command="$1"
+
+repo_name="example-repo-${command}"
+
+export GIT_EDITOR=true # helps with automated git stuff
+
+mkdir "$repo_name"
+pushd "$repo_name" &>/dev/null
+git init
+
+echo "Master branch creates file a" > file_a
+git add .
+git commit -m "Master branch created file a."
+
+echo "Master branch creates file b" > file_b
+git add .
+git commit -m "Master branch created file b."
+
+# now on feature breanch
+git checkout -b feature
+
+echo "Feature branch changes file a" >> file_a
+git add .
+git commit -m "Feature branch changed file a."
+
+# now on master branch
+git checkout master
+
+echo "Master branch changes file a" >> file_a
+git add .
+git commit -m "Master branch changed file a."
+
+echo "Master branch changes file b" >> file_b
+git add .
+git commit -m "Master branch changed file b."
+
+echo "Master branch creates file c" >> file_c
+git add .
+git commit -m "Master branch created file c."
+
+# now on feature breanch
+git checkout feature
+
+# the guy who's working on feature now either does:
+# (a) git merge master
+# (b) git rebase master
+# (c) nothing
+
+if [[ "$command" != 'nothing' ]]; then
+
+    git "$command" master
+
+    # if he merges or rebases, in both cases, he gets a merge conflict,
+    # which he can then fix by updating *his* changes to be consistent
+    # with the latest changes from master.
+
+    # fix the merge conflict
+    sed -Ei '/^[<=>]{7,}/d' file_a
+
+    git add . # add the changes
+    git commit
+
+    if [[ "$command" == rebase ]]; then
+        git "$command" --continue
+    fi
+
+fi
+
+# finish the feature, and add another file for good measure
+echo "Feature branch finishes feature in file a" >> file_a
+git add .
+git commit -m "Feature branch finished feature in file a."
+
+# master branch changes file c, cuz life is asynchronous
+git checkout master
+echo "Master branch changes file c" >> file_c
+git add .
+git commit -m "Master branch changed file c."
+
+# back to feature branch
+git checkout feature
+echo "Feature branch adds file d" >> file_d
+git add .
+git commit -m "Feature branch adds file d."
+
+# now we submit a pull request, and someone on master has to merge our stuff
+
+# first check to make sure no one else changed anything in master (they didn't)
+if [[ "$command" != 'nothing' ]]; then
+    git "$command" master
+fi
+
+# then submit the pull request.
+
+# someone else gets the pull request, and that person (on master) has to merge our stuff
+
+# go back to master, so we can become that person
+git checkout master
+
+# merge the feature branch
+git merge feature
+
+if [[ "$command" == 'nothing' ]]; then
+    # if your friend the programmer wasn't syncing with master while writing the feature,
+    # we have to fix the merge conflict during the pull request, which is a pain,
+    # cuz you likely don't know the code as well as the person who wrote it.
+    sed -Ei '/^[<=>]{7,}/d' file_a
+    git add .
+    git commit
+fi
+
+# in either case other than rebase,
+# the history is now interleaved insanity
+
+git log > "$HOME/Desktop/history-if-we-${command}d-in-the-feature-branch"
+echo "==========================================="
+echo "Here's the git log if we sync with '$command'"
+echo "==========================================="
+git log | cat
+echo "==========================================="
+
+# leave the repo
+git status
+echo "==========================================="
+
+popd &>/dev/null
+rm -rf "$repo_name"
