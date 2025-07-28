@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# from `doc/make/index.md` in the lean source tree
+
+# build lean from source
+git clone https://github.com/leanprover/lean4
+cd lean4
+cmake --preset release
+make -C build/release -j$(nproc)
+
+# set up a dev environment for modifying your local lean
+
+## Get a version of elan that doesn't have a default version of lean installed
+curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none
+
+## The `lean-toolchain` files in the Lean 4 repository are set up to use the `lean4-stage0`
+## toolchain for editing files in `src` and the `lean4` toolchain for editing files in `tests`.
+## Run the following commands to make `lean4` point at `stage1` and `lean4-stage0` point at `stage0`:
+## From the Lean rootdir
+elan toolchain link lean4 build/release/stage1
+elan toolchain link lean4-stage0 build/release/stage0
