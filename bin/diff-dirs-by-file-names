@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# Terminal color codes.
+bla='\033[01;30m' red='\033[01;31m' gre='\033[01;32m'
+yel='\033[01;33m' blu='\033[01;34m' pur='\033[01;35m'
+cya='\033[01;36m' gra='\033[01;37m' whi='\033[01;39m'
+end='\033[00m'
+
+log() {
+    printf "${blu}[${whi}*${blu}]${whi} ${1}${end}\n"
+}
+
+log2() {
+    printf "  ${yel}->${whi} ${1}${end}\n"
+}
+
+die() {
+    printf "${red}ERROR${whi}: ${1}${end}\n"
+    exit 1
+}
+
+usage() {
+    # We can optionally pass in an explanation of what went wrong.
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) <dir-1> <dir-2>
+
+SYNOPSIS
+    Generates a diff of the pathnames in <dir-1> and <dir-2>,
+    after removing the prefixes <dir-1> and <dir-2> from the
+    absolute pathnames in each directory.
+
+    Tl;dr: Generates a diff of two directories at the filename level.
+EOF
+    exit 1
+}
+
+[[ -z "$1" ]] && usage
+
+if [[ ! -d "$1" ]]; then
+    die "not a directory: ${1}"
+fi
+
+if [[ ! -d "$2" ]]; then
+    die "not a directory: ${2}"
+fi
+
+dir_1="$1"
+dir_2="$2"
+
+if [[ "$dir_1" =~ .*[^/]$ ]]; then
+    dir_1="${dir_1}/"
+fi
+
+if [[ "$dir_2" =~ .*[^/]$ ]]; then
+    dir_2="${dir_2}/"
+fi
+
+log "Directory 1 is: ${dir_1}"
+log "Directory 2 is: ${dir_2}"
+log2 "Generating diff of pathnames in these directories, with leading dirnames removed."
+
+output="$(
+    diff -U 0 \
+    <(find "${dir_1}" | sort | uniq | sed "s@^${dir_1}@@") \
+    <(find "${dir_2}" | sort | uniq | sed "s@^${dir_2}@@")
+)"
+
+# replace the /dev/fd{n} filenames with the real dirnames.
+echo "${output}" \
+    | sed -r \
+        -e "s@^([-]{3}) ([^ ]*) (.*)@\1 ${dir_1} \3@" \
+        -e "s@^([+]{3}) ([^ ]*) (.*)@\1 ${dir_2} \3@"
