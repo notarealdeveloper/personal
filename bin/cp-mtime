@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]] || [[ -z "$2" ]]; then
+    echo "Copies the last modified time from srcfile to dstfile."
+    echo "usage: $(basename $0) <srcfile> <dstfile>"
+    exit 1
+fi
+
+touch -d $(ls -ltr --time-style=full-iso "$1" | cut -f 6,7 -d' ' | sed 's/ /T/') "$2"
