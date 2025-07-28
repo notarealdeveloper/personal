@@ -1,0 +1,165 @@
+#!/usr/bin/python3
+
+import os
+import re
+import sys
+import glob
+import shutil
+import textwrap
+import argparse
+from collections import defaultdict
+
+try:
+    from colorama import Fore, Style
+    ON = Style.BRIGHT
+    R = Fore.LIGHTRED_EX
+    W = Fore.LIGHTWHITE_EX
+    B = Fore.LIGHTBLUE_EX
+    G = Fore.LIGHTGREEN_EX
+    Y = Fore.LIGHTYELLOW_EX
+    OFF = Style.RESET_ALL + Fore.RESET
+except:
+    ON = ''
+    R = ''
+    W = ''
+    B = ''
+    G = ''
+    Y = ''
+    OFF = ''
+
+def parse_command_line(args):
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-s",
+        "--src-to-dst",
+        action = 'append',
+        default = [],
+        metavar = ('src', 'dst'),
+        nargs = 2,
+        help = "Specify an expression as two space-separated args passed to re.sub."
+    )
+
+    parser.add_argument(
+        "-e",
+        "--expression",
+        action = 'append',
+        default = [],
+        type = str,
+        metavar = 'sed-pattern',
+        nargs = 1,
+        help = "Specify an expression, as in sed (allow multiple times)."
+    )
+
+    parser.add_argument(
+        "-i",
+        "--in-place",
+        action = 'store_true',
+        help = "Actually make changes.",
+    )
+
+    parser.add_argument(
+        "filenames",
+        nargs = '+',
+        help = "Positional Arguments.",
+    )
+
+    config = parser.parse_args(args)
+    return config
+
+
+def sed_to_re_sub_args(sed_pattern):
+
+    if len(sed_pattern) == 1 and isinstance(sed_pattern, (list, tuple, set)):
+        sed_pattern = sed_pattern[0]
+
+    if not sed_pattern.startswith('s'):
+        raise ValueError(f"Only sed patterns starting with 's' are supported.")
+    separator = sed_pattern[1]
+    if sed_pattern.count(separator) != 3:
+        raise TypeError(f"Invalid sed pattern: '{sed_pattern}'")
+    s, src, dst, opts = re.split(separator, sed_pattern)
+    if not (opt_set := set(opts)) <= {'i', 'g'}:
+        # 'g' does nothing. it's just there in case we pass it from force of habit.
+        raise TypeError(f"Invalid sed options '{opts}' in pattern '{sed_pattern}'")
+
+    options = []
+    if 'i' in opt_set:
+        options.append(re.I)
+
+    return (src, dst, options)
+
+
+def log(mode, src, dst):
+    if mode == 'RENAME':
+        mode_color = R
+    elif mode == 'DRY RUN':
+        mode_color = W
+    else:
+        raise ValueError(f"Unrecognized mode: '{mode}'")
+    MC = mode_color
+    quote_color = QC = W
+    src_color = SC = B
+    dst_color = DC = B
+    arrow_color = AC = Y
+    print(f"{ON}{MC}[{mode}] {QC}'{SC}{src}{QC}' {AC}-> {QC}'{DC}{dst}{QC}'{OFF}")
+
+
+def check_for_collisions(replacements):
+    inverse_map = defaultdict(list)
+    for old, new in replacements:
+        inverse_map[new].append(old)
+    for new, old in inverse_map.items():
+        if len(old) > 1:
+            olds = '\n'.join(f'    * {o}' for o in old)
+            message = textwrap.dedent(f"""\
+            name collision: the following filenames would all be renamed to '{new}':
+            """).strip() + '\n' + olds
+            raise Exception(message)
+
+def main():
+
+    config = parse_command_line(sys.argv[1:])
+
+    todo = []
+    todo += [(src, dst, []) for src, dst in config.src_to_dst]
+    todo += [sed_to_re_sub_args(sed_pattern) for sed_pattern in config.expression]
+
+    replacements = []
+
+    for path in config.filenames:
+        old_path = path
+        new_path = path
+        for src, dst, opts in todo:
+
+            if src == '.':
+                raise ValueError(f"Source regex cannot simply be '.' Did you mean '[.]'?")
+            if src == '':
+                raise ValueError(f"Source regex cannot be the empty string.")
+
+            new_path = re.sub(src, dst, new_path, count=1, *opts)
+
+            if new_path == '':
+                raise ValueError(f"Destination filename cannot be the empty string.")
+
+        replacements.append((old_path, new_path))
+
+    replacements = sorted(set(replacements))
+
+    # okay, now we've got the desired replacements.
+    # check them for collisions before doing any of them.
+    check_for_collisions(replacements)
+
+    # remove unchanged files
+    replacements = [(old, new) for old, new in replacements if old != new]
+
+    for old_path, new_path in replacements:
+        if config.in_place:
+            log(f"RENAME", old_path, new_path)
+            shutil.move(old_path, new_path)
+        else:
+            log(f"DRY RUN", old_path, new_path)
+
+if __name__ == "__main__":
+    main()
