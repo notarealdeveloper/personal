@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+pattern="$1"
+shift
+args=("$@")
+
+git log -G "${pattern}" --source --all "${args[@]}"
+
