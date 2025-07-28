@@ -2,230 +2,230 @@
 
 set -euo pipefail
 
-dconf_nemo() {
-	cat <<- EOF
-		[list-view]
-		default-zoom-level='small'
+dconf load / <<- EOF
+	[org/gnome/desktop/interface]
+	gtk-theme='Numix'
+	icon-theme='Numix-Circle'
 
-		[preferences]
-		default-folder-viewer='list-view'
-		executable-text-activation='display'
-		show-full-path-titles=true
-		show-home-icon-toolbar=true
-		show-new-folder-icon-toolbar=true
-		show-open-in-terminal-toolbar=true
-		show-reload-icon-toolbar=true
-		show-show-thumbnails-toolbar=true
-		show-thumbnails-toolbar=true
+	[org/gnome/gedit/preferences/editor]
+	insert-spaces=true
+	style-scheme-for-light-theme-variant='classic'
+	tabs-size=uint32 4
+	use-default-font=false
+	wrap-last-split-mode='word'
 
-		[window-state]
-		maximized=true
-		sidebar-bookmark-breakpoint=0
-		start-with-sidebar=true
-	EOF
-}
+	[org/cinnamon]
+	enabled-applets=['panel1:left:0:menu@cinnamon.org:0', 'panel1:left:1:separator@cinnamon.org:1', 'panel1:right:2:systray@cinnamon.org:3', 'panel1:right:3:xapp-status@cinnamon.org:4', 'panel1:right:4:notifications@cinnamon.org:5', 'panel1:right:5:printers@cinnamon.org:6', 'panel1:right:6:removable-drives@cinnamon.org:7', 'panel1:right:7:keyboard@cinnamon.org:8', 'panel1:right:8:favorites@cinnamon.org:9', 'panel1:right:9:network@cinnamon.org:10', 'panel1:right:10:sound@cinnamon.org:11', 'panel1:right:11:power@cinnamon.org:12', 'panel1:right:12:calendar@cinnamon.org:13', 'panel1:right:13:cornerbar@cinnamon.org:14', 'panel1:left:2:panel-launchers@cinnamon.org:15', 'panel1:left:3:window-list@cinnamon.org:16', 'panel1:right:0:panel-launchers@cinnamon.org:17']
+	next-applet-id=18
 
-dconf_gedit() {
-    cat <<- EOF
-		[editor]
-		insert-spaces=true
-		style-scheme-for-light-theme-variant='classic'
-		tabs-size=uint32 4
-		use-default-font=false
-		wrap-last-split-mode='word'
-	EOF
-}
+	[org/cinnamon/desktop/interface]
+	gtk-theme='Numix'
+	icon-theme='Numix-Circle'
 
-dconf_cinnamon() {
-
-    cat <<- EOF
-		[org/cinnamon]
-		theme-name='Numix'
-		icon-theme='Numix‑Circle'
-	EOF
-}
-
-dconf_cinnamon_keybindings () {
-    cat <<- EOF
-		[/]
-		custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28']
-
-		[custom-keybindings/custom0]
-		binding=['<Primary><Alt>b']
-		command='terminal'
-		name='terminal'
-
-		[custom-keybindings/custom1]
-		binding=['<Alt>Delete']
-		command='trash'
-		name='trash'
-
-		[custom-keybindings/custom10]
-		binding=['<Super>c']
-		command='im --chinese'
-		name='im-chinese'
-
-		[custom-keybindings/custom11]
-		binding=['<Super>e']
-		command='im --english'
-		name='im-english'
-
-		[custom-keybindings/custom12]
-		binding=['<Super>j']
-		command='im --japanese'
-		name='im-japanese'
-
-		[custom-keybindings/custom13]
-		binding=['<Super>k']
-		command='im --korean'
-		name='im-korean'
-
-		[custom-keybindings/custom14]
-		binding=['<Shift><Alt>o']
-		command='o obsidian'
-		name='o-obsidian'
-
-		[custom-keybindings/custom16]
-		binding=['<Primary><Shift><Alt>s']
-		command='o scratch'
-		name='o-scratch'
-
-		[custom-keybindings/custom17]
-		binding=['<Super>s']
-		command='im s'
-		name='im-settings'
-
-		[custom-keybindings/custom18]
-		binding=['<Super>h']
-		command='im --hebrew'
-		name='im-hebrew'
-
-		[custom-keybindings/custom19]
-		binding=['<Super>t']
-		command='im --telugu'
-		name='im-telugu'
-
-		[custom-keybindings/custom2]
-		binding=['<Shift><Alt>b']
-		command='focusterm'
-		name='focusterm'
-
-		[custom-keybindings/custom20]
-		binding=['<Super>d']
-		command='im --devangari'
-		name='im-devangari'
-
-		[custom-keybindings/custom21]
-		binding=['<Super>a']
-		command='im --arabic'
-		name='im-arabic'
-
-		[custom-keybindings/custom22]
-		binding=['<Super>i']
-		command='im i'
-		name='im-on'
-
-		[custom-keybindings/custom23]
-		binding=['<Super>o']
-		command='im o'
-		name='im-off'
-
-		[custom-keybindings/custom24]
-		binding=['<Super>g']
-		command='im --greek'
-		name='im-greek'
-
-		[custom-keybindings/custom25]
-		binding=['<Super>r']
-		command='im --russian'
-		name='im-russian'
-
-		[custom-keybindings/custom26]
-		binding=['<Primary><Shift><Alt>a']
-		command='my address'
-		name='my-address'
-
-		[custom-keybindings/custom27]
-		binding=['<Primary><Alt>p']
-		command='browser neverssl.com'
-		name='browser-neverssl'
-
-		[custom-keybindings/custom28]
-		binding=['<Primary><Shift><Alt>p']
-		command='my shebang-python'
-		name='my-shebang-python'
-
-		[custom-keybindings/custom3]
-		binding=['<Shift><Alt>e']
-		command='fm'
-		name='fm'
-
-		[custom-keybindings/custom4]
-		binding=['<Shift><Alt>d']
-		command='get-date --short'
-		name='get-date-short'
-
-		[custom-keybindings/custom5]
-		binding=['<Primary><Shift>d']
-		command='get-date --long'
-		name='get-date-long'
-
-		[custom-keybindings/custom6]
-		binding=['<Primary><Shift><Alt>d']
-		command='my debug'
-		name='my-debug'
-
-		[custom-keybindings/custom7]
-		binding=['<Primary><Alt>r']
-		command='reconky'
-		name='reconky'
-
-		[custom-keybindings/custom8]
-		binding=['<Primary><Alt>q']
-		command='recinnamon'
-		name='recinnamon'
-
-		[custom-keybindings/custom9]
-		binding=['<Primary><Alt>w']
-		command='renemo'
-		name='renemo'
-	EOF
-}
-
-dconf_load_nemo() {
-	dconf load /org/nemo/ < <(dconf_nemo)
-}
-
-dconf_load_gedit() {
-	dconf load /org/gnome/gedit/preferences/ < <(dconf_gedit)
-}
-
-dconf_load_cinnamon() {
-
-	dconf load /org/cinnamon/ < <(dconf_cinnamon)
-}
-
-dconf_load_cinnamon_keybindings() {
-
-	dconf load /org/cinnamon/desktop/keybindings/ < <(dconf_cinnamon_keybindings)
-}
-
-dconf_load_all() {
-    dconf_load_nemo
-    dconf_load_gedit
-	dconf_load_cinnamon
-    dconf_load_cinnamon_keybindings
-}
-
-dconf_show_all() {
-    dconf_load_nemo
-    dconf_load_gedit
-	dconf_load_cinnamon
-    dconf_load_cinnamon_keybindings
-}
+	[org/cinnamon/settings-daemon/plugins/xsettings]
+	buttons-have-icons=true
+EOF
 
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    dconf_load_all
-fi
+dconf load /org/nemo/ <<- EOF
+	[list-view]
+	default-zoom-level='small'
 
+	[preferences]
+	default-folder-viewer='list-view'
+	executable-text-activation='display'
+	show-full-path-titles=true
+	show-home-icon-toolbar=true
+	show-new-folder-icon-toolbar=true
+	show-open-in-terminal-toolbar=true
+	show-reload-icon-toolbar=true
+	show-show-thumbnails-toolbar=true
+	show-thumbnails-toolbar=true
+
+	[window-state]
+	maximized=true
+	sidebar-bookmark-breakpoint=0
+	start-with-sidebar=true
+EOF
+
+
+dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
+	[/]
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28']
+
+	[custom-keybindings/custom0]
+	binding=['<Primary><Alt>b']
+	command='terminal'
+	name='terminal'
+
+	[custom-keybindings/custom1]
+	binding=['<Alt>Delete']
+	command='trash'
+	name='trash'
+
+	[custom-keybindings/custom10]
+	binding=['<Super>c']
+	command='im --chinese'
+	name='im-chinese'
+
+	[custom-keybindings/custom11]
+	binding=['<Super>e']
+	command='im --english'
+	name='im-english'
+
+	[custom-keybindings/custom12]
+	binding=['<Super>j']
+	command='im --japanese'
+	name='im-japanese'
+
+	[custom-keybindings/custom13]
+	binding=['<Super>k']
+	command='im --korean'
+	name='im-korean'
+
+	[custom-keybindings/custom14]
+	binding=['<Shift><Alt>o']
+	command='o obsidian'
+	name='o-obsidian'
+
+	[custom-keybindings/custom16]
+	binding=['<Primary><Shift><Alt>s']
+	command='o scratch'
+	name='o-scratch'
+
+	[custom-keybindings/custom17]
+	binding=['<Super>s']
+	command='im s'
+	name='im-settings'
+
+	[custom-keybindings/custom18]
+	binding=['<Super>h']
+	command='im --hebrew'
+	name='im-hebrew'
+
+	[custom-keybindings/custom19]
+	binding=['<Super>t']
+	command='im --telugu'
+	name='im-telugu'
+
+	[custom-keybindings/custom2]
+	binding=['<Shift><Alt>b']
+	command='focusterm'
+	name='focusterm'
+
+	[custom-keybindings/custom20]
+	binding=['<Super>d']
+	command='im --devangari'
+	name='im-devangari'
+
+	[custom-keybindings/custom21]
+	binding=['<Super>a']
+	command='im --arabic'
+	name='im-arabic'
+
+	[custom-keybindings/custom22]
+	binding=['<Super>i']
+	command='im i'
+	name='im-on'
+
+	[custom-keybindings/custom23]
+	binding=['<Super>o']
+	command='im o'
+	name='im-off'
+
+	[custom-keybindings/custom24]
+	binding=['<Super>g']
+	command='im --greek'
+	name='im-greek'
+
+	[custom-keybindings/custom25]
+	binding=['<Super>r']
+	command='im --russian'
+	name='im-russian'
+
+	[custom-keybindings/custom26]
+	binding=['<Primary><Shift><Alt>a']
+	command='my address'
+	name='my-address'
+
+	[custom-keybindings/custom27]
+	binding=['<Primary><Alt>p']
+	command='browser neverssl.com'
+	name='browser-neverssl'
+
+	[custom-keybindings/custom28]
+	binding=['<Primary><Shift><Alt>p']
+	command='my shebang-python'
+	name='my-shebang-python'
+
+	[custom-keybindings/custom3]
+	binding=['<Shift><Alt>e']
+	command='fm'
+	name='fm'
+
+	[custom-keybindings/custom4]
+	binding=['<Shift><Alt>d']
+	command='get-date --short'
+	name='get-date-short'
+
+	[custom-keybindings/custom5]
+	binding=['<Primary><Shift>d']
+	command='get-date --long'
+	name='get-date-long'
+
+	[custom-keybindings/custom6]
+	binding=['<Primary><Shift><Alt>d']
+	command='my debug'
+	name='my-debug'
+
+	[custom-keybindings/custom7]
+	binding=['<Primary><Alt>r']
+	command='reconky'
+	name='re conky'
+
+	[custom-keybindings/custom8]
+	binding=['<Primary><Alt>q']
+	command='recinnamon'
+	name='re cinnamon'
+
+	[custom-keybindings/custom9]
+	binding=['<Primary><Alt>w']
+	command='renemo'
+	name='re nemo'
+EOF
+
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/menu@cinnamon.org/0.json"
+	dict = json.load(open(file))
+	dict['menu-custom']['value'] = True
+	dict['menu-icon']['value'] = 'nix'
+	json.dump(dict, open(file, 'w'))
+EOF
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/calendar@cinnamon.org/13.json"
+	dict = json.load(open(file))
+	dict['use-custom-format']['value'] = True
+	dict['custom-format']['value'] = '%a, %b %e, %-I:%M %p'
+	json.dump(dict, open(file, 'w'))
+EOF
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/panel-launchers@cinnamon.org/15.json"
+	dict = json.load(open(file))
+	dict['launcherList']['value'] = [
+		"nemo.desktop",
+		"google-chrome.desktop",
+		"org.gnome.Terminal.desktop",
+		"obsidian.desktop",
+		"cinnamon-settings.desktop"
+	]
+	json.dump(dict, open(file, 'w'))
+EOF
