@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+CMD=(git --no-pager log --oneline --graph --decorate --max-count=35 --abbrev-commit --all --date=relative)
+
+while true; do
+    clear
+    ${CMD[@]} $*
+    sleep 1
+done
