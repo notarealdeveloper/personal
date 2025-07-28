@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+unset HEX
+
+args=()
+while [[ -n $1 ]]; do
+    case $1 in
+        -x|--hex)   HEX=true;;
+        *)          args+=($1);;
+    esac
+    shift
+done
+
+if [[ ${#args[@]} == 0 ]]; then
+    args=(/dev/stdin)
+fi
+
+for arg in ${args[@]}; do
+    if [[ -n $HEX ]]; then
+        cat "$arg" | zlib-flate -uncompress | hexdump -Cv
+    else
+        cat "$arg" | zlib-flate -uncompress
+    fi
+done
