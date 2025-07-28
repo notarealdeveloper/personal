@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "«Je suis Francais haw haw haw»" | tee >(xc)
