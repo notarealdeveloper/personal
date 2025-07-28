@@ -22,6 +22,10 @@ export CODE="${STUFF}/code"
 export LEAN="${CODE}/lean"
 export GITHUB='https://github.com/notarealdeveloper'
 
+files+=(
+    [bashrc/personal]="${PERSONAL}/bashrc"
+)
+
 dirs+=(
 
     [personal]="${PERSONAL}"
