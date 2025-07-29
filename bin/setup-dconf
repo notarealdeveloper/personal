@@ -42,22 +42,19 @@ dconf load / <<- EOF
 	delay=uint32 500
 	repeat-interval=uint32 30
 
-    [org/cinnamon/sounds]
-    notification-enabled=false
-    plug-enabled=true
-    switch-enabled=false
-    tile-enabled=false
+	[org/cinnamon/sounds]
+	notification-enabled=false
+	plug-enabled=true
+	switch-enabled=false
+	tile-enabled=false
 
     [org/cinnamon/desktop/sound]
     allow-amplified-volume=true
-EOF
 
-
-dconf load /org/nemo/ <<- EOF
-	[list-view]
+	[org/nemo/list-view]
 	default-zoom-level='small'
 
-	[preferences]
+	[org/nemo/preferences]
 	default-folder-viewer='list-view'
 	executable-text-activation='display'
 	show-full-path-titles=true
@@ -67,11 +64,13 @@ dconf load /org/nemo/ <<- EOF
 	show-reload-icon-toolbar=true
 	show-show-thumbnails-toolbar=true
 	show-thumbnails-toolbar=true
+	show-directory-item-counts='always'
+	show-image-thumbnails='always'
 
-	[desktop]
+	[org/nemo/desktop]
 	volumes-visible=false
 
-	[window-state]
+	[org/nemo/window-state]
 	maximized=true
 	sidebar-bookmark-breakpoint=0
 	start-with-sidebar=true
