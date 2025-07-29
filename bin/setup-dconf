@@ -48,6 +48,8 @@ dconf load / <<- EOF
     switch-enabled=false
     tile-enabled=false
 
+    [org/cinnamon/desktop/sound]
+    allow-amplified-volume=true
 EOF
 
 
