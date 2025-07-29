@@ -60,6 +60,9 @@ dconf load /org/nemo/ <<- EOF
 	show-show-thumbnails-toolbar=true
 	show-thumbnails-toolbar=true
 
+	[desktop]
+	volumes-visible=false
+
 	[window-state]
 	maximized=true
 	sidebar-bookmark-breakpoint=0
