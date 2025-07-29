@@ -198,16 +198,16 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 
 	[custom-keybindings/custom7]
 	binding=['<Primary><Alt>r']
-	command='reconky'
-	name='re conky'
+	command='re conky'
+	name='reconky'
 
 	[custom-keybindings/custom8]
 	binding=['<Primary><Alt>q']
-	command='recinnamon'
-	name='re cinnamon'
+	command='re cinnamon'
+	name='recinnamon'
 
 	[custom-keybindings/custom9]
 	binding=['<Primary><Alt>w']
-	command='renemo'
-	name='re nemo'
+	command='re nemo'
+	name='renemo'
 EOF
