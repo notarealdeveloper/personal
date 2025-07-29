@@ -42,6 +42,12 @@ dconf load / <<- EOF
 	delay=uint32 500
 	repeat-interval=uint32 30
 
+    [org/cinnamon/sounds]
+    notification-enabled=false
+    plug-enabled=true
+    switch-enabled=false
+    tile-enabled=false
+
 EOF
 
 
