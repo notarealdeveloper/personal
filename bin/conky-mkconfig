@@ -269,7 +269,7 @@ ${color lightblue}BATTERY_STRING: ${color lightgreen}${battery_percent}% ${batte
 ${color}Memory (TOTAL_MEMORY): ${color lightgreen}${memperc}% ${membar BAR_H}
 ${color}CPU Count: ${color lightgreen}CPU_COUNT ${alignr}\
 ${color}${color lightblue}CPU Freq: ${color lightgreen}${freq_g} GHz${color lightblue}
-${color}ACPI Temp: ${color lightgreen}${acpitemp}°C ${alignr}\
+${color}ACPI Temp: ${color lightgreen}${acpitemp}°C ${alignr}
 #${color lightblue}Bitcoin: ${color lightgreen}$$${execi 600 getbtcprice}
 ${color}${color lightblue}${cpugraph cpu0 GRAPH_H,CPUGRAPH_W GRAPH_LIGHT_COLOR GRAPH_DARK_COLOR -t}
 ${if_existing PRIMARY_DRIVE_PATH}\
