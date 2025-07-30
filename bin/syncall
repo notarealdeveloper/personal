@@ -111,7 +111,7 @@ elif [[ "$target" =~ "mistress" || "$target" =~ "master" || "$target" =~ "wifey"
         [[ ! -d "/run/media/jason/${cap_name}/butter-clone/" ]]          && die "${cap_name} doesn't seem to be mounted. Dying for safety."
         [[ ! -d "${STUFF}/" ]]                                           && die "Desktop doesn't seem to have stuff. Dying for safety."
         [[ ! -d "${STUFF}/obsidian" ]]                                   && die "Desktop doesn't seem to have stuff/obsidian. Dying for safety."
-        [[ ! -d "${STUFF}/private" ]]                                    && die "Desktop doesn't seem to have stuff/private. Dying for safety."
+        [[ ! -d "${STUFF}/pictures/miscellaneous/" ]]                    && die "Desktop doesn't seem to have stuff/pictures/miscellaneous. Dying for safety."
 
         "${CMD[@]}" "${STUFF}/" "/run/media/jason/${cap_name}/butter-clone/stuff/"
 

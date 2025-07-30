@@ -59,7 +59,7 @@ dirs+=(
 
     # code/nix
     [nix]="${CODE}/nix"
-    [nixos]="/etc/nixos"
+    [nixos]="$(readlink -f /etc/nixos)"
     [hm]="$HOME/.config/home-manager"
     [home-manager]="$HOME/.config/home-manager"
 
