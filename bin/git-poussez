@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 # french "git push"
 # pronounced like "get poossay"
 
+echo "gitting poussez... ("
 git push $*
+echo "...) got poussez"
