@@ -66,6 +66,7 @@ dconf load / <<- EOF
 	show-thumbnails-toolbar=true
 	show-directory-item-counts='always'
 	show-image-thumbnails='always'
+    show-location-entry=true
 
 	[org/nemo/desktop]
 	volumes-visible=false
