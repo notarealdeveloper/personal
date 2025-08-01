@@ -31,6 +31,7 @@ dirs+=(
     [personal/bin]="${PERSONAL}/bin"
     [personal/lib]="${PERSONAL}/lib"
     [personal/etc]="${PERSONAL}/etc"
+    [legacy]="${HOME}/src/legacy"
 
     # home
     [src]="$HOME/src"
@@ -40,7 +41,6 @@ dirs+=(
     [stuff]="${STUFF}"
     [prefixes]="${PREFIXES}"
     [personal]="${PERSONAL}"
-    [legacy]="${PREFIXES}/legacy"
     [obsidian]="${OBSIDIAN}"
     [dropbox]="${DROPBOX}"
     [pkg]="${PKG}"
