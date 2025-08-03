@@ -106,7 +106,7 @@ fi
 ###############
 ### aliases ###
 ###############
-alias brcp="${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${PERSONAL}/etc/bashrc"
+alias brcp="${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${HOME}/.bashrc"
 
 # ranger
 alias r='ranger'
