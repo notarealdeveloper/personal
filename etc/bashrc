@@ -67,6 +67,8 @@ dirs+=(
     [documents]="${DOCUMENTS}"
     [me]="${DOCUMENTS}/me"
 
+    # ranger
+    [ranger]="$HOME/.config/ranger"
 )
 
 if [[ -d "$PKG" ]]; then
@@ -105,6 +107,11 @@ fi
 ### aliases ###
 ###############
 alias brcp="${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${PERSONAL}/etc/bashrc"
+
+# ranger
+alias r='ranger'
+alias rrc="$EDITOR ~/.config/ranger/rc.conf"
+
 
 ###################
 ### os specific ###
