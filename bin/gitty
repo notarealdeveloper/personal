@@ -47,6 +47,7 @@ linux-0.01      https://github.com/zavg/linux-0.01
 unix-history    https://github.com/dspinellis/unix-history-repo
 minix           https://github.com/Stichting-MINIX-Research-Foundation/minix
 linux           git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux
+git             https://github.com/git/git
 
 # python
 cpython         https://github.com/python/cpython
