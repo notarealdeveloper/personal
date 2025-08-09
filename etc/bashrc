@@ -103,9 +103,11 @@ add_to_path        "${PERSONAL}/bin/o"
 add_to_path        "${PERSONAL}/lib/bash"
 add_to_python_path "${PERSONAL}/lib/python"
 
-for completion in "${PERSONAL}/lib/bash/completions"/*.sh; do
-    source "$completion"
-done
+if [[ -n ${BASH_VERSION:-} && $- == *i* ]]; then
+    for completion in "${PERSONAL}/lib/bash/completions"/*.sh; do
+        source "$completion"
+    done
+fi
 
 ###################
 ### PS1 and PS2 ###
