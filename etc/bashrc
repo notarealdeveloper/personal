@@ -10,9 +10,10 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 ######################
 
 export DESKTOP="$HOME/Desktop"
+export SRC="${HOME}/src"
+
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
-
 export DROPBOX="${HOME}/Dropbox"
 export OBSIDIAN="${STUFF}/obsidian"
 export PKG="${STUFF}/pkg"
@@ -81,6 +82,17 @@ if [[ -d "$PKG" ]]; then
         dirs+=([$name]="$PKG/$name")
     done
 fi
+
+# todo: use shell var dereferencing to merge the
+# next few lines with the lines up above this
+if [[ -d "$SRC" ]]; then
+    for dir in "${SRC}/"*; do
+        [[ ! -d "$dir" ]] && continue
+        name="$(basename "$dir")"
+        dirs+=([$name]="$SRC/$name")
+    done
+fi
+
 
 ############
 ### PATH ###
