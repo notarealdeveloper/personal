@@ -40,7 +40,7 @@ EOF
 python <<- EOF
 	import os
 	import json
-    file = "$HOME/.config/cinnamon/spices/power@cinnamon.org/power@cinnamon.org.json"
+	file = "$HOME/.config/cinnamon/spices/power@cinnamon.org/power@cinnamon.org.json"
 	dict = json.load(open(file))
 	dict['labelinfo']['value'] = "percentage"
 	json.dump(dict, open(file, 'w'))
