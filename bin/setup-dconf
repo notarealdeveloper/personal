@@ -80,7 +80,7 @@ EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
-	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28']
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29']
 
 	[custom-keybindings/custom0]
 	binding=['<Primary><Alt>b']
@@ -116,6 +116,11 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	binding=['<Shift><Alt>o']
 	command='o obsidian'
 	name='o-obsidian'
+
+	[custom-keybindings/custom15]
+	binding=['<Primary><Alt>o']
+	command='obsidian'
+	name='obsidian'
 
 	[custom-keybindings/custom16]
 	binding=['<Primary><Shift><Alt>s']
@@ -187,6 +192,11 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	command='my shebang-python'
 	name='my-shebang-python'
 
+	[custom-keybindings/custom29]
+	binding=['<Primary><Alt>g']
+	command='browser'
+	name='browser'
+
 	[custom-keybindings/custom3]
 	binding=['<Shift><Alt>e']
 	command='fm'
@@ -221,4 +231,19 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	binding=['<Primary><Alt>w']
 	command='re nemo'
 	name='renemo'
+
+	[media-keys]
+	area-screenshot=['<Shift>F9']
+	area-screenshot-clip=['<Primary><Shift>F9']
+	screenshot=['F9']
+	screenshot-clip=['<Primary>F9']
+	window-screenshot=['<Alt>F9']
+	window-screenshot-clip=['<Primary>Alt_L']
+
+	[wm]
+	decrease-opacity=['<Primary><Alt>j']
+	increase-opacity=['<Primary><Alt>k']
+	minimize=['<Primary><Alt>space']
+	show-desktop=['<Super>d', '<Primary><Alt>d']
+	toggle-maximized=['<Alt>F10', '<Super>Return']
 EOF
