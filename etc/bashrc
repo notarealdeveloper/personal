@@ -62,7 +62,6 @@ dirs+=(
     [mathlib]="${LEAN}/mathlib4"
 
     # code/nix
-    [nix]="${CODE}/nix"
     [nixos]="$HOME/src/nixos"
     [hm]="$HOME/.config/home-manager"
     [home-manager]="$HOME/.config/home-manager"
