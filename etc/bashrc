@@ -11,6 +11,7 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 
 export DESKTOP="$HOME/Desktop"
 export SRC="${HOME}/src"
+export PKG="${HOME}/pkg"
 
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
@@ -35,7 +36,8 @@ dirs+=(
     [legacy]="${HOME}/src/legacy"
 
     # home
-    [src]="$HOME/src"
+    [src]="${SRC}"
+    [pkg]="${PKG}"
     [desktop]="${DESKTOP}"
 
     # stuff
@@ -44,7 +46,6 @@ dirs+=(
     [personal]="${PERSONAL}"
     [obsidian]="${OBSIDIAN}"
     [dropbox]="${DROPBOX}"
-    [pkg]="${PKG}"
     [ih]="${IH}"
 
     # obsidian
@@ -74,23 +75,15 @@ dirs+=(
     [ranger]="$HOME/.config/ranger"
 )
 
-if [[ -d "$PKG" ]]; then
-    for dir in "${PKG}/"*; do
-        [[ ! -d "$dir" ]] && continue
-        name="$(basename "$dir")"
-        dirs+=([$name]="$PKG/$name")
-    done
-fi
-
-# todo: use shell var dereferencing to merge the
-# next few lines with the lines up above this
-if [[ -d "$SRC" ]]; then
-    for dir in "${SRC}/"*; do
-        [[ ! -d "$dir" ]] && continue
-        name="$(basename "$dir")"
-        dirs+=([$name]="$SRC/$name")
-    done
-fi
+for dir in "$SRC" "$PKG"; do
+    if [[ -d "$dir" ]]; then
+        for sub in "${dir}/"*; do
+            [[ ! -d "$sub" ]] && continue
+            name="$(basename "$sub")"
+            dirs+=([$name]="$dir/$name")
+        done
+    fi
+done
 
 
 ############
