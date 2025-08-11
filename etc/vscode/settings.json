@@ -1,0 +1,24 @@
+{
+    "editor.hover.delay": 1000,
+    "editor.quickSuggestionsDelay": 100,
+    "editor.guides.highlightActiveBracketPair": false,
+    "editor.matchBrackets": "never",
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoSurround": "never",
+    "editor.fontFamily": "'FiraMono Nerd Font', 'monospace', monospace",
+    "editor.autoIndent": "keep", // preserve current indentation
+
+    "files.trimTrailingWhitespace": false,
+
+    "git.confirmSync": false,
+    "git.autofetch": true,
+
+    "python.defaultInterpreterPath": "/home/jason/env/main",
+
+    "lean4.alwaysAskBeforeInstallingLeanVersions": true,
+    "lean4.decorationEditDelay": 1000,
+    "haskell.manageHLS": "PATH",
+    "makefile.configureOnOpen": true,
+    "mesonbuild.downloadLanguageServer": true,
+}
