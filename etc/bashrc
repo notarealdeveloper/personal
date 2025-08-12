@@ -32,12 +32,12 @@ dirs+=(
     [personal/bin]="${PERSONAL}/bin"
     [personal/lib]="${PERSONAL}/lib"
     [personal/etc]="${PERSONAL}/etc"
-    [legacy]="${HOME}/src/legacy"
 
     # home
     [src]="${SRC}"
     [pkg]="${PKG}"
     [desktop]="${DESKTOP}"
+    [legacy]="${HOME}/src/legacy"
 
     # stuff
     [stuff]="${STUFF}"
@@ -73,16 +73,35 @@ dirs+=(
     [ranger]="$HOME/.config/ranger"
 )
 
-for dir in "$SRC" "$PKG"; do
+for key in src pkg; do
+    dir="${dirs["$key"]}"
     if [[ -d "$dir" ]]; then
         for sub in "${dir}/"*; do
             [[ ! -d "$sub" ]] && continue
             name="$(basename "$sub")"
+            root="$(basename "$dir")"
             dirs+=([$name]="$dir/$name")
         done
     fi
 done
 
+# EXPERIMENTAL!
+# We MAY want to automatically add slash keys for the top level of
+# everything in ${dirs[@]}, or maybe just a select set of them.
+# However! We would obviously like fully recursive TAB COMPLETION,
+# lazily, for things that aren't in the dir keys. The latter is the
+# ideal solution, but it's a bit more subtle than this.
+#for key in "${!dirs[@]}"; do
+#    dir="${dirs["$key"]}"
+#    if [[ -d "$dir" ]]; then
+#        for sub in "${dir}/"*; do
+#            [[ ! -d "$sub" ]] && continue
+#            name="$(basename "$sub")"
+#            root="$(basename "$dir")"
+#            dirs+=([$root/$name]="$dir/$name")
+#        done
+#    fi
+#done
 
 ############
 ### PATH ###
@@ -130,7 +149,6 @@ is_linux && {
 }
 
 is_mac && {
-
     export CLICOLOR=1
     export LSCOLORS=ExFxBxDxCxegedabagacad
     unalias ls

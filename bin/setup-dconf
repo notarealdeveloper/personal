@@ -80,7 +80,7 @@ EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
-	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29']
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30']
 
 	[custom-keybindings/custom0]
 	binding=['<Primary><Alt>b']
@@ -192,7 +192,12 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	command='my shebang-python'
 	name='my-shebang-python'
 
-	[custom-keybindings/custom29]
+    [custom-keybindings/custom29]
+    binding=['<Primary><Shift><Alt>b']
+    command='my shebang'
+    name='my shebang'
+
+	[custom-keybindings/custom30]
 	binding=['<Primary><Alt>g']
 	command='browser'
 	name='browser'
