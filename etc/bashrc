@@ -145,3 +145,6 @@ is_mac && {
         fi
     }
 }
+
+shorter_prompt # let's do this by default
+
