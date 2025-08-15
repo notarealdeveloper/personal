@@ -28,6 +28,14 @@ dconf load / <<- EOF
 	gtk-theme='Numix'
 	icon-theme='Numix-Circle'
 
+    [org/cinnamon/desktop/screensaver]
+    allow-media-control=false
+    date-format='%a, %b %e'
+    default-message="If it ain't broke, break it"
+    show-album-art=false
+    time-format='%-I:%M %p'
+    use-custom-format=true
+
 	[org/cinnamon/settings-daemon/plugins/xsettings]
 	buttons-have-icons=true
 
