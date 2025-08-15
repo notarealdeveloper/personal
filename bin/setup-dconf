@@ -28,13 +28,13 @@ dconf load / <<- EOF
 	gtk-theme='Numix'
 	icon-theme='Numix-Circle'
 
-    [org/cinnamon/desktop/screensaver]
-    allow-media-control=false
-    date-format='%a, %b %e'
-    default-message="If it ain't broke, break it"
-    show-album-art=false
-    time-format='%-I:%M %p'
-    use-custom-format=true
+	[org/cinnamon/desktop/screensaver]
+	allow-media-control=false
+	date-format='%a, %b %e'
+	default-message="If it ain't broke, break it"
+	show-album-art=false
+	time-format='%-I:%M %p'
+	use-custom-format=true
 
 	[org/cinnamon/settings-daemon/plugins/xsettings]
 	buttons-have-icons=true
@@ -56,8 +56,8 @@ dconf load / <<- EOF
 	switch-enabled=false
 	tile-enabled=false
 
-    [org/cinnamon/desktop/sound]
-    allow-amplified-volume=true
+	[org/cinnamon/desktop/sound]
+	allow-amplified-volume=true
 
 	[org/nemo/list-view]
 	default-zoom-level='small'
@@ -74,7 +74,7 @@ dconf load / <<- EOF
 	show-thumbnails-toolbar=true
 	show-directory-item-counts='always'
 	show-image-thumbnails='always'
-    show-location-entry=true
+	show-location-entry=true
 
 	[org/nemo/desktop]
 	volumes-visible=false
@@ -200,10 +200,10 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	command='my shebang-python'
 	name='my-shebang-python'
 
-    [custom-keybindings/custom29]
-    binding=['<Primary><Shift><Alt>b']
-    command='my shebang'
-    name='my shebang'
+	[custom-keybindings/custom29]
+	binding=['<Primary><Shift><Alt>b']
+	command='my shebang'
+	name='my shebang'
 
 	[custom-keybindings/custom30]
 	binding=['<Primary><Alt>g']
