@@ -12,6 +12,7 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 export DESKTOP="$HOME/Desktop"
 export SRC="${HOME}/src"
 export GIT="${HOME}/git"
+export OPT="${HOME}/opt"
 
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
@@ -36,6 +37,7 @@ dirs+=(
     # home
     [src]="${SRC}"
     [git]="${GIT}"
+    [opt]="${OPT}"
     [desktop]="${DESKTOP}"
     [legacy]="${HOME}/src/legacy"
 
@@ -73,7 +75,7 @@ dirs+=(
     [ranger]="$HOME/.config/ranger"
 )
 
-for key in src pkg; do
+for key in src opt; do
     dir="${dirs["$key"]}"
     if [[ -d "$dir" ]]; then
         for sub in "${dir}/"*; do
