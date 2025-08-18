@@ -12,7 +12,7 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 export DESKTOP="$HOME/Desktop"
 export SRC="${HOME}/src"
 export GIT="${HOME}/git"
-export OPT="${HOME}/opt"
+export PIN="${HOME}/pin"
 
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
@@ -37,9 +37,9 @@ dirs+=(
     # home
     [src]="${SRC}"
     [git]="${GIT}"
-    [opt]="${OPT}"
+    [pin]="${PIN}"
     [desktop]="${DESKTOP}"
-    [legacy]="${HOME}/src/legacy"
+    [legacy]="${SRC}/legacy"
 
     # stuff
     [stuff]="${STUFF}"
@@ -75,7 +75,7 @@ dirs+=(
     [ranger]="$HOME/.config/ranger"
 )
 
-for key in src opt; do
+for key in src pin; do
     dir="${dirs["$key"]}"
     if [[ -d "$dir" ]]; then
         for sub in "${dir}/"*; do
@@ -136,6 +136,10 @@ fi
 ### aliases ###
 ###############
 alias brcp="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${HOME}/.bashrc"
+
+# cds
+alias cs='c src'
+alias cn='c nixos'
 
 # ranger
 alias r='ranger'
