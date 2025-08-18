@@ -11,7 +11,7 @@ export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 
 export DESKTOP="$HOME/Desktop"
 export SRC="${HOME}/src"
-export PKG="${HOME}/pkg"
+export GIT="${HOME}/git"
 
 export STUFF="$DESKTOP/stuff"
 export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
@@ -35,7 +35,7 @@ dirs+=(
 
     # home
     [src]="${SRC}"
-    [pkg]="${PKG}"
+    [git]="${GIT}"
     [desktop]="${DESKTOP}"
     [legacy]="${HOME}/src/legacy"
 
