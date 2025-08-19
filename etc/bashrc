@@ -172,6 +172,25 @@ is_mac && {
 
 shorter_prompt # let's do this by default
 
-for pkg in zlib.dev openssl.dev bzip2.dev xz.dev zstd.dev libffi.dev readline.dev ncurses.dev gdbm.dev sqlite.dev libuuid.dev tk.dev; do
-    export PKG_CONFIG_PATH="$(nix path-info nixpkgs#${pkg})/lib/pkgconfig:${PKG_CONFIG_PATH}"
-done
+#for pkg in zlib.dev openssl.dev bzip2.dev xz.dev zstd.dev libffi.dev readline.dev ncurses.dev gdbm.dev sqlite.dev libuuid.dev tk.dev; do
+#    export PKG_CONFIG_PATH="$(nix path-info nixpkgs#${pkg})/lib/pkgconfig:${PKG_CONFIG_PATH}"
+#done
+
+# libs we want pkg-config to find
+deps=(zlib openssl libffi bzip2 xz zstd sqlite gdbm util-linux tcl tk ncurses)
+
+# Build PKG_CONFIG_PATH from *.dev outputs
+build_pcpath() {
+  local out p sub
+  for name in "${deps[@]}"; do
+    # .dev output has the .pc files
+    if out="$(nix path-info "nixpkgs#${name}.dev" 2>/dev/null)"; then
+      for sub in lib/pkgconfig share/pkgconfig; do
+        p="${out}/${sub}"
+        [[ -d "$p" ]] && printf '%s:' "$p"
+      done
+    fi
+  done
+}
+
+export PKG_CONFIG_PATH="$(build_pcpath)"; export PKG_CONFIG_PATH="${PKG_CONFIG_PATH%:}"
