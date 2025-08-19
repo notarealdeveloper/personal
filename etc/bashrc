@@ -189,6 +189,6 @@ set_up_pkg_config() {
     done
 }
 
-if [[ -z "$PKG_CONFIG_PATH" ]]; then
-    set_up_pkg_config
-fi
+#if [[ -z "$PKG_CONFIG_PATH" ]]; then
+#    set_up_pkg_config
+#fi
