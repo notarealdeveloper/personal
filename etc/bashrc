@@ -178,17 +178,15 @@ shorter_prompt # let's do this by default
 
 set_up_pkg_config() {
     local out p sub
-    deps=(zlib openssl libffi bzip2 xz zstd sqlite gdbm util-linux tcl tk ncurses)
+    deps=(zlib openssl bzip2 xz zstd libffi readline ncurses gdbm sqlite libuuid tk)
     for name in "${deps[@]}"; do
-        if out="$(nix path-info "nixpkgs#${name}.dev" 2>/dev/null)"; then
+        if out="$(nix path-info --offline "nixpkgs#${name}.dev" 2>/dev/null)"; then
             for sub in lib/pkgconfig share/pkgconfig; do
                 p="${out}/${sub}"
-                [[ -d "$p" ]] && printf '%s:' "$p"
+                [[ -d "$p" ]] && export PKG_CONFIG_PATH="$p:${PKG_CONFIG_PATH%:}"
             done
         fi
     done
-
-    export PKG_CONFIG_PATH="$(build_pcpath)"; export PKG_CONFIG_PATH="${PKG_CONFIG_PATH%:}"
 }
 
 if [[ -z "$PKG_CONFIG_PATH" ]]; then
