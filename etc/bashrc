@@ -172,3 +172,6 @@ is_mac && {
 
 shorter_prompt # let's do this by default
 
+for pkg in zlib.dev openssl.dev bzip2.dev xz.dev zstd.dev libffi.dev readline.dev ncurses.dev gdbm.dev sqlite.dev libuuid.dev tk.dev; do
+    export PKG_CONFIG_PATH="$(nix path-info nixpkgs#${pkg})/lib/pkgconfig:${PKG_CONFIG_PATH}"
+done
