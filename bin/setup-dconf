@@ -28,6 +28,9 @@ dconf load / <<- EOF
 	gtk-theme='Numix'
 	icon-theme='Numix-Circle'
 
+	[org/cinnamon/desktop/peripherals/touchpad]
+	natural-scroll=false
+
 	[org/cinnamon/desktop/screensaver]
 	allow-media-control=false
 	date-format='%a, %b %e'
