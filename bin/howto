@@ -1488,4 +1488,6 @@ sudo pacman -S nix
 sudo systemctl enable --now nix-daemon
 sudo gpasswd -a $USER nix-users
 
-
+# cachix
+# once per machine that will pull
+cachix use notarealdeveloper
