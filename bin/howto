@@ -1491,3 +1491,5 @@ sudo gpasswd -a $USER nix-users
 # cachix
 # once per machine that will pull
 cachix use notarealdeveloper
+# once per machine that will push
+setup-cachix # in secret/bin
