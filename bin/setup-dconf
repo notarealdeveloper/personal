@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+###################
+### setup dconf ###
+###################
+
 dconf load / <<- EOF
 	[org/gnome/desktop/interface]
 	gtk-theme='Numix'
@@ -263,3 +267,30 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	show-desktop=['<Super>d', '<Primary><Alt>d']
 	toggle-maximized=['<Alt>F10', '<Super>Return']
 EOF
+
+
+############################
+### setup gnome terminal ###
+############################
+
+if { command -v gsettings && command -v gnome-terminal; } >/dev/null; then
+
+profile="$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")"
+
+dconf load / <<- EOF
+	[org/gnome/terminal/legacy/profiles:/:${profile}]
+	audible-bell=false
+	background-color='rgb(34,34,34)'
+	bold-color-same-as-fg=true
+	bold-is-bright=true
+	cursor-blink-mode='off'
+	cursor-shape='ibeam'
+	default-size-columns=80
+	font='Monospace 14'
+	foreground-color='rgb(255,255,255)'
+	use-system-font=false
+	use-theme-colors=true
+	visible-name='Default'
+EOF
+
+fi
