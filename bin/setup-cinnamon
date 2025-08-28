@@ -45,3 +45,13 @@ python <<- EOF
 	dict['labelinfo']['value'] = "percentage"
 	json.dump(dict, open(file, 'w'))
 EOF
+
+python <<- EOF
+	import os
+	import json
+	file = "$HOME/.config/cinnamon/spices/calendar@cinnamon.org/13.json"
+	dict = json.load(open(file))
+	dict['keyOpen']['value'] = "::"
+	json.dump(dict, open(file, 'w'))
+EOF
+
