@@ -22,7 +22,6 @@ glibc           git://sourceware.org/git/glibc
 binutils        git://sourceware.org/git/binutils
 coreutils       git://git.sv.gnu.org/coreutils
 bash            git://git.sv.gnu.org/bash
-bash-dev        https://cgit.git.savannah.gnu.org/cgit/bash.git?h=devel
 
 # tiny
 toybox          https://github.com/landley/toybox
