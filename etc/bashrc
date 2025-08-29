@@ -185,6 +185,4 @@ set_up_pkg_config() {
     done
 }
 
-#if [[ -z "$PKG_CONFIG_PATH" ]]; then
-#    set_up_pkg_config
-#fi
+export PS1="${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
