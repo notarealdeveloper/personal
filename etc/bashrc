@@ -185,4 +185,4 @@ set_up_pkg_config() {
     done
 }
 
-export PS1="${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
+export PS1="\n${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
