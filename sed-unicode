@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-[[ -z $1 ]] && echo "usage: $(basename "$0")" && exit 1
-
-sed -r -i -e "s@’@'@g" "$1"
