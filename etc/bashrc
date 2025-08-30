@@ -196,14 +196,13 @@ next() {
     git reset --hard $(git rev-list presentation...simple | tail -1)
 }
 
-unalias gl
-
-gl() {
-    if [[ $(basename "$PWD") == es-hf ]]; then
-        git log --color=always --name-only --shortstat --author="Jason Wilkes" presentation...simple \
-            | sed -r -e 's@(\S+)Jason Wilkes(\S+)@User@g' -e 's/notarealdeveloper@gmail.com/user@here/g'
-    else
-        git log
-    fi
-}
+#unalias gl
+#gl() {
+#    if [[ $(basename "$PWD") == es-hf ]]; then
+#        git log --color=always --name-only --shortstat --author="Jason Wilkes" presentation...simple \
+#            | sed -r -e 's@(\S+)Jason Wilkes(\S+)@User@g' -e 's/notarealdeveloper@gmail.com/user@here/g'
+#    else
+#        git log
+#    fi
+#}
 shorter_prompt
