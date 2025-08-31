@@ -1493,3 +1493,6 @@ sudo gpasswd -a $USER nix-users
 cachix use notarealdeveloper
 # once per machine that will push
 setup-cachix # in secret/bin
+
+# tensorflow build
+bazel build //tensorflow/tools/pip_package:wheel --repo_env=USE_PYWRAP_RULES=1 --repo_env=WHEEL_NAME=tf_nightly_cpu
