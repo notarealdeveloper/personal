@@ -189,8 +189,8 @@ set_up_pkg_config() {
 ### PRESENTATION SPECIFIC STUFF ###
 ###################################
 
-#export PS1="\n${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
-export PS1="${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
+export PS1="\n${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
+#export PS1="${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
 
 next() {
     git reset --hard $(git rev-list presentation...simple | tail -1)
