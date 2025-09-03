@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]] || [[ -z $2 ]]; then
+    echo "usage: $(basename $0) <start-time> <step>"
+    exit 1
+fi
+
+start="$1"
+step="$2"
+paste -d'-' <(itertime "$start" "$step" | head -n -1) <(itertime "$start" "$step" | tail -n +2)

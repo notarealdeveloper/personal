@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+
+"""
+ffmpeg-split -i file.mp4 -w 0:04-0:07,3:21-3:27,9:43-9:49
+"""
+
+import os
+import re
+import sys
+import glob
+import shutil
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--infile')
+parser.add_argument('-o', '--outfile')
+parser.add_argument('-w', '--windows')
+parser.add_argument('-c', '--copy', action='store_true')
+parser.add_argument('-e', '--ext', default=None)
+parser.add_argument('-n', '--no-overwrite', action='store_true')
+args = parser.parse_args(sys.argv[1:])
+
+if not args.infile:
+    print(f"usage: ffmpeg-split -i file.mp4 -w 0:04-0:07,3:21-3:27,9:43-9:49")
+    sys.exit(0)
+
+infile = os.path.abspath(args.infile)
+windows = [window.split('-') for window in args.windows.split(',')]
+if args.outfile and len(windows) > 1:
+    raise RuntimeError(f"Passing --outfile requires len(windows) == 1")
+
+files = []
+
+n = 1
+for (start, end) in windows:
+    pre, ext = os.path.splitext(os.path.basename(infile))
+    if args.ext:
+        ext = args.ext
+    while glob.glob(f"{pre}-split-{n}-*"):
+        n += 1
+    s = re.sub(':', '', start)
+    e = re.sub(':', '', end)
+
+    opts = []
+    if args.copy:
+        opts.append('-c:a copy -c:v copy')
+
+    opts = ' '.join(opts)
+
+    if args.outfile:
+        file = args.outfile
+    else:
+        file = f"{pre}-split-{n}-from-{s}-to-{e}.{ext}"
+
+    if args.no_overwrite and os.path.exists(file):
+        continue
+
+    ret = os.system(f"""ffmpeg -i {infile} -ss {start} -to {end} {opts} {file!r}""")
+    if ret != 0:
+        try: os.remove(file)
+        except: pass
+        finally: sys.exit(ret)
+

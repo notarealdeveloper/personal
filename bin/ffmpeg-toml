@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import glob
+import yt_dlp
+import tomllib
+import argparse
+from pathlib import Path
+
+def get_file(dirname, name):
+    files = glob.glob(f"{dirname}/{name}.*")
+    if len(files) == 0:
+        raise FileNotFoundError(file)
+    [file] = files
+    return file
+
+def ensure_have_video(url, name, dirname):
+    args = ['--write-sub', '--write-auto-sub', '--sub-lang="en.*"']
+    try:
+        os.makedirs(dirname, exist_ok=True)
+        yt_dlp.main(['-o', f'{dirname}/{name}', *args, url])
+    except SystemExit:
+        return get_file(dirname, name)
+    except BaseException as e:
+        try: os.rmdir(dirname)
+        except: pass
+        raise e
+    raise RuntimeError(f"Bug for toml with name={name!r} and dirname={dirname!r}")
+
+parser = argparse.ArgumentParser()
+parser.add_argument('toml_path')
+parser.add_argument('-d', '--split-videos-dir', default='.')
+parser.add_argument('-D', '--full-video-dir', default='.')
+parser.add_argument('-e', '--ext', default=None)
+parser.add_argument('-c', '--copy', action='store_true')
+parser.add_argument('-a', '--actions', default='download,split')
+
+args = parser.parse_args(sys.argv[1:])
+toml_path = os.path.realpath(args.toml_path)
+full_video_dir = os.path.realpath(args.full_video_dir)
+split_videos_dir = os.path.realpath(args.split_videos_dir)
+
+# parse the toml file
+config = tomllib.load(open(toml_path, 'rb'))
+url = config['input']['url']
+name = Path(toml_path).stem
+outputs = config['outputs']
+actions = args.actions.split(',')
+
+# extra options
+opts = []
+if args.copy:
+    opts = ['--copy']
+opts = ' '.join(opts)
+
+
+if 'download' in actions:
+    ensure_have_video(url, name, full_video_dir)
+
+if 'split' in actions:
+    file = get_file(full_video_dir, name)
+
+    prefix, ext = os.path.splitext(file)
+    if args.ext:
+        ext = args.ext
+    ext = ext.lstrip('.')
+
+    for name, info in outputs.items():
+        start, end = info['start'], info['end']
+        outpath = f"{split_videos_dir}/{name}.{ext}"
+        os.makedirs(split_videos_dir, exist_ok=True)
+        ret = os.system(f"""ffmpeg-split -n -i {file!r} -w {start}-{end} {opts} -o {outpath!r}""") 
+        if ret != 0:
+            try: os.remove(file)
+            except: pass
+            finally: sys.exit(ret)

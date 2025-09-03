@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import os
+import re
+import sys
+import glob
+
+a, b, c, *other = sys.argv[1:]
+
+if os.path.exists(a):
+    file, start, end = a, b, c
+elif os.path.exists(c):
+    start, end, file = a, b, c
+else:
+    self = os.path.basename(sys.argv[0])
+    print(f"usage: {self} <start> <end> <file>", file=sys.stderr)
+    sys.exit(1)
+
+# get free filename
+n = 1
+prefix, suffix = os.path.splitext(file)
+while glob.glob(f"{prefix}-{n}*{suffix}"):
+    n += 1
+
+#newfile = f"{prefix}-ffmpeg-{n}{suffix}"
+s = re.sub(':', '', start)
+e = re.sub(':', '', end)
+newfile = f"{prefix}-{n}-from-{s}-to-{e}{suffix}"
+quiet = "2>/dev/null"
+opts = ' '.join(other)
+copy = f"-c:v copy -c:a copy"
+os.system(f"""ffmpeg -i "{file}" {copy} -ss '{start}' -to '{end}' {opts} '{newfile}' {quiet}""")
+print(newfile)
