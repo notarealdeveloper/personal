@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+import os, sys, argparse, subprocess, shlex, tempfile, re
+
+def run(cmd):
+    subprocess.run(cmd, check=True)
+
+def ffprobe_json(path, sel):
+    # returns a dict via ffprobe -of default=nw=1:nk=1 (line-based)
+    # but we only need a few fields, so we read them one-by-one.
+    def get(fmt):
+        c = ["ffprobe","-v","error","-select_streams",sel,"-show_entries",fmt,"-of","default=nw=1:nk=1",path]
+        r = subprocess.run(c, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if r.returncode != 0 or not r.stdout.strip():
+            return None
+        return r.stdout.strip()
+    return {
+        "codec_name": get("stream=codec_name"),
+        "width":      get("stream=width") if sel.startswith("v") else None,
+        "height":     get("stream=height") if sel.startswith("v") else None,
+        "pix_fmt":    get("stream=pix_fmt") if sel.startswith("v") else None,
+        "r_frame_rate": get("stream=r_frame_rate") if sel.startswith("v") else None,
+        "sample_rate":  get("stream=sample_rate") if sel.startswith("a") else None,
+        "channels":     get("stream=channels") if sel.startswith("a") else None,
+    }
+
+def natural_key(s):
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r'(\d+)', s)]
+
+def build_listfile(files):
+    # concat demuxer requires a plaintext list with POSIX-escaped single-quoted paths
+    # best reliability: use relative paths; allow abs with -safe 0
+    lines = []
+    for f in files:
+        # escape single quotes for ffmpeg concat list format
+        q = f.replace("'", r"'\''")
+        lines.append(f"file '{q}'")
+    tf = tempfile.NamedTemporaryFile(mode="w", delete=False, prefix="ffcat_", suffix=".txt")
+    tf.write("\n".join(lines) + "\n")
+    tf.close()
+    return tf.name
+
+def check_uniformity(files):
+    # Check first file’s params; compare the rest. Only warn; don’t block.
+    v0 = ffprobe_json(files[0], "v:0")
+    a0 = ffprobe_json(files[0], "a:0")
+    mismatches = []
+    for f in files[1:]:
+        v = ffprobe_json(f, "v:0")
+        a = ffprobe_json(f, "a:0")
+        def same(a,b):
+            return (a or {}) == (b or {})
+        if not same(v, v0) or not same(a, a0):
+            mismatches.append((f, v, a))
+    return v0, a0, mismatches
+
+def write_chapters(files, out="chapters.txt"):
+    # FFMETADATA1 chapters with START/END in ms based on each clip’s duration
+    lines = [";FFMETADATA1"]
+    t = 0.0
+    for f in files:
+        # duration in seconds
+        r = subprocess.run([
+            "ffprobe","-v","error","-show_entries","format=duration",
+            "-of","default=nw=1:nk=1", f
+        ], stdout=subprocess.PIPE, text=True)
+        d = float(r.stdout.strip()) if r.stdout.strip() else 0.0
+        start = int(t*1000); end = int((t+d)*1000)
+        title = os.path.basename(f)
+        lines += [
+            "[CHAPTER]",
+            "TIMEBASE=1/1000",
+            f"START={start}",
+            f"END={end}",
+            f"TITLE={title}",
+        ]
+        t += d
+    with open(out, "w") as fp:
+        fp.write("\n".join(lines) + "\n")
+    return out
+
+def main():
+    ap = argparse.ArgumentParser(description="Lossless MKV concat using ffmpeg concat demuxer.")
+    ap.add_argument("files", nargs="*", help="Input files (MKV). If empty, read from stdin.")
+    ap.add_argument("-o","--outfile", default="file.mkv", help="Output MKV")
+    ap.add_argument("--chapters", action="store_true", help="Add per-clip chapters")
+    ap.add_argument("--no-check", action="store_true", help="Skip codec/format uniformity check")
+    args = ap.parse_args()
+
+    files = args.files[:]
+    if not sys.stdin.isatty():
+        files += [ln.strip() for ln in sys.stdin.read().splitlines() if ln.strip()]
+
+    if not files:
+        print("No input files.", file=sys.stderr)
+        sys.exit(1)
+
+    # keep only existing .mkv files, sorted naturally
+    files = [f for f in files if os.path.isfile(f) and f.lower().endswith(".mkv")]
+    files.sort(key=natural_key)
+
+    if not files:
+        print("No MKV files found.", file=sys.stderr)
+        sys.exit(1)
+
+    if not args.no_check:
+        v0, a0, mismatches = check_uniformity(files)
+        if mismatches:
+            print("WARN: Not all streams match. Concat may force re-encode or fail.", file=sys.stderr)
+            print("Reference video:", v0, file=sys.stderr)
+            print("Reference audio:", a0, file=sys.stderr)
+            for f, v, a in mismatches[:10]:
+                print(f"  Mismatch: {f}\n    video={v}\n    audio={a}", file=sys.stderr)
+            if len(mismatches) > 10:
+                print(f"  (+{len(mismatches)-10} more)", file=sys.stderr)
+
+    listfile = build_listfile(files)
+    tmp_out = args.outfile
+
+    try:
+        # First pass: concat via stream copy
+        cmd = [
+            "ffmpeg","-hide_banner","-nostdin","-loglevel","warning",
+            "-f","concat","-safe","0","-i", listfile,
+            "-map","0","-c","copy","-y", tmp_out
+        ]
+        run(cmd)
+
+        if args.chapters:
+            chapters = write_chapters(files)
+            # Remux chapters into MKV (copy streams)
+            cmd2 = [
+                "ffmpeg","-hide_banner","-nostdin","-loglevel","warning",
+                "-i", tmp_out, "-i", chapters,
+                "-map","0","-map_metadata","1","-c","copy","-y", tmp_out
+            ]
+            run(cmd2)
+
+        print(f"OK → {tmp_out}")
+
+    finally:
+        try: os.remove(listfile)
+        except OSError: pass
+
+if __name__ == "__main__":
+    main()
+
