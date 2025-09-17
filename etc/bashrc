@@ -189,7 +189,7 @@ set_up_pkg_config() {
 ### PRESENTATION SPECIFIC STUFF ###
 ###################################
 
-export PS1="${_gre}user${_red}@${_blu}here${_pur} \w ${_blu}\$${_end} "
+export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 #if [[ $PS1 =~ .*(.*).* ]] && [[ ! $PS1 =~ .*\n.* ]]; then
 if [[ -n $VIRTUAL_ENV ]]; then
     name=$(basename $VIRTUAL_ENV)
