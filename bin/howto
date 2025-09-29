@@ -1496,3 +1496,6 @@ setup-cachix # in secret/bin
 
 # tensorflow build
 bazel build //tensorflow/tools/pip_package:wheel --repo_env=USE_PYWRAP_RULES=1 --repo_env=WHEEL_NAME=tf_nightly_cpu
+
+# bulk rename
+n=1 && for f in $(ls | sort); do echo mv -v "$f" "$(printf "prefix-%02d.png" "$n")"; ((n++)); done
