@@ -1498,5 +1498,5 @@ setup-cachix # in secret/bin
 bazel build //tensorflow/tools/pip_package:wheel --repo_env=USE_PYWRAP_RULES=1 --repo_env=WHEEL_NAME=tf_nightly_cpu
 
 # bulk rename files and copy as obsidian links
-n=1 && for f in $(ls | sort | grep '[.](jpg|png)$'); do ext="${f##*.}" && echo mv -v "$f" "$(printf "x-%02d.${ext}" "$n")"; ((n++)); done
+n=1 && for f in $(ls | sort | grep -P '[.](jpg|png)$'); do ext="${f##*.}" && echo mv -v "$f" "$(printf "x-%02d.${ext}" "$n")"; ((n++)); done
 ls | sort | sed -r 's@.*@![[&]]\n\n@g' | xc

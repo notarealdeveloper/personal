@@ -7,8 +7,10 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
-echo fixnames -i *.jpg *.png
-n=1 && for f in $(ls | sort | grep '[.](jpg|png)$'); do ext="${f##*.}" && echo mv -v "$f" "$(printf "${1}-%02d.${ext}" "$n")"; ((n++)); done
+prefix="$1"
+
+echo fixnames -i *
+n=1 && for f in $(ls | sort | grep -E '[.](jpg|png)$'); do ext="${f##*.}" && echo mv -v "$f" "$(printf "${1}-%02d.${ext}" "$n")"; ((n++)); done
 
 printf "${red}*** ${blu}HEY! ${whi}Should I execute the above commands (${gre}y${whi}/${red}n${whi})?: "
 
@@ -17,7 +19,7 @@ read answer
 if [[ "$answer" == 'y' || "$answer" == 'Y' ]]; then
     log "Renaming files."
     fixnames -i *.jpg *.png
-    n=1 && for f in $(ls | sort | grep '[.](jpg|png)$'); do ext="${f##*.}" && mv -v "$f" "$(printf "${1}-%02d.${ext}" "$n")"; ((n++)); done
+    n=1 && for f in $(ls | sort | grep -E '[.](jpg|png)$'); do ext="${f##*.}" && mv -v "$f" "$(printf "${1}-%02d.${ext}" "$n")"; ((n++)); done
 else
     log "Not doing anything."
     exit 1
