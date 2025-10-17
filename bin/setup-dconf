@@ -90,8 +90,16 @@ dconf load / <<- EOF
 	maximized=true
 	sidebar-bookmark-breakpoint=0
 	start-with-sidebar=true
-EOF
 
+	[org/cinnamon/desktop/keybindings/media-keys]
+	area-screenshot=['<Shift>Print']
+	area-screenshot-clip=['<Primary><Shift>Print']
+	home=['XF86Explorer']
+	screenshot=['Print']
+	screenshot-clip=['<Primary>Print']
+	window-screenshot=['<Super>Print']
+	window-screenshot-clip=['<Primary><Shift><Super>Print']
+EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
