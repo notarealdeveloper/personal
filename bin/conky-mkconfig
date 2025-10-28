@@ -103,6 +103,10 @@ FACE_IMAGE_SIZE = '30x30'
 distro = os.popen("getdistro").read().strip().capitalize()
 dev_disk_by_label = f'/dev/disk/by-label/{distro}'
 
+
+if distro == 'nixos':
+    distro = 'NixOS'
+
 PRIMARY_DRIVE_NAME = '/'
 
 if os.path.exists(dev_disk_by_label):
@@ -110,8 +114,13 @@ if os.path.exists(dev_disk_by_label):
 else:
     PRIMARY_DRIVE_PATH = '(Primary drive path unknown)'
 
-SECONDARY_DRIVE_NAME = 'Desktop'
-SECONDARY_DRIVE_PATH = os.popen(f"realpath /dev/disk/by-label/Desktop").read().strip()
+if hostname() == 'kleene':
+    PRIMARY_DRIVE_PATH = '/dev/nvme0n1p5'
+    SECONDARY_DRIVE_NAME = 'Swap'
+    SECONDARY_DRIVE_PATH = '/dev/nvme0n1p6'
+else:
+    SECONDARY_DRIVE_NAME = 'Desktop'
+    SECONDARY_DRIVE_PATH = os.popen(f"realpath /dev/disk/by-label/Desktop").read().strip()
 
 # hostname specific overrides
 if hostname() == 'shannon':
@@ -132,6 +141,9 @@ if hostname() == 'shannon':
 
 
 elif hostname() == 'turing':
+    GAP_Y = '200'
+
+elif hostname() == 'kleene':
     GAP_Y = '200'
 
 elif hostname() == 'godel':
