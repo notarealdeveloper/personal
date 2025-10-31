@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HEBREW="אבגדהוזחטיכלמנסעפצקרשת"
+LATIN=""
+PHOENICIAN="𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕"
+
+LATIN="
+A a 𐤀
+B b 𐤁
+G g 𐤂
+S s d 𐤃
+H h 𐤄
+W w 𐤅
+Z 𐤆
+X 𐤇
+j 𐤈
+Y y 𐤉
+K k 𐤊
+L l 𐤋
+M m 𐤌
+N n 𐤍
+<b>𓁹 </b> 𐤏
+p 𐤐
+C 𐤑
+Q q ϙ 𐤒
+R r 𐤓
+D f
+F 𐤔
+T t 𐤕
+"
+#LATIN="ABCDEFGHIJKLMNOPQRSTUVWXYZ
+#abcdefghijklmnopqrstuvwxyz"
+
+# --- REQUIREMENTS -------------------------------------------------------------
+need() {
+    command -v "$1" >/dev/null || {
+        echo "Missing $1 (on NixOS: nix-shell -p $* --run $0)"
+        exit 1
+    }
+}
+
+need pango-view fc-list fc-match
+
+# Pick a proto-sinaitic family
+# Try a few likely names
+CANDIDATES=(
+  "Proto-Sinaitic 15"
+  "Proto-Sinaitic 13"
+  "Proto Sinaitic"
+  "ProtoCanaanite"
+  "Paleo Hebrew"
+  "HebrewPaleoGezer"
+)
+
+FAM=""
+for C in "${CANDIDATES[@]}"; do
+    if fc-list | grep -i "$C" >/dev/null; then
+        FAM="$(fc-list | grep -i "$C" | head -n1 | cut -d: -f2 | cut -d, -f1 | sed 's/^ //')"
+        break
+    fi
+done
+
+if [ -z "${FAM}" ]; then
+  echo "Could not find a Proto-Sinaitic font family in fc-list."
+  echo "Run: fc-list | grep -Ei 'Proto|Sinai|Paleo|Canaan|Gezer' and add the family name to CANDIDATES."
+  exit 1
+fi
+
+echo "Using Proto-Sinaitic family: ${FAM}"
+echo "Font matched path:"
+fc-match -v "${FAM}" | sed -n 's|.*file: \"\(.*\)\".*|\1|p' | head -n1
+
+FG="#d3c48e"
+BG="#2f383e"
+
+pango-view \
+  --foreground="$FG" --background="$BG" \
+  --markup \
+  --output="proto-sinaitic-latin.png" \
+  --text="<span font='${FAM} 50'>${LATIN}</span>"
