@@ -10,8 +10,8 @@ PHOENICIAN="𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐
 # pango-view --markup --text "<span font='ProtoCanaanite 50'>𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>"
 
 # For Obsidian
-# pango-view --foreground=#d3c48e --background=#2f383e --markup --output=proto-sinaitic.png --text "<span font='ProtoCanaanite 50'>𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>"
+pango-view --foreground=#d3c48e --background=#2f383e --markup --output=proto-sinaitic.png --text "<span font='ProtoCanaanite 50'>𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>"
 
-P1="<span font='ProtoCanaanite 50'>${PHOENICIAN}</span>"
-P2="<span font='HebrewPaleoGezer 54'>${PHOENICIAN}</span>"
-pango-view --markup --text "${P1}"
+#P1="<span font='ProtoCanaanite 50'>${PHOENICIAN}</span>"
+#P2="<span font='HebrewPaleoGezer 54'>${PHOENICIAN}</span>"
+#pango-view --markup --text "${P1}"
