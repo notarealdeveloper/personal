@@ -2,6 +2,7 @@
 
 usage() {
     echo "usage: $(basename $0) [-l|--long] [-d|--date] [-h|--help] <file>"
+    exit 1
 }
 
 [[ -z "$1" ]] && usage
@@ -34,6 +35,10 @@ for f in ${files[@]}; do
     fi
 
     if [[ -n $date_only ]]; then
+        if [[ -n $long_type ]]; then
+            echo "error: $(basename $0) does not support combining -l with -d"
+            exit 1
+        fi
         out="$(echo "$out" | sed -e 's@[-].*@@g')"
     fi
 
