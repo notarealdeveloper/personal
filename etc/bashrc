@@ -15,7 +15,6 @@ export GIT="${HOME}/git"
 export PIN="${HOME}/pin"
 
 export STUFF="$DESKTOP/stuff"
-export PREFIXES="${PREFIXES:-"$STUFF/prefixes"}"
 export DROPBOX="${HOME}/Dropbox"
 export OBSIDIAN="${HOME}/obsidian"
 export IH="${STUFF}/ih"
