@@ -67,7 +67,7 @@ dirs+=(
 
     # documents
     [documents]="${DOCUMENTS}"
-    [me]="${DOCUMENTS}/me"
+    #[me]="${DOCUMENTS}/me"
 
     # ranger
     [ranger]="$HOME/.config/ranger"
