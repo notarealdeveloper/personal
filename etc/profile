@@ -1,0 +1,2 @@
+#export PATH="$HOME/src/exec/bin:$HOME/src/personal/bin:$HOME/src/secret/bin:$HOME/src/secret/bin/o:$PATH"
+source ~/.bashrc
