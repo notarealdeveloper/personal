@@ -40,6 +40,12 @@ dirs+=(
     [desktop]="${DESKTOP}"
     [legacy]="${SRC}/legacy"
 
+    # git
+    [doubleunix]="${GIT}/mine/doubleunix"
+    [thedynamiclinker]="${GIT}/mine/thedynamiclinker"
+    [hello-corporation]="${GIT}/mine/hello-corporation"
+    [notarealdeveloper]="${GIT}/mine/notarealdeveloper"
+
     # stuff
     [stuff]="${STUFF}"
     [personal]="${PERSONAL}"
