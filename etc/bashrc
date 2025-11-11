@@ -205,6 +205,13 @@ next() {
     git reset --hard $(git rev-list presentation...simple | tail -1)
 }
 
+sstc() {
+    sudo systemctl status cachix-daemon@notarealdeveloper.service
+}
+ssrc() {
+    sudo systemctl restart cachix-daemon@notarealdeveloper.service
+}
+
 #unalias gl
 #gl() {
 #    if [[ $(basename "$PWD") == es-hf ]]; then
