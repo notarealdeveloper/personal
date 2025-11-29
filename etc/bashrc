@@ -226,4 +226,4 @@ shorter_prompt
 #################
 ### SUDO CODE ###
 #################
-export ERCHOMAI="$SRC/bbl"      # https://github.com/notarealdeveloper/bbl
+export ERCHOMAI="$SRC/bbl/formats/json"      # https://github.com/notarealdeveloper/bbl
