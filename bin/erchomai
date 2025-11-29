@@ -1,0 +1,152 @@
+#!/usr/bin/env python
+
+"""
+    USAGE
+
+    ερχομαι <bible1> <bible2>
+"""
+
+import json
+from collections import defaultdict
+
+# -------------------------------------------------------
+# Simple mapping to normalize book names across versions.
+# Add more aliases as needed.
+# -------------------------------------------------------
+BOOK_ALIASES = {
+    "Genesis": "Genesis",
+    "Gen": "Genesis",
+    "Exodus": "Exodus",
+    "Exod": "Exodus",
+    "Leviticus": "Leviticus",
+    "Lev": "Leviticus",
+    "Numbers": "Numbers",
+    "Num": "Numbers",
+    "Deuteronomy": "Deuteronomy",
+    "Deut": "Deuteronomy",
+    "Joshua": "Joshua",
+    "Judges": "Judges",
+    "Ruth": "Ruth",
+    "1 Samuel": "1 Samuel",
+    "I Samuel": "1 Samuel",
+    "2 Samuel": "2 Samuel",
+    "II Samuel": "2 Samuel",
+    "1 Kings": "1 Kings",
+    "I Kings": "1 Kings",
+    "2 Kings": "2 Kings",
+    "II Kings": "2 Kings",
+    "1 Chronicles": "1 Chronicles",
+    "2 Chronicles": "2 Chronicles",
+    "Ezra": "Ezra",
+    "Nehemiah": "Nehemiah",
+    "Esther": "Esther",
+    "Job": "Job",
+    "Psalms": "Psalms",
+    "Psalm": "Psalms",
+    "Proverbs": "Proverbs",
+    "Ecclesiastes": "Ecclesiastes",
+    "Song of Solomon": "Song of Solomon",
+    "Isaiah": "Isaiah",
+    "Jeremiah": "Jeremiah",
+    "Lamentations": "Lamentations",
+    "Ezekiel": "Ezekiel",
+    "Daniel": "Daniel",
+    # NT
+    "Matthew": "Matthew",
+    "Mark": "Mark",
+    "Luke": "Luke",
+    "John": "John",
+    "Acts": "Acts",
+    "Romans": "Romans",
+    "1 Corinthians": "1 Corinthians",
+    "2 Corinthians": "2 Corinthians",
+    "Galatians": "Galatians",
+    "Ephesians": "Ephesians",
+    "Philippians": "Philippians",
+    "Colossians": "Colossians",
+    "1 Thessalonians": "1 Thessalonians",
+    "2 Thessalonians": "2 Thessalonians",
+    "1 Timothy": "1 Timothy",
+    "2 Timothy": "2 Timothy",
+    "Titus": "Titus",
+    "Philemon": "Philemon",
+    "Hebrews": "Hebrews",
+    "James": "James",
+    "1 Peter": "1 Peter",
+    "2 Peter": "2 Peter",
+    "1 John": "1 John",
+    "2 John": "2 John",
+    "3 John": "3 John",
+    "Jude": "Jude",
+    "Revelation": "Revelation",
+    "Revelation of John": "Revelation",
+}
+
+def normalize_book(name):
+    return BOOK_ALIASES.get(name, name.strip())
+
+
+# -------------------------------------------------------
+# Load a Bible JSON into a dict:
+#   data[book][chapter][verse] = text
+# -------------------------------------------------------
+def load_bible_json(path):
+    with open(path, encoding="utf-8") as f:
+        raw = json.load(f)
+
+    normalized = defaultdict(lambda: defaultdict(dict))
+
+    for book in raw["books"]:
+        book_name = normalize_book(book["name"])
+
+        for chap in book["chapters"]:
+            cnum = chap["chapter"]
+
+            for verse in chap["verses"]:
+                vnum = verse["verse"]
+                text = verse["text"]
+                normalized[book_name][cnum][vnum] = text
+
+    return normalized
+
+
+# -------------------------------------------------------
+# Join two Bible dictionaries
+# Output format:
+# join_result[book][chapter][verse] = (text1, text2)
+# If one translation lacks the verse, its text is None.
+# -------------------------------------------------------
+def join_bibles(b1, b2):
+    result = {}
+
+    all_books = set(b1.keys()) | set(b2.keys())
+
+    for book in sorted(all_books):
+        result[book] = {}
+        chapters = set(b1.get(book, {}).keys()) | set(b2.get(book, {}).keys())
+
+        for chap in sorted(chapters):
+            result[book][chap] = {}
+            verses = (
+                set(b1.get(book, {}).get(chap, {}).keys()) |
+                set(b2.get(book, {}).get(chap, {}).keys())
+            )
+            for verse in sorted(verses):
+                t1 = b1.get(book, {}).get(chap, {}).get(verse)
+                t2 = b2.get(book, {}).get(chap, {}).get(verse)
+                result[book][chap][verse] = (t1, t2)
+
+    return result
+
+
+# -------------------------------------------------------
+# Example usage:
+# -------------------------------------------------------
+if __name__ == "__main__":
+    a = load_bible_json("WLC.json")
+    b = load_bible_json("KJV.json")
+
+    merged = join_bibles(a, b)
+
+    print(json.dumps(merged))
+
