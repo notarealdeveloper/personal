@@ -1,48 +1,42 @@
 #!/usr/bin/env python
 
 """
-    USAGE
+USAGE:
 
     ερχομαι <bible1> <bible2>
+    ερχομαι --list
 """
 
-import json
-from collections import defaultdict
+def get_env_dir():
+    import os
+    d = os.getenv("ERCHOMAI")
+    if not d:
+        raise RuntimeError("ERCHOMAI environment variable not set.")
+    return d
 
 # -------------------------------------------------------
-# Simple mapping to normalize book names across versions.
-# Add more aliases as needed.
+# Normalize book names
 # -------------------------------------------------------
 BOOK_ALIASES = {
-    "Genesis": "Genesis",
-    "Gen": "Genesis",
-    "Exodus": "Exodus",
-    "Exod": "Exodus",
-    "Leviticus": "Leviticus",
-    "Lev": "Leviticus",
-    "Numbers": "Numbers",
-    "Num": "Numbers",
-    "Deuteronomy": "Deuteronomy",
-    "Deut": "Deuteronomy",
+    "Genesis": "Genesis", "Gen": "Genesis",
+    "Exodus": "Exodus", "Exod": "Exodus",
+    "Leviticus": "Leviticus", "Lev": "Leviticus",
+    "Numbers": "Numbers", "Num": "Numbers",
+    "Deuteronomy": "Deuteronomy", "Deut": "Deuteronomy",
     "Joshua": "Joshua",
     "Judges": "Judges",
     "Ruth": "Ruth",
-    "1 Samuel": "1 Samuel",
-    "I Samuel": "1 Samuel",
-    "2 Samuel": "2 Samuel",
-    "II Samuel": "2 Samuel",
-    "1 Kings": "1 Kings",
-    "I Kings": "1 Kings",
-    "2 Kings": "2 Kings",
-    "II Kings": "2 Kings",
+    "1 Samuel": "1 Samuel", "I Samuel": "1 Samuel",
+    "2 Samuel": "2 Samuel", "II Samuel": "2 Samuel",
+    "1 Kings": "1 Kings", "I Kings": "1 Kings",
+    "2 Kings": "2 Kings", "II Kings": "2 Kings",
     "1 Chronicles": "1 Chronicles",
     "2 Chronicles": "2 Chronicles",
     "Ezra": "Ezra",
     "Nehemiah": "Nehemiah",
     "Esther": "Esther",
     "Job": "Job",
-    "Psalms": "Psalms",
-    "Psalm": "Psalms",
+    "Psalms": "Psalms", "Psalm": "Psalms",
     "Proverbs": "Proverbs",
     "Ecclesiastes": "Ecclesiastes",
     "Song of Solomon": "Song of Solomon",
@@ -87,10 +81,12 @@ def normalize_book(name):
 
 
 # -------------------------------------------------------
-# Load a Bible JSON into a dict:
-#   data[book][chapter][verse] = text
+# Load Bible JSON
 # -------------------------------------------------------
 def load_bible_json(path):
+    import json
+    from collections import defaultdict
+
     with open(path, encoding="utf-8") as f:
         raw = json.load(f)
 
@@ -98,27 +94,20 @@ def load_bible_json(path):
 
     for book in raw["books"]:
         book_name = normalize_book(book["name"])
-
         for chap in book["chapters"]:
             cnum = chap["chapter"]
-
             for verse in chap["verses"]:
                 vnum = verse["verse"]
-                text = verse["text"]
-                normalized[book_name][cnum][vnum] = text
+                normalized[book_name][cnum][vnum] = verse["text"]
 
     return normalized
 
 
 # -------------------------------------------------------
-# Join two Bible dictionaries
-# Output format:
-# join_result[book][chapter][verse] = (text1, text2)
-# If one translation lacks the verse, its text is None.
+# Merge two bibles
 # -------------------------------------------------------
 def join_bibles(b1, b2):
     result = {}
-
     all_books = set(b1.keys()) | set(b2.keys())
 
     for book in sorted(all_books):
@@ -140,13 +129,41 @@ def join_bibles(b1, b2):
 
 
 # -------------------------------------------------------
-# Example usage:
+# Main + argparse
 # -------------------------------------------------------
+def main():
+    import argparse
+    import os
+    import json
+
+    parser = argparse.ArgumentParser(description="Merge any two JSON Bibles.")
+    parser.add_argument("bible1", nargs="?", help="first bible filename")
+    parser.add_argument("bible2", nargs="?", help="second bible filename")
+    parser.add_argument("--list", action="store_true",
+                        help="list all bibles in $ERCHOMAI")
+    args = parser.parse_args()
+
+    basedir = get_env_dir()
+
+    if args.list:
+        for f in sorted(os.listdir(basedir)):
+            if f.endswith(".json"):
+                print(f)
+        return
+
+    if not args.bible1 or not args.bible2:
+        parser.error("You must supply <bible1> <bible2> unless using --list")
+
+    p1 = os.path.join(basedir, args.bible1)
+    p2 = os.path.join(basedir, args.bible2)
+
+    b1 = load_bible_json(p1)
+    b2 = load_bible_json(p2)
+
+    merged = join_bibles(b1, b2)
+    print(json.dumps(merged, ensure_ascii=False, indent=2))
+
+
 if __name__ == "__main__":
-    a = load_bible_json("WLC.json")
-    b = load_bible_json("KJV.json")
-
-    merged = join_bibles(a, b)
-
-    print(json.dumps(merged))
+    main()
 
