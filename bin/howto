@@ -1500,3 +1500,9 @@ bazel build //tensorflow/tools/pip_package:wheel --repo_env=USE_PYWRAP_RULES=1 -
 # bulk rename files and copy as obsidian links
 n=1 && for f in $(ls | sort | grep -P '[.](jpg|png)$'); do ext="${f##*.}" && echo mv -v "$f" "$(printf "x-%02d.${ext}" "$n")"; ((n++)); done
 ls | sort | sed -r 's@.*@![[&]]\n\n@g' | xc
+
+# xdg templates dir
+vim ~/.config/user-dirs.dirs
+XDG_TEMPLATES_DIR="$HOME/Templates"
+
+
