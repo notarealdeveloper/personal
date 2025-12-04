@@ -1,0 +1,14 @@
+#!/bin/sh
+
+text="usage: $(basename $0) 《text》"
+
+if [[ -n $1 ]]; then
+    text="$@"
+fi
+
+pango-view \
+  --foreground="#d3c48e" \
+  --background="#2f383e" \
+  --markup \
+  --output="output.png" \
+  --text="<span font='Great Vibes 80'>$text</span>"
