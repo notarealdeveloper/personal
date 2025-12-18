@@ -227,3 +227,7 @@ shorter_prompt
 ### SUDO CODE ###
 #################
 export ERCHOMAI="$SRC/bbl/formats/json"      # https://github.com/notarealdeveloper/bbl
+
+# make capslock act as escape
+setxkbmap -option "caps:escape"
+
