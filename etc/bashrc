@@ -174,8 +174,6 @@ is_mac && {
     }
 }
 
-shorter_prompt # let's do this by default
-
 set_up_pkg_config() {
     local out p sub
     deps=(zlib openssl bzip2 xz zstd libffi readline ncurses gdbm sqlite libuuid tk)
@@ -197,15 +195,15 @@ set_up_pkg_config() {
 export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 
 if [[ -z $VIRTUAL_ENV ]]; then
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
     venv main
 fi
 
-if [[ $VIRTUAL_ENV == main ]]; then
+if [[ $(basename $VIRTUAL_ENV) == main ]]; then
     export PS1="${_whi}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
-    export VIRTUAL_ENV_PROMPT="$PS1"
-    #name=$(basename $VIRTUAL_ENV)
-    #export PS1="\n(${name}) $PS1"
 fi
+
+shorter_prompt # let's do this by default
 
 next() {
     git reset --hard $(git rev-list presentation...simple | tail -1)
