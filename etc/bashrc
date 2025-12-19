@@ -195,12 +195,7 @@ set_up_pkg_config() {
 export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 
 if [[ -z $VIRTUAL_ENV ]]; then
-    export VIRTUAL_ENV_DISABLE_PROMPT=1
     venv main
-fi
-
-if [[ $(basename $VIRTUAL_ENV) == main ]]; then
-    export PS1="${_whi}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 fi
 
 shorter_prompt # let's do this by default
