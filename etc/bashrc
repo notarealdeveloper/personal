@@ -196,8 +196,13 @@ set_up_pkg_config() {
 #export PS1="\n${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 
+if [[ -z $VIRTUAL_ENV ]]; then
+    venv main
+fi
+
 if [[ $VIRTUAL_ENV == main ]]; then
-    unset VIRTUAL_ENV_PROMPT
+    export PS1="${_whi}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
+    export VIRTUAL_ENV_PROMPT="$PS1"
     #name=$(basename $VIRTUAL_ENV)
     #export PS1="\n(${name}) $PS1"
 fi
