@@ -195,7 +195,8 @@ set_up_pkg_config() {
 export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
 
 if [[ -z $VIRTUAL_ENV ]]; then
-    venv main
+    true
+    #venv main
 fi
 
 shorter_prompt # let's do this by default
