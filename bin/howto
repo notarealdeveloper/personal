@@ -60,6 +60,9 @@ kill -CONT $(pidof program)
 # gpg, tor: use gpg to verify a package using a gpg signature from previously imported public key
 gpg --verify tor-*.xz{.asc,}
 
+# gpg, tor: import the tor developers key from a source other than the website where the tar.xz and signature were was downloaded from
+gpg --auto-key-locate wkd --locate-keys torbrowser@torproject.org
+
 # gpg, ncat: encrypt, transfer, decrypt, verify signature
 ## on machine a
 ncat -l | gpg > filename
@@ -1504,5 +1507,4 @@ ls | sort | sed -r 's@.*@![[&]]\n\n@g' | xc
 # xdg templates dir
 vim ~/.config/user-dirs.dirs
 XDG_TEMPLATES_DIR="$HOME/Templates"
-
 
