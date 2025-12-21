@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source ~/.bashrc
+c sudocode
+cd usr/share/dict
+
+find . -type f -name "*.md" | grep -v 'nu-dict' | sed 's@[.]/@@' | sort | while read f; do
+    echo "## ${f%%.md}"
+    echo "$(cat "$f")"
+    echo
+done | sed 's@^Type: @Def: @g' | sed -E 's@(\[\[)[^]]+[|]([^]])+@\1\2@g'
