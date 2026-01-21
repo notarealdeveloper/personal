@@ -231,4 +231,8 @@ export ERCHOMAI="$SRC/bbl/formats/json"      # https://github.com/notarealdevelo
 # make capslock act as escape
 setxkbmap -option "caps:escape"
 
+# If running inside Guake, start in ~/Desktop
+if [[ -n "$GUAKE_TAB_UUID" ]]; then
+    cd ~/Desktop
+fi
 
