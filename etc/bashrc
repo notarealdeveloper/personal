@@ -236,3 +236,5 @@ if [[ -n "$GUAKE_TAB_UUID" ]]; then
     cd ~/Desktop
 fi
 
+unset GIT_ASKPASS SSH_ASKPASS
+export GIT_TERMINAL_PROMPT=1
