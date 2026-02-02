@@ -199,7 +199,8 @@ if [[ -n $VIRTUAL_ENV ]]; then
     #echo "$VIRTUAL_ENV"
 else
     true
-    shopt -q login_shell || penv master
+    #shopt -q login_shell || penv master
+    penv master
 fi
 
 shorter_prompt # let's do this by default
