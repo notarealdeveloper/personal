@@ -130,7 +130,7 @@ fi
 ### PS1 and PS2 ###
 ###################
 
-if which emerge &>/dev/null; then
+if type -P emerge &>/dev/null; then
     if [[ ${EUID} == 0 ]]; then
         export PS1="${_red}root${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_blu} \w #${_end} "
     else
