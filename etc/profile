@@ -1,3 +1,2 @@
 export PATH="$HOME/src/exec/bin:$HOME/src/personal/bin:$HOME/src/secret/bin:$HOME/src/secret/bin/o:$PATH"
-setxkbmap -option "caps:escape"
 source ~/.bashrc
