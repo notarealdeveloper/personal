@@ -84,8 +84,10 @@ for key in src pin; do
     if [[ -d "$dir" ]]; then
         for sub in "${dir}/"*; do
             [[ ! -d "$sub" ]] && continue
-            name="$(basename "$sub")"
-            root="$(basename "$dir")"
+            name=${sub##*/}
+            root=${dir##*/}
+            #name="$(basename "$sub")"
+            #root="$(basename "$dir")"
             dirs+=([$name]="$dir/$name")
         done
     fi
@@ -234,7 +236,7 @@ shorter_prompt
 export ERCHOMAI="$SRC/bbl/formats/json"      # https://github.com/notarealdeveloper/bbl
 
 # make capslock act as escape
-setxkbmap -option "caps:escape"
+setxkbmap -option "caps:escape" & &>/dev/null
 
 # If running inside Guake, start in ~/Desktop
 if [[ -n "$GUAKE_TAB_UUID" ]]; then
