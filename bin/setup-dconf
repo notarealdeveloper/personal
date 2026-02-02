@@ -99,6 +99,10 @@ dconf load / <<- EOF
 	screenshot-clip=['<Primary>Print']
 	window-screenshot=['<Super>Print']
 	window-screenshot-clip=['<Primary><Shift><Super>Print']
+
+    [org/gnome/desktop/input-sources]
+    xkb-options=['caps:escape']
+
 EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
