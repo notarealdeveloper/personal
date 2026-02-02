@@ -2,7 +2,7 @@
 ### personal bashrc ###
 #######################
 
-export PERSONAL="$(readlink -f "${BASH_SOURCE[0]}" | xargs dirname | xargs dirname)"
+export PERSONAL="$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")"
 export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 
 ######################
