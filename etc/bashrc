@@ -236,7 +236,8 @@ shorter_prompt
 export ERCHOMAI="$SRC/bbl/formats/json"      # https://github.com/notarealdeveloper/bbl
 
 # make capslock act as escape
-setxkbmap -option "caps:escape" & &>/dev/null
+# EXPERIMENT: Putting this in .profile to see if that's enough
+# setxkbmap -option "caps:escape"
 
 # If running inside Guake, start in ~/Desktop
 if [[ -n "$GUAKE_TAB_UUID" ]]; then
