@@ -208,6 +208,7 @@ else
     #penv master
 fi
 penv master
+#venv master
 
 shorter_prompt # let's do this by default
 
