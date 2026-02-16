@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+src_dir='0-pdfs'
+dst_dir='4-txts'
+fin_dir='finished'
+
+export src_dir
+export dst_dir
+export fin_dir
+
+dst_path() {
+    local src="$1"
+    local tmp="${src/$src_dir/$dst_dir}"
+    local dst="${tmp%.*}.txt"
+    echo "$dst"
+}
+export -f dst_path
+
+fin_path() {
+    local src="$1"
+    echo "$fin_dir/$(dst_path "$src")"
+}
+export -f fin_path
+
+unfinished() {
+    while IFS= read -r src; do
+        local fin="$(fin_path "$src")"
+        if [[ -e "$fin" ]]; then
+            echo "[*] all finished: $fin" >&2
+            continue
+        fi
+        echo "$src"
+    done
+}
+export -f unfinished
+
+process_one() {
+    local src="$1"
+    local dst="$(dst_path "$src")"
+    local fin="$(fin_path "$src")"
+
+    mkdir -p "${dst%/*}" "${fin%/*}"
+
+    magick "$src" "$dst"
+    echo "created: $dst"
+
+    : >> "$fin"
+}
+export -f process_one
+
+mkdir -p "$dst_dir" "$fin_dir"
+
+find "$src_dir" -type f -name '*.ppm'  \
+| xargs -n 2000 -P"$(nproc)" bash -c 'printf "%s\n" "$@" | unfinished' _ \
+| parallel -j"$(nproc)" --line-buffer process_one {}
+
