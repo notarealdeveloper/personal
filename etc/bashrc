@@ -207,7 +207,7 @@ else
     #shopt -q login_shell || penv master
     #penv master
 fi
-penv master
+#penv master
 #venv master
 
 shorter_prompt # let's do this by default
