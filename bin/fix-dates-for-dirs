@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Update the timestamp on a directory to be
+# the most recent timestamp in its top level.
+
+usage() {
+    echo "usage: $(basename "$0") <directory>"
+    exit 1
+}
+
+validate_directory() {
+    if [[ ! -d "$1" ]]; then
+        echo "error: not a directory: $1" >&2
+        exit 2
+    elif [[ -n "$dir" ]]; then
+        echo "error: tried to set dir to '$1' but is already set to '$dir'"
+        exit 3
+    fi
+    echo "$1"
+}
+
+inplace=0
+dir=
+
+while [[ -n $1 ]]; do
+    case $1 in
+        -i)         inplace=1;;
+        -h)         usage;;
+        -*)         usage;;
+        *)          dir="$(validate_directory "$1")";;
+    esac
+    shift
+done
+
+find "$dir" -type d | while read d; do
+    date="$(ls -ltr --time-style=full-iso "$d" | head -n 2 | tail -n 1 | grep -Po '20\d+-\d+-\d+ [\d:]+')"
+    if ((inplace)); then
+        echo "[REAL_RUN] touch -d '$date' '$d'"
+        touch -d "$date" "$d"
+    else
+        echo "[DRY_RUN] touch -d '$date' '$d'"
+    fi
+done

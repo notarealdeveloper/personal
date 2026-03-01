@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+die   () { echo "ERROR: ${1}" && exit 1; }
+usage () {
+[[ -n "$1" ]] && printf "[*] ${1}\n"
+
+cat << EOF
+USAGE
+    $(basename $0) <options> <filenames>
+OPTIONS
+    -h, --help:     Show this help
+    -i, --inline:   Actually change filenames (like sed)
+EOF
+exit 1
+}
+
+fix_dates () {
+    newnames=()
+    for old in "${oldnames[@]}"; do
+
+        # THIS IS FOR:    2015-04-15-08-30-00
+        if grep -Pcq '\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}' <(echo "$old"); then
+            new=$(echo "$old" | sed -r 's@([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})@\1\2\3-\4\5\6@g')
+            newnames+=("$new")
+
+        # THIS IS FOR:    xyz2016-04-15 12-54-30
+        elif grep -Pcq '[^0-9]\d{4}[-_ ]\d{2}[-_ ]\d{2}[-_ ]\d{2}[-_ ]\d{2}[-_ ]\d{2}[^0-9]' <(echo "$old"); then
+            new=$(echo "$old" | sed -r 's@([0-9]{4})[-_ ]([0-9]{2})[-_ ]([0-9]{2})[-_ ]([0-9]{2})[-_ ]([0-9]{2})[-_ ]([0-9]{2})@\1\2\3-\4\5\6@g')
+            newnames+=("$new")
+
+        # THIS IS FOR:    xyz2016-04-15$  |   2016-04-15[^0-9]   |  [^0-9]2016-04-15
+        elif grep -Pcq '\d{4}-\d{2}-\d{2}$|\d{4}-\d{2}-\d{2}[^\d]|[^\d]\d{4}-\d{2}-\d{2}' <(echo "$old"); then
+            new=$(echo "$old" | sed -r 's@([0-9]{4})-([0-9]{2})-([0-9]{2})@\1\2\3@g')
+            newnames+=("$new")
+
+        # THIS IS FOR EVERYTHING THAT DOESN'T MATCH
+        else
+            newnames+=("$old")
+        fi
+    done
+
+    # Only make changes if the inline option is set
+    if [[ $inline ]]; then
+        printf "CHANGING FILENAMES\n"
+        for ((i=0; i<${#oldnames[@]}; i++)); do
+            if [[ "${oldnames[$i]}" != "${newnames[$i]}" ]]; then
+                printf "  "
+                mv -v --no-clobber "${oldnames[$i]}" "${newnames[$i]}" || die "Failed to move ${oldnames[$i]} to ${newnames[$i]}."
+            fi
+        done
+    else
+        # Print the old and new filenames
+        echo "OLDNAMES"
+        for f in "${oldnames[@]}"; do echo "  $f"; done
+        echo "NEWNAMES"
+        for f in "${newnames[@]}"; do echo "  $f"; done
+        printf 'NO CHANGES MADE. USE -i TO RENAME FILES\n'
+    fi
+
+    exit 0
+}
+
+oldnames=()
+inline=
+
+[[ -z "$1" ]] && usage
+
+while [[ -n "$1" ]]; do
+    case "$1" in
+        --help|-h)          usage;;
+        --inline|-i)        inline=1;;
+        -*)                 usage "Unknown option: ${1}";;
+        *)                  oldnames+=("$1");;
+    esac
+    shift
+done
+
+fix_dates
