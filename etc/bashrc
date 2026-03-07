@@ -197,7 +197,11 @@ set_up_pkg_config() {
 ###################################
 
 #export PS1="\n${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
-export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
+if [[ ${UID} == 0 ]]; then
+    export PS1="${_red}root${_whi}@${_red}world${_whi} \w ${_red}\$${_end} "
+else
+    export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
+fi
 
 if [[ -n $VIRTUAL_ENV ]]; then
     true

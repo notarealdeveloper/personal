@@ -33,7 +33,7 @@ while [[ -n $1 ]]; do
 done
 
 find "$dir" -type d | while read d; do
-    date="$(ls -ltr --time-style=full-iso "$d" | head -n 2 | tail -n 1 | grep -Po '20\d+-\d+-\d+ [\d:]+')"
+    date="$(ls -ltr --time-style=full-iso "$d" | head -n 2 | tail -n 1 | grep -Po '20\d{6}[_-]?\d+-\d+')"
     if ((inplace)); then
         echo "[REAL_RUN] touch -d '$date' '$d'"
         touch -d "$date" "$d"

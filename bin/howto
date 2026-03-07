@@ -1508,3 +1508,8 @@ ls | sort | sed -r 's@.*@![[&]]\n\n@g' | xc
 vim ~/.config/user-dirs.dirs
 XDG_TEMPLATES_DIR="$HOME/Templates"
 
+# turn sizes like 2.4GB into a number of bytes
+numfmt --from=iec
+
+# turn a number of bytes into sizes like 2.4GB
+numfmt --to=iec
