@@ -38,6 +38,7 @@ dirs+=(
     [src]="${SRC}"
     [git]="${GIT}"
     [pin]="${PIN}"
+    [mine]="${GIT}/mine"
     [desktop]="${DESKTOP}"
     [legacy]="${SRC}/legacy"
 
