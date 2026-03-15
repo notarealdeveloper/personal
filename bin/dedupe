@@ -51,7 +51,8 @@ class DuplicateDetector:
     @property
     def duplicates(self):
         from collections import OrderedDict
-        d = {k:v for k,v in self.hashes.items() if len(v) > 1}
+        d = {k:v for k,v in self.hashes.items()}
+        #d = {k:v for k,v in self.hashes.items() if len(v) > 1}
         return OrderedDict(sorted(d.items()))
 
     # @G: self.duplicates, self.indent
