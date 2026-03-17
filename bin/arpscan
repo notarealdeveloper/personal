@@ -22,7 +22,7 @@ get_device_ip() {
 mac_filter() {
     # Take input from </dev/stdin
     # Build a fake file of substitution commands and do a search and replace with each.
-    sed </dev/stdin -f <(macs | sed -r -e "s@(^|$| )@/@g" -e "s@^@s@" -e "s@.*@&g@")
+    sed </dev/stdin -f <(macs | sed -E -e "s@(^|$| )@/@g" -e "s@^@s@" -e "s@.*@&g@" -e 's@.[(]DUP:.*@@g') | sort -k2 | uniq
 }
 
 # Place the preferred device first
