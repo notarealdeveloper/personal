@@ -42,8 +42,8 @@ done
 # -x suppresses the banner
 if $(which macs &>/dev/null); then
     tabs 24
-    sudo arp-scan -x -r 2 -I "$dev" --localnet $@ | mac_filter
+    sudo arp-scan -x -r 10 -I "$dev" --localnet $@ | mac_filter
 else
-    sudo arp-scan -x -r 2 -I "$dev" --localnet $@
+    sudo arp-scan -x -r 10 -I "$dev" --localnet $@
 fi
 
