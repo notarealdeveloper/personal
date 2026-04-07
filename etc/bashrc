@@ -60,6 +60,7 @@ dirs+=(
 
     # obsidian
     [sudocode]="${OBSIDIAN}/Sudocode"
+    [we]="${OBSIDIAN}/We"
 
     # code
     [code]="${CODE}"
