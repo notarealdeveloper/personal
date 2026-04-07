@@ -41,6 +41,7 @@ dirs+=(
     [mine]="${GIT}/mine"
     [desktop]="${DESKTOP}"
     [legacy]="${SRC}/legacy"
+    [kernel]="${STUFF}/git/orgs/linux/linux"
 
     # git
     [doubleunix]="${GIT}/mine/doubleunix"
