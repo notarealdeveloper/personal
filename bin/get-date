@@ -13,7 +13,8 @@ copy_to_clipboards() {
     printf "${DATE}" | xc
 }
 
-[[ -z $1 ]] && echo "USAGE: $(basename "$0") [-(-l)ong|-(-s)hort] Xor [filename]"
+[[ -z $1 ]] && date +%Y%m%d && exit 0
+
 
 while [[ -n "$1" ]]; do
 
