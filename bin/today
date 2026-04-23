@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+usage() {
+    [[ -n "$1" ]] && echo "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [OPTIONS]
+
+DESCRIPTION
+    Show all files on the machine with today's date
+    in their filenames, from the relevant previous years.
+
+OPTIONS
+    --help, -h          Show this help
+    --list, -l          List the files from today's date in prev years
+    --link, -L DIR      Make a bunch of links to those files in DIR
+EOF
+    exit 1
+}
+
+[[ -z "$1" ]] && usage
+
+link=
+list=
+while [[ -n "$1" ]]; do
+    case "$1" in
+        -h|--help)          usage;;
+        -l|--list)          list=1;;
+        -L|--link)          shift; list=; link="$1";;
+        *)                  usage "Unrecognized option: ${1}";;
+    esac
+    shift
+done
+
+regex="$(get-date | sed -E 's@(..)(..)(....)@20[012][0-9]\3@g')"
+files=("$(sudo plocate --regex "$regex")")
+
+if [[ -n "$link" ]]; then
+    echo "Not yet implemented"
+    exit 1
+fi
+
+if [[ -n "$list" ]]; then
+    echo "${files[@]}"
+fi
+
