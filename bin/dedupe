@@ -85,6 +85,8 @@ class DuplicateDetector:
         RELATIVE_PATH = True
         cwd = os.getcwd()
         for hash, clones in self.duplicates.items():
+            if len(clones) == 1:
+                continue
             l.append('{0}'.format(hash))
             for clone in clones:
                 if RELATIVE_PATH:
