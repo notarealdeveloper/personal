@@ -21,7 +21,9 @@ read answer
 if [[ "$answer" == 'y' || "$answer" == 'Y' ]]; then
     log "Renaming files."
     fixnames -i *.jpg *.png
-    n=1 && for f in $(ls | sort | grep -E '[.](jpg|png)$'); do ext="${f##*.}" && mv -v "$f" "$(printf "${1}-${fmt}.${ext}" "$n")"; ((n++)); done
+    n=1 && for f in $(ls | sort | grep -Pi '[.](jpe?g|png|webp|avif|tiff|gif|bmp)$'); do
+        ext="${f##*.}" && mv -v "$f" "$(printf "${1}-${fmt}.${ext}" "$n")"; ((n++));
+    done
 else
     log "Not doing anything."
     exit 1
