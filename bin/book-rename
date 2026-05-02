@@ -19,9 +19,7 @@ fi
 fmt="%0${digits}d"
 
 echo fixnames -i *
-echo "prefix=$prefix"
-echo "digits=$digits"
-exit 0
+
 n=1 && for f in $(ls | sort | grep -E '[.](jpg|png)$'); do
     ext="${f##*.}" && echo mv -v "$f" "$(printf "${prefix}-${fmt}.${ext}" "$n")"
     ((n++))
