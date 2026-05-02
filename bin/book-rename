@@ -3,11 +3,13 @@
 source log.sh
 
 if [[ -z $1 ]]; then
-    echo "usage: $(basename $0) <prefix-for-new-filenames>"
-    exit 1
+    prefix="$(basename "$PWD")"
+    #echo "usage: $(basename $0) <prefix-for-new-filenames>"
+    #exit 1
+else
+    prefix="$1"
 fi
 
-prefix="$1"
 digits=${2:-2}
 fmt="%0${digits}d"
 
