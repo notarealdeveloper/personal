@@ -9,6 +9,7 @@ include "%L"
 <Multi_key> <e> <b> : "𓉔" U13254
 <Multi_key> <e> <c> : "𓊽" U132BD
 <Multi_key> <e> <d> : "𓆟" U1319F
+<Multi_key> <e> <D> : "𓉿" U1327F
 <Multi_key> <e> <e> : "𓀠" U13020
 <Multi_key> <e> <f> : "𓊋" U1328B
 <Multi_key> <e> <g> : "𓌙" U13319
