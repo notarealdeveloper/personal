@@ -2,104 +2,102 @@ include "%L"
 
 # ------------------------------------------------------------
 # Paleo Hebrew
+# Compose p <letter>
+# example:
+#   Compose p a -> 𐤀
 # ------------------------------------------------------------
 
-<Multi_key> <a> : "𐤀" U10900
-<Multi_key> <b> : "𐤁" U10901
-<Multi_key> <c> : "𐤑" U10911
-<Multi_key> <d> : "𐤃" U10903
-<Multi_key> <e> : "𐤄" U10904
-<Multi_key> <f> : "𐤐" U10910
-<Multi_key> <g> : "𐤂" U10902
-<Multi_key> <h> : "𐤇" U10907
-<Multi_key> <i> : "𐤉" U10909
-<Multi_key> <j> : "𐤉" U10909
-<Multi_key> <k> : "𐤊" U1090A
-<Multi_key> <l> : "𐤋" U1090B
-<Multi_key> <m> : "𐤌" U1090C
-<Multi_key> <n> : "𐤍" U1090D
-<Multi_key> <o> : "𐤏" U1090F
-<Multi_key> <p> : "𐤐" U10910
-<Multi_key> <q> : "𐤒" U10912
-<Multi_key> <r> : "𐤓" U10913
-<Multi_key> <s> : "𐤔" U10914
-<Multi_key> <t> : "𐤕" U10915
-<Multi_key> <u> : "𐤎" U1090E
-<Multi_key> <v> : "𐤎" U1090E
-<Multi_key> <w> : "𐤅" U10905
-<Multi_key> <x> : "𐤈" U10908
-<Multi_key> <y> : "𐤉" U10909
-<Multi_key> <z> : "𐤆" U10906
+<Multi_key> <p> <a> : "𐤀" U10900
+<Multi_key> <p> <b> : "𐤁" U10901
+<Multi_key> <p> <c> : "𐤑" U10911
+<Multi_key> <p> <d> : "𐤃" U10903
+<Multi_key> <p> <e> : "𐤄" U10904
+<Multi_key> <p> <f> : "𐤐" U10910
+<Multi_key> <p> <g> : "𐤂" U10902
+<Multi_key> <p> <h> : "𐤇" U10907
+<Multi_key> <p> <i> : "𐤉" U10909
+<Multi_key> <p> <j> : "𐤉" U10909
+<Multi_key> <p> <k> : "𐤊" U1090A
+<Multi_key> <p> <l> : "𐤋" U1090B
+<Multi_key> <p> <m> : "𐤌" U1090C
+<Multi_key> <p> <n> : "𐤍" U1090D
+<Multi_key> <p> <o> : "𐤏" U1090F
+<Multi_key> <p> <p> : "𐤐" U10910
+<Multi_key> <p> <q> : "𐤒" U10912
+<Multi_key> <p> <r> : "𐤓" U10913
+<Multi_key> <p> <s> : "𐤔" U10914
+<Multi_key> <p> <t> : "𐤕" U10915
+<Multi_key> <p> <u> : "𐤎" U1090E
+<Multi_key> <p> <v> : "𐤎" U1090E
+<Multi_key> <p> <w> : "𐤅" U10905
+<Multi_key> <p> <x> : "𐤈" U10908
+<Multi_key> <p> <y> : "𐤉" U10909
+<Multi_key> <p> <z> : "𐤆" U10906
 
 # ------------------------------------------------------------
 # Egyptian / proto-alphabetic symbolic glyph layer
+# Compose e <letter>
 # ------------------------------------------------------------
 
-<Multi_key> <A> : "𓃾" U130FE
-<Multi_key> <B> : "𓉔" U13250
-<Multi_key> <C> : "𓊽" U132BD
-<Multi_key> <D> : "𓆟" U1319F
-<Multi_key> <E> : "𓀠" U13020
-<Multi_key> <F> : "𓊋" U1328B
-<Multi_key> <G> : "𓌙" U13319
-<Multi_key> <H> : "𓉗" U13257
-<Multi_key> <I> : "𓇋" U131CB
-<Multi_key> <J> : "𓂝" U1309D
-<Multi_key> <K> : "𓂧" U130A7
-<Multi_key> <L> : "𓍢" U13362
-<Multi_key> <M> : "𓈖" U13216
-<Multi_key> <N> : "𓆓" U13193
-<Multi_key> <O> : "𓁹" U13079
-<Multi_key> <P> : "𓂋" U1308B
-<Multi_key> <Q> : "𓎗" U13397
-<Multi_key> <R> : "𓁶" U13076
-<Multi_key> <S> : "𓌔" U13314
-<Multi_key> <T> : "𓏴" U133F4
-<Multi_key> <U> : "𓇑" U131D1
-<Multi_key> <V> : "𓇉" U13358
-<Multi_key> <W> : "𓌉" U13309
-<Multi_key> <X> : "𓄤" U13124
-<Multi_key> <Y> : "𓂝" U1309D
-<Multi_key> <Z> : "𓏭" U133ED
+<Multi_key> <e> <a> : "𓃾" U130FE
+<Multi_key> <e> <b> : "𓉔" U13254
+<Multi_key> <e> <c> : "𓊽" U132BD
+<Multi_key> <e> <d> : "𓆟" U1319F
+<Multi_key> <e> <e> : "𓀠" U13020
+<Multi_key> <e> <f> : "𓊋" U1328B
+<Multi_key> <e> <g> : "𓌙" U13319
+<Multi_key> <e> <h> : "𓉗" U13257
+<Multi_key> <e> <i> : "𓇋" U131CB
+<Multi_key> <e> <j> : "𓂝" U1309D
+<Multi_key> <e> <k> : "𓂧" U130A7
+<Multi_key> <e> <l> : "𓍢" U13362
+<Multi_key> <e> <m> : "𓈖" U13216
+<Multi_key> <e> <n> : "𓆓" U13193
+<Multi_key> <e> <o> : "𓁹" U13079
+<Multi_key> <e> <p> : "𓂋" U1308B
+<Multi_key> <e> <q> : "𓎗" U13397
+<Multi_key> <e> <r> : "𓁶" U13076
+<Multi_key> <e> <s> : "𓌔" U13314
+<Multi_key> <e> <t> : "𓏴" U133F4
+<Multi_key> <e> <u> : "𓇑" U131D1
+<Multi_key> <e> <v> : "𓇉" U131C9
+<Multi_key> <e> <w> : "𓌉" U13309
+<Multi_key> <e> <x> : "𓄤" U13124
+<Multi_key> <e> <y> : "𓂝" U1309D
+<Multi_key> <e> <z> : "𓏭" U133ED
 
 # ------------------------------------------------------------
 # IPA / historical linguistics symbols
-# prefixed with Compose . <key>
-# example:
-#   Compose . a -> ʔ
-#   Compose . s -> ʃ
+# Compose i <letter>
 # ------------------------------------------------------------
 
-# letters
-<Multi_key> <period> <a> : "ʔ" U0294
-<Multi_key> <period> <b> : "β" U03B2
-<Multi_key> <period> <c> : "ɔ" U0254
-<Multi_key> <period> <d> : "Ꞁ" UA780
-<Multi_key> <period> <e> : "æ" U00E6
-<Multi_key> <period> <f> : "ɸ" U0278
-<Multi_key> <period> <g> : "Γ" U0393
-<Multi_key> <period> <h> : "𐌇" U10307
-<Multi_key> <period> <i> : "ɪ" U026A
-<Multi_key> <period> <j> : "ʒ" U0292
-<Multi_key> <period> <k> : "κ" U03BA
-<Multi_key> <period> <l> : "ʌ" U028C
-<Multi_key> <period> <m> : "Ϻ" U03FA
-<Multi_key> <period> <n> : "ŋ" U014B
-<Multi_key> <period> <o> : "ʕ" U0295
-<Multi_key> <period> <p> : "⅃" U2143
-<Multi_key> <period> <q> : "Ϙ" U03D8
-<Multi_key> <period> <r> : "ɚ" U025A
-<Multi_key> <period> <s> : "ʃ" U0283
-<Multi_key> <period> <t> : "ð" U00F0
-<Multi_key> <period> <u> : "ə" U0259
-<Multi_key> <period> <v> : "ʋ" U028B
-<Multi_key> <period> <w> : "ʊ" U028A
-<Multi_key> <period> <x> : "χ" U03C7
-<Multi_key> <period> <y> : "ʎ" U028E
-<Multi_key> <period> <z> : "ɛ" U025B
+<Multi_key> <i> <a> : "ʔ" U0294
+<Multi_key> <i> <b> : "β" U03B2
+<Multi_key> <i> <c> : "ɔ" U0254
+<Multi_key> <i> <d> : "Ꞁ" UA780
+<Multi_key> <i> <e> : "æ" U00E6
+<Multi_key> <i> <f> : "ɸ" U0278
+<Multi_key> <i> <g> : "Γ" U0393
+<Multi_key> <i> <h> : "𐌇" U10307
+<Multi_key> <i> <i> : "ɪ" U026A
+<Multi_key> <i> <j> : "ʒ" U0292
+<Multi_key> <i> <k> : "κ" U03BA
+<Multi_key> <i> <l> : "ʌ" U028C
+<Multi_key> <i> <m> : "Ϻ" U03FA
+<Multi_key> <i> <n> : "ŋ" U014B
+<Multi_key> <i> <o> : "ʕ" U0295
+<Multi_key> <i> <p> : "⅃" U2143
+<Multi_key> <i> <q> : "Ϙ" U03D8
+<Multi_key> <i> <r> : "ɚ" U025A
+<Multi_key> <i> <s> : "ʃ" U0283
+<Multi_key> <i> <t> : "ð" U00F0
+<Multi_key> <i> <u> : "ə" U0259
+<Multi_key> <i> <v> : "ʋ" U028B
+<Multi_key> <i> <w> : "ʊ" U028A
+<Multi_key> <i> <x> : "χ" U03C7
+<Multi_key> <i> <y> : "ʎ" U028E
+<Multi_key> <i> <z> : "ɛ" U025B
 
 # numbers
-<Multi_key> <period> <3> : "ϻ" U03FB
-<Multi_key> <period> <8> : "ϙ" U03D9
-
-
+<Multi_key> <i> <3> : "ϻ" U03FB
+<Multi_key> <i> <8> : "ϙ" U03D9
