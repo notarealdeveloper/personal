@@ -33,6 +33,76 @@ include "%L"
 <Multi_key> <e> <z> : "𓏭" U133ED
 
 # ------------------------------------------------------------
+# Ugaritic Cuneiform Alphabet
+# Compose u <letter>
+# ------------------------------------------------------------
+
+<Multi_key> <u> <a> : "𐎀" U10380
+<Multi_key> <u> <b> : "𐎁" U10381
+<Multi_key> <u> <c> : "𐎑" U10391
+<Multi_key> <u> <d> : "𐎄" U10384
+<Multi_key> <u> <e> : "𐎅" U10385
+<Multi_key> <u> <f> : "𐎔" U10394
+<Multi_key> <u> <g> : "𐎂" U10382
+<Multi_key> <u> <h> : "𐎈" U10388
+<Multi_key> <u> <i> : "𐎊" U1038A
+<Multi_key> <u> <j> : "𐎌" U1038C
+<Multi_key> <u> <k> : "𐎋" U1038B
+<Multi_key> <u> <l> : "𐎍" U1038D
+<Multi_key> <u> <m> : "𐎎" U1038E
+<Multi_key> <u> <n> : "𐎐" U10390
+<Multi_key> <u> <o> : "𐎓" U10393
+<Multi_key> <u> <p> : "𐎔" U10394
+<Multi_key> <u> <q> : "𐎒" U10392
+<Multi_key> <u> <r> : "𐎗" U10397
+<Multi_key> <u> <s> : "𐎌" U1038C
+<Multi_key> <u> <t> : "𐎚" U1039A
+<Multi_key> <u> <v> : "𐎘" U10398
+<Multi_key> <u> <w> : "𐎆" U10386
+<Multi_key> <u> <x> : "𐎃" U10383
+<Multi_key> <u> <y> : "𐎊" U1038A
+<Multi_key> <u> <z> : "𐎇" U10387
+
+# ------------------------------------------------------------
+# Full Ugaritic Alphabet
+# Compose u <letter>
+# mnemonic / comparative-semitic oriented
+# ------------------------------------------------------------
+
+<Multi_key> <u> <a> : "𐎀" U10380  # aleph
+<Multi_key> <u> <A> : "𐎛" U1039B  # aleph-i
+<Multi_key> <u> <b> : "𐎁" U10381  # bet
+<Multi_key> <u> <c> : "𐎕" U10395  # tsade-ish
+<Multi_key> <u> <C> : "𐎝" U1039D  # mysterious final sibilant
+<Multi_key> <u> <d> : "𐎄" U10384  # dalet
+<Multi_key> <u> <D> : "𐎏" U1038F  # ḏ
+<Multi_key> <u> <e> : "𐎅" U10385  # he
+<Multi_key> <u> <f> : "𐎗" U10397  # resh-ish
+<Multi_key> <u> <g> : "𐎂" U10382  # gimel
+<Multi_key> <u> <G> : "𐎙" U10399  # ġ
+<Multi_key> <u> <h> : "𐎈" U10388  # het
+<Multi_key> <u> <i> : "𐎊" U1038A  # yod
+<Multi_key> <u> <j> : "𐎑" U10391  # emphatic z
+<Multi_key> <u> <k> : "𐎋" U1038B  # kaf
+<Multi_key> <u> <l> : "𐎍" U1038D  # lamed
+<Multi_key> <u> <m> : "𐎎" U1038E  # mem
+<Multi_key> <u> <n> : "𐎐" U10390  # nun
+<Multi_key> <u> <o> : "𐎓" U10393  # ayin
+<Multi_key> <u> <O> : "𐎜" U1039C  # aleph-u
+<Multi_key> <u> <p> : "𐎔" U10394  # pe
+<Multi_key> <u> <q> : "𐎖" U10396  # qoph
+<Multi_key> <u> <r> : "𐎗" U10397  # resh
+<Multi_key> <u> <s> : "𐎌" U1038C  # shin
+<Multi_key> <u> <S> : "𐎒" U10392  # samekh-ish
+<Multi_key> <u> <t> : "𐎉" U10389  # tet
+<Multi_key> <u> <T> : "𐎚" U1039A  # tav
+<Multi_key> <u> <u> : "𐎘" U10398  # ṯ
+<Multi_key> <u> <w> : "𐎆" U10386  # waw
+<Multi_key> <u> <x> : "𐎃" U10383  # ḫ
+<Multi_key> <u> <y> : "𐎊" U1038A  # yod
+<Multi_key> <u> <z> : "𐎇" U10387  # zayin
+
+# ------------------------------------------------------------
 # Paleo Hebrew
 # Compose p <letter>
 # example:
