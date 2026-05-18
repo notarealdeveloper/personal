@@ -99,6 +99,104 @@ include "%L"
 <Multi_key> <a> <z> : "𐡆" U10846
 
 # ------------------------------------------------------------
+# Hebrew
+# Compose h <letter>
+# ------------------------------------------------------------
+
+<Multi_key> <h> <a> : "א" U05D0
+<Multi_key> <h> <b> : "ב" U05D1
+<Multi_key> <h> <c> : "צ" U05E6
+<Multi_key> <h> <d> : "ד" U05D3
+<Multi_key> <h> <e> : "ה" U05D4
+<Multi_key> <h> <f> : "פ" U05E4
+<Multi_key> <h> <g> : "ג" U05D2
+<Multi_key> <h> <h> : "ח" U05D7
+<Multi_key> <h> <i> : "י" U05D9
+<Multi_key> <h> <j> : "י" U05D9
+<Multi_key> <h> <k> : "כ" U05DB
+<Multi_key> <h> <l> : "ל" U05DC
+<Multi_key> <h> <m> : "מ" U05DE
+<Multi_key> <h> <n> : "נ" U05E0
+<Multi_key> <h> <o> : "ע" U05E2
+<Multi_key> <h> <p> : "פ" U05E4
+<Multi_key> <h> <q> : "ק" U05E7
+<Multi_key> <h> <r> : "ר" U05E8
+<Multi_key> <h> <s> : "ש" U05E9
+<Multi_key> <h> <t> : "ת" U05EA
+<Multi_key> <h> <u> : "ס" U05E1
+<Multi_key> <h> <v> : "ס" U05E1
+<Multi_key> <h> <w> : "ו" U05D5
+<Multi_key> <h> <x> : "ט" U05D8
+<Multi_key> <h> <y> : "י" U05D9
+<Multi_key> <h> <z> : "ז" U05D6
+
+# ------------------------------------------------------------
+# Greek
+# Compose g <letter>
+# ------------------------------------------------------------
+
+<Multi_key> <g> <a> : "α" U03B1
+<Multi_key> <g> <b> : "β" U03B2
+<Multi_key> <g> <c> : "ξ" U03BE
+<Multi_key> <g> <d> : "δ" U03B4
+<Multi_key> <g> <e> : "ε" U03B5
+<Multi_key> <g> <f> : "φ" U03C6
+<Multi_key> <g> <g> : "γ" U03B3
+<Multi_key> <g> <h> : "η" U03B7
+<Multi_key> <g> <i> : "ι" U03B9
+<Multi_key> <g> <j> : "ψ" U03C8
+<Multi_key> <g> <k> : "κ" U03BA
+<Multi_key> <g> <l> : "λ" U03BB
+<Multi_key> <g> <m> : "μ" U03BC
+<Multi_key> <g> <n> : "ν" U03BD
+<Multi_key> <g> <o> : "ο" U03BF
+<Multi_key> <g> <p> : "π" U03C0
+<Multi_key> <g> <q> : "ϙ" U03D9
+<Multi_key> <g> <r> : "ρ" U03C1
+<Multi_key> <g> <s> : "σ" U03C3
+<Multi_key> <g> <t> : "τ" U03C4
+<Multi_key> <g> <u> : "υ" U03C5
+<Multi_key> <g> <v> : "ϝ" U03DD
+<Multi_key> <g> <w> : "ω" U03C9
+<Multi_key> <g> <x> : "χ" U03C7
+<Multi_key> <g> <y> : "υ" U03C5
+<Multi_key> <g> <z> : "ζ" U03B6
+<Multi_key> <g> <3> : "ϻ" U03FB
+<Multi_key> <g> <8> : "ϙ" U03D9
+
+# ------------------------------------------------------------
+# Russian / Cyrillic
+# Compose r <letter>
+# ------------------------------------------------------------
+
+<Multi_key> <r> <a> : "а" U0430
+<Multi_key> <r> <b> : "б" U0431
+<Multi_key> <r> <c> : "ц" U0446
+<Multi_key> <r> <d> : "д" U0434
+<Multi_key> <r> <e> : "е" U0435
+<Multi_key> <r> <f> : "ф" U0444
+<Multi_key> <r> <g> : "г" U0433
+<Multi_key> <r> <h> : "х" U0445
+<Multi_key> <r> <i> : "и" U0438
+<Multi_key> <r> <j> : "ж" U0436
+<Multi_key> <r> <k> : "к" U043A
+<Multi_key> <r> <l> : "л" U043B
+<Multi_key> <r> <m> : "м" U043C
+<Multi_key> <r> <n> : "н" U043D
+<Multi_key> <r> <o> : "о" U043E
+<Multi_key> <r> <p> : "п" U043F
+<Multi_key> <r> <q> : "я" U044F
+<Multi_key> <r> <r> : "р" U0440
+<Multi_key> <r> <s> : "ш" U0448
+<Multi_key> <r> <t> : "т" U0442
+<Multi_key> <r> <u> : "у" U0443
+<Multi_key> <r> <v> : "в" U0432
+<Multi_key> <r> <w> : "щ" U0449
+<Multi_key> <r> <x> : "ы" U044B
+<Multi_key> <r> <y> : "й" U0439
+<Multi_key> <r> <z> : "з" U0437
+
+# ------------------------------------------------------------
 # IPA / historical linguistics symbols
 # Compose i <letter>
 # ------------------------------------------------------------
@@ -115,11 +213,13 @@ include "%L"
 <Multi_key> <i> <j> : "ʒ" U0292
 <Multi_key> <i> <k> : "κ" U03BA
 <Multi_key> <i> <l> : "ʌ" U028C
-<Multi_key> <i> <m> : "Ϻ" U03FA
+<Multi_key> <i> <M> : "Ϻ" U03FA
+<Multi_key> <i> <m> : "ϻ" U03FB
 <Multi_key> <i> <n> : "ŋ" U014B
 <Multi_key> <i> <o> : "ʕ" U0295
 <Multi_key> <i> <p> : "⅃" U2143
-<Multi_key> <i> <q> : "Ϙ" U03D8
+<Multi_key> <i> <Q> : "Ϙ" U03D8
+<Multi_key> <i> <q> : "ϙ" U03D9
 <Multi_key> <i> <r> : "ɚ" U025A
 <Multi_key> <i> <s> : "ʃ" U0283
 <Multi_key> <i> <t> : "ð" U00F0
@@ -129,7 +229,3 @@ include "%L"
 <Multi_key> <i> <x> : "χ" U03C7
 <Multi_key> <i> <y> : "ʎ" U028E
 <Multi_key> <i> <z> : "ɛ" U025B
-
-# numbers
-<Multi_key> <i> <3> : "ϻ" U03FB
-<Multi_key> <i> <8> : "ϙ" U03D9
