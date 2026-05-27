@@ -107,7 +107,8 @@ EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
-	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30']
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33', 'custom34', 'custom35', '__dummy__']
+	show-desklets=@as []
 
 	[custom-keybindings/custom0]
 	binding=['<Primary><Alt>b']
@@ -148,11 +149,6 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	binding=['<Primary><Alt>o']
 	command='obsidian'
 	name='obsidian'
-
-	[custom-keybindings/custom16]
-	binding=['<Primary><Shift><Alt>s']
-	command='o scratch'
-	name='o-scratch'
 
 	[custom-keybindings/custom17]
 	binding=['<Super>s']
@@ -224,15 +220,40 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	command='my shebang'
 	name='my shebang'
 
+	[custom-keybindings/custom3]
+	binding=['<Shift><Alt>e']
+	command='fm'
+	name='fm'
+
 	[custom-keybindings/custom30]
 	binding=['<Primary><Alt>g']
 	command='browser'
 	name='browser'
 
-	[custom-keybindings/custom3]
-	binding=['<Shift><Alt>e']
-	command='fm'
-	name='fm'
+	[custom-keybindings/custom31]
+	binding=['<Primary><Alt>a']
+	command='my a'
+	name='my a'
+
+	[custom-keybindings/custom32]
+	binding=['<Primary><Shift><Alt>e']
+	command='my e'
+	name='my e'
+
+	[custom-keybindings/custom33]
+	binding=['<Primary><Shift><Alt>c']
+	command='my c'
+	name='my c'
+
+	[custom-keybindings/custom34]
+	binding=['<Primary><Shift><Alt>z']
+	command='my z'
+	name='my z'
+
+	[custom-keybindings/custom35]
+	binding=['<Primary><Shift><Alt>s']
+	command='ssmv'
+	name='ssmv'
 
 	[custom-keybindings/custom4]
 	binding=['<Shift><Alt>d']
