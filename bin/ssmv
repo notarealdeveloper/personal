@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+dst="$HOME/Desktop/stuff/screenshots"
+if [[ ! -d "$dst" ]]; then
+    msg="Destination dir does not exist: dir='$dir'"
+    if command -v glog; then
+        glog "$msg"
+    elif command -v xcowsay; then
+        xcowsay "$msg"
+    else
+        echo "$msg"
+    fi
+    exit 1
+fi
+
+mv -v $HOME/Screenshot*.png "$dst"/
