@@ -52,6 +52,8 @@ bold-color = bright
 background = #222222
 theme = Tomorrow Night Eighties
 font-size = 14
+font-family = "DejaVu Sans Mono"
+font-codepoint-map = U+0590-U+05FF=DejaVu Sans Mono
 working-directory = /home/jason/Desktop
 maximize = true
 keybind = alt+9=goto_tab:9
