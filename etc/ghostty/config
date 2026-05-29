@@ -57,6 +57,8 @@ working-directory = /home/jason/Desktop
 maximize = true
 keybind = alt+9=goto_tab:9
 keybind = alt+0=last_tab
+keybind = ctrl+|=new_split:right
+keybind = ctrl+-=new_split:down
 
 
 ##################################################################################
