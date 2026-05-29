@@ -76,7 +76,7 @@
   {
     "key": "alt+s",
     "command": "workbench.action.openGlobalKeybindingsFile",
-    "when": "terminalFocus || panelFocus"
+    "when": ""
   },
   {
     "key": "alt+r",
@@ -86,5 +86,13 @@
   {
     "key": "alt+m",
     "command": "workbench.action.toggleMaximizedPanel"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+        "text": "\u0005"
+    },
+    "when": "terminalFocus"
   }
 ]
