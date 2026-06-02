@@ -1,0 +1,356 @@
+#!/usr/bin/env python
+
+"""
+Examples:
+
+  sefaria gen
+  sefaria exo --lang both -o exodus
+  sefaria Genesis 1 1
+  sefaria "Song of Songs" 2 3
+  sefaria gen 1 1 --strip-niqqud
+  sefaria gen 1 1 --lang both
+  sefaria gen 1 1 --list-translations
+  sefaria gen 1 1 --json
+"""
+
+import argparse
+import json
+import re
+import sys
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+
+BASE = "https://www.sefaria.org/api/v3/texts"
+HEBREW_MARKS_RE = re.compile(r"[\u0591-\u05BD\u05BF-\u05C7]")
+PREFERRED_ENGLISH_VERSIONS = [
+    "HarperCollins Study Bible, New Revised Standard Version",
+    "Harper Collins Study Bible, New Revised Standard Version",
+    "New Revised Standard Version",
+    "NRSV",
+]
+SIMILAR_ENGLISH_VERSIONS = [
+    "Tanakh: The Holy Scriptures, published by JPS",
+    "The Contemporary Torah, Jewish Publication Society, 2006",
+]
+
+BOOKS = [
+    "Genesis",
+    "Exodus",
+    "Leviticus",
+    "Numbers",
+    "Deuteronomy",
+    "Joshua",
+    "Judges",
+    "I Samuel",
+    "II Samuel",
+    "I Kings",
+    "II Kings",
+    "Isaiah",
+    "Jeremiah",
+    "Ezekiel",
+    "Hosea",
+    "Joel",
+    "Amos",
+    "Obadiah",
+    "Jonah",
+    "Micah",
+    "Nahum",
+    "Habakkuk",
+    "Zephaniah",
+    "Haggai",
+    "Zechariah",
+    "Malachi",
+    "Psalms",
+    "Proverbs",
+    "Job",
+    "Song of Songs",
+    "Ruth",
+    "Lamentations",
+    "Ecclesiastes",
+    "Esther",
+    "Daniel",
+    "Ezra",
+    "Nehemiah",
+    "I Chronicles",
+    "II Chronicles",
+]
+
+
+def norm(s):
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def strip_niqqud(text):
+    return HEBREW_MARKS_RE.sub("", text)
+
+
+def book_name(s):
+    key = norm(s)
+    hits = [b for b in BOOKS if norm(b).startswith(key)]
+    if len(hits) == 1:
+        return hits[0]
+    if len(hits) > 1:
+        raise SystemExit(f"Ambiguous book name {s!r}: {', '.join(hits)}")
+    return s
+
+
+def slug(s):
+    return re.sub(r"[^0-9A-Za-z]+", "-", s.lower()).strip("-") or "book"
+
+
+def ref_from_parts(parts):
+    if len(parts) >= 3 and parts[-1].isdigit() and parts[-2].isdigit():
+        return f"{book_name(' '.join(parts[:-2]))} {parts[-2]}:{parts[-1]}"
+    if len(parts) >= 2 and parts[-1].isdigit():
+        return f"{book_name(' '.join(parts[:-1]))} {parts[-1]}"
+    return book_name(" ".join(parts))
+
+
+def is_book_ref(parts, ref):
+    return ":" not in ref and not (len(parts) >= 2 and parts[-1].isdigit())
+
+
+def fetch_version(ref, lang="he", version=None):
+    qs = {"return_format": "text_only"}
+    qs["version"] = version or {"he": "hebrew", "en": "english"}[lang]
+
+    url = f"{BASE}/{urllib.parse.quote(ref, safe='')}?{urllib.parse.urlencode(qs)}"
+    req = urllib.request.Request(url, headers={"User-Agent": "sefaria"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)
+
+
+def available_versions(data, lang=None):
+    versions = data.get("available_versions", [])
+    if lang:
+        versions = [v for v in versions if v.get("language") == lang]
+    return versions
+
+
+def english_versions(data):
+    return [
+        v
+        for v in available_versions(data, "en")
+        if v.get("actualLanguage", "en") == "en"
+        or v.get("languageFamilyName") == "english"
+    ]
+
+
+def find_version(data, candidates):
+    versions = english_versions(data)
+    by_title = {norm(v.get("versionTitle") or ""): v for v in versions}
+    by_short = {norm(v.get("shortVersionTitle") or ""): v for v in versions}
+
+    for candidate in candidates:
+        key = norm(candidate)
+        if key in by_title:
+            return by_title[key].get("versionTitle")
+        if key in by_short:
+            return by_short[key].get("versionTitle")
+
+    for candidate in candidates:
+        key = norm(candidate)
+        for v in versions:
+            title = norm(v.get("versionTitle") or "")
+            short = norm(v.get("shortVersionTitle") or "")
+            if key and (key in title or key in short):
+                return v.get("versionTitle")
+
+    return None
+
+
+def default_english_version(data):
+    return (
+        find_version(data, PREFERRED_ENGLISH_VERSIONS)
+        or find_version(data, SIMILAR_ENGLISH_VERSIONS)
+    )
+
+
+def fetch(ref, lang="he", version=None):
+    if version or lang != "en":
+        return fetch_version(ref, lang=lang, version=version)
+
+    data = fetch_version(ref, lang=lang)
+    default_version = default_english_version(data)
+    if default_version and default_version != get_version_title(data, "en"):
+        return fetch_version(ref, lang=lang, version=default_version)
+    return data
+
+
+def fetch_all(ref, lang, version):
+    if lang != "both":
+        return fetch(ref, lang=lang, version=version)
+    if version:
+        raise SystemExit("--version cannot be used with --lang both")
+
+    he = fetch(ref, lang="he")
+    en = fetch(ref, lang="en")
+    data = dict(he)
+    data["versions"] = he.get("versions", []) + en.get("versions", [])
+    return data
+
+
+def flatten(x):
+    if isinstance(x, str):
+        return [x]
+    if isinstance(x, list):
+        out = []
+        for y in x:
+            out.extend(flatten(y))
+        return out
+    return []
+
+
+def split_ref(ref):
+    m = re.match(r"^(?P<book>.+?)\s+(?P<chapter>\d+)(?::(?P<verse>\d+))?$", ref)
+    if m:
+        return m.group("book"), int(m.group("chapter")), int(m.group("verse") or 1)
+    return ref, 1, 1
+
+
+def prefixed_lines(text, book, chapter=1, verse=1, strip=False):
+    if isinstance(text, str):
+        line = strip_niqqud(text) if strip else text
+        return [f"{book} {chapter}:{verse} {line}"]
+
+    if not isinstance(text, list):
+        return []
+
+    out = []
+    for i, item in enumerate(text):
+        if isinstance(item, list):
+            out.extend(prefixed_lines(item, book, chapter + i, 1, strip=strip))
+        else:
+            out.extend(prefixed_lines(item, book, chapter, verse + i, strip=strip))
+    return out
+
+
+def get_text(data, lang):
+    if data.get("error"):
+        raise SystemExit(f"Sefaria error: {data['error']}")
+    for v in data.get("versions", []):
+        if v.get("language") == lang and v.get("text"):
+            return v.get("text"), v.get("versionTitle")
+    raise SystemExit(f"No {lang} text returned.")
+
+
+def get_version_title(data, lang):
+    for v in data.get("versions", []):
+        if v.get("language") == lang and v.get("text"):
+            return v.get("versionTitle")
+    return None
+
+
+def format_translations(data, lang):
+    versions = available_versions(data)
+    if lang != "both":
+        versions = [v for v in versions if v.get("language") == lang]
+
+    rows = []
+    for v in versions:
+        title = v.get("versionTitle") or "(untitled)"
+        actual = v.get("actualLanguage") or v.get("language")
+        short = v.get("shortVersionTitle")
+        suffix = f" ({short})" if short and short != title else ""
+        rows.append((actual or "", title + suffix))
+
+    rows.sort(key=lambda row: (row[0], norm(row[1])))
+    return "\n".join(f"{actual}\t{title}" if actual else title for actual, title in rows)
+
+
+def lines(data, lang, ref, strip=False):
+    text, title = get_text(data, lang)
+    book, chapter, verse = split_ref(ref)
+    out = prefixed_lines(text, book, chapter, verse, strip=strip and lang == "he")
+    return out, title
+
+
+def format_text(data, ref, lang, strip=False):
+    if lang == "both":
+        he, he_title = lines(data, "he", ref, strip=strip)
+        en, en_title = lines(data, "en", ref)
+        return "\n\n".join(
+            [
+                f"## Hebrew - {he_title}\n" + "\n".join(he),
+                f"## English - {en_title}\n" + "\n".join(en),
+            ]
+        )
+
+    out, _title = lines(data, lang, ref, strip=strip)
+    return "\n".join(out)
+
+
+def write_book(data, outdir, ref, lang, strip=False):
+    outdir.mkdir(parents=True, exist_ok=True)
+    book, _chapter, _verse = split_ref(ref)
+    books = []
+
+    if lang in ("he", "both"):
+        text, _title = get_text(data, "he")
+        books.append(("Hebrew", text))
+    if lang in ("en", "both"):
+        text, _title = get_text(data, "en")
+        books.append(("English", text))
+
+    count = len(books[0][1])
+    width = max(2, len(str(count)))
+
+    for i in range(count):
+        parts = []
+        for label, text in books:
+            out = prefixed_lines(text[i], book, i + 1, strip=strip and label == "Hebrew")
+            block = "\n".join(out)
+            parts.append(f"## {label}\n{block}" if lang == "both" else block)
+        (outdir / f"{i + 1:0{width}d}.md").write_text(
+            "\n\n".join(parts) + "\n",
+            encoding="utf-8",
+        )
+
+    return count
+
+
+def main():
+    p = argparse.ArgumentParser(
+        description="Download Hebrew and/or English Bible text from Sefaria.",
+        epilog=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("ref", nargs="+", help='Book/ref, e.g. gen, exo 1, "Genesis 1:1"')
+    p.add_argument("-l", "--lang", choices=["he", "en", "both"], default="en")
+    p.add_argument("-v", "--version", help="Specific Sefaria version title")
+    p.add_argument(
+        "-t",
+        "--list-translations",
+        action="store_true",
+        help="List available translations/versions for the ref",
+    )
+    p.add_argument("-s", "--strip-niqqud", action="store_true")
+    p.add_argument("-o", "--output", type=Path)
+    p.add_argument("--json", action="store_true", help="Print raw Sefaria JSON")
+    args = p.parse_args()
+
+    ref = ref_from_parts(args.ref)
+    data = fetch_all(ref, args.lang, args.version)
+
+    if args.json:
+        text = json.dumps(data, ensure_ascii=False, indent=2)
+    elif args.list_translations:
+        text = format_translations(data, args.lang)
+    elif is_book_ref(args.ref, ref):
+        outdir = args.output or Path(slug(ref))
+        n = write_book(data, outdir, ref, args.lang, strip=args.strip_niqqud)
+        print(f"Wrote {n} chapters to {outdir}", file=sys.stderr)
+        return
+    else:
+        text = format_text(data, ref, args.lang, strip=args.strip_niqqud)
+
+    if args.output:
+        args.output.write_text(text + "\n", encoding="utf-8")
+    else:
+        print(text)
+
+
+if __name__ == "__main__":
+    main()
