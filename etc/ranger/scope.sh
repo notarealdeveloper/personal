@@ -44,7 +44,7 @@ HIGHLIGHT_TABWIDTH="${HIGHLIGHT_TABWIDTH:-8}"
 HIGHLIGHT_STYLE="${HIGHLIGHT_STYLE:-pablo}"
 HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
 PYGMENTIZE_STYLE="${PYGMENTIZE_STYLE:-autumn}"
-BAT_STYLE="${BAT_STYLE:-plain}"
+BAT_STYLE="${BAT_STYLE:-1337}"
 OPENSCAD_IMGSIZE="${RNGR_OPENSCAD_IMGSIZE:-1000,1000}"
 OPENSCAD_COLORSCHEME="${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}"
 SQLITE_TABLE_LIMIT=20  # Display only the top <limit> tables in database, set to 0 for no exhaustive preview (only the sqlite_master table is displayed).
