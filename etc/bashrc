@@ -153,14 +153,13 @@ fi
 alias brcp="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${HOME}/.bashrc"
 alias crc="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/XCompose && ibus restart"
 
-# cds
-alias cs='c src'
-alias cn='c nix'
-
 # ranger
 alias r='ranger'
 alias rrc="$EDITOR ~/.config/ranger/rc.conf"
 
+# cds
+alias cs='c src'
+alias cn='c nix'
 
 ###################
 ### os specific ###
