@@ -1,5 +1,6 @@
+
 # style name or JSON path (default "auto")
-style: "/home/jason/.config/glow/everforest-ranger.json"
+style: "dark"
 
 # mouse support (TUI-mode only)
 mouse: false
