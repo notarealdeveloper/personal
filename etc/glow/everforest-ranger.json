@@ -1,0 +1,34 @@
+{
+  "document": {
+    "stylePrimitive": {
+      "color": "#d3c6aa",
+      "backgroundColor": "#2f383e"
+    }
+  },
+
+  "heading": {
+    "stylePrimitive": {
+      "color": "#d3c6aa",
+      "bold": false
+    }
+  },
+
+  "h1": { "stylePrimitive": { "color": "#da6362", "bold": false } },
+  "h2": { "stylePrimitive": { "color": "#d77f48", "bold": false } },
+  "h3": { "stylePrimitive": { "color": "#bf983d", "bold": false } },
+  "h4": { "stylePrimitive": { "color": "#899c40", "bold": false } },
+  "h5": { "stylePrimitive": { "color": "#569d79", "bold": false } },
+  "h6": { "stylePrimitive": { "color": "#b87b9d", "bold": false } },
+
+  "paragraph": {
+    "stylePrimitive": {
+      "color": "#d3c6aa"
+    }
+  },
+
+  "text": {
+    "stylePrimitive": {
+      "color": "#d3c6aa"
+    }
+  }
+}

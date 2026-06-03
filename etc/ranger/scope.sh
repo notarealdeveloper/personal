@@ -57,7 +57,10 @@ handle_extension() {
 
         # Markdown
         md|markdown)
-            glow --style=dark --width="${PV_WIDTH}" -- "${FILE_PATH}" && exit 5
+            glow \
+                --style ~/.config/glow/everforest-ranger.json \
+                --width "${PV_WIDTH}" \
+                -- "${FILE_PATH}" && exit 5
             env COLORTERM=truecolor bat \
                 --color=always \
                 --style="${BAT_STYLE}" \
