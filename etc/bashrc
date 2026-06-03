@@ -156,6 +156,7 @@ alias crc="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/XCompose && ibus restart
 # ranger
 alias r='ranger'
 alias rrc="c personal && $EDITOR etc/ranger/rc.conf"
+alias rrcs="c personal && $EDITOR etc/ranger/scope.sh"
 
 # cds
 alias cs='c src'
