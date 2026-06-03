@@ -57,18 +57,14 @@ handle_extension() {
 
         # Markdown
         md|markdown)
-            #echo "MARKDOWN BRANCH HIT"
-            #echo "file: ${FILE_PATH}"
-            #echo "width: ${PV_WIDTH}"
             glow --style dark --width "${PV_WIDTH}" -- "${FILE_PATH}" && exit 5
-            #exit 5;
             env COLORTERM=truecolor bat \
                 --color=always \
                 --style="${BAT_STYLE}" \
                 --theme="${BAT_THEME}" \
                 --language=markdown \
                 -- "${FILE_PATH}" && exit 5
-            exit 1;;
+            exit 2;;
 
         ## Archive
         a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
