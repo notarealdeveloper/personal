@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+rm-niqqud-from-clipboard
+
+# open clipboard in wiktionary
+
+word="$(xclip -o -selection clipboard)"
+
+xdg-open "https://en.wiktionary.org/wiki/${word}"
+
