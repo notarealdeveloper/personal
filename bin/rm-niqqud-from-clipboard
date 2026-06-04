@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+strip_niqqud() {
+    perl -CSDA -pe 's/[\x{0591}-\x{05BD}\x{05BF}\x{05C1}\x{05C2}\x{05C4}-\x{05C7}]//g'
+}
+
+primary=$(xclip -o -selection primary 2>/dev/null || true)
+clipboard=$(xclip -o -selection clipboard 2>/dev/null || true)
+
+printf '%s' "$primary" \
+    | strip_niqqud \
+    | xclip -i -selection primary
+
+printf '%s' "$clipboard" \
+    | strip_niqqud \
+    | xclip -i -selection clipboard
