@@ -4,9 +4,8 @@ set -euo pipefail
 
 rm-niqqud-from-clipboard
 
-# open clipboard in wiktionary
-
 word="$(xclip -o -selection primary)"
 
 xdg-open "https://en.wiktionary.org/wiki/${word}"
 
+xdg-open "https://biblehub.com/searchhebrew.php?q=${word}"
