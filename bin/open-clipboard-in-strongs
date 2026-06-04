@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+rm-niqqud-from-clipboard
+
+word="$(xclip -o -selection primary)"
+
+xdg-open "https://biblehub.com/searchhebrew.php?q=${word}"
