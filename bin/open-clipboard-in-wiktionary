@@ -6,7 +6,8 @@ rm-niqqud-from-clipboard
 
 # open clipboard in wiktionary
 
-word="$(xclip -o -selection clipboard)"
+#word="$(xclip -o -selection clipboard)"
+word="$(xclip -o -selection primary)"
 
 xdg-open "https://en.wiktionary.org/wiki/${word}"
 
