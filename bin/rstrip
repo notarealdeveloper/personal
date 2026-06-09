@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ "$#" -eq 0 ]; then
+    sed -E 's/[[:space:]]+$//'
+    #perl -CSDA -pe 's/\s+$//'
+else
+    sed -Ei 's/[[:space:]]+$//' "$@"
+    #perl -CSDA -i -pe 's/\s+$//' "$@"
+fi
