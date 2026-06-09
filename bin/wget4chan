@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+
+import os
+import re
+import sys
+import argparse
+import datetime
+
+import asyncio
+import aiohttp
+import aiofiles
+
+from operator import add
+from functools import reduce
+
+def parse_command_line():
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        'page',
+        nargs='?',
+        type = str,
+        default=None,
+    )
+
+    parser.add_argument(
+        '-b',
+        '--board',
+        type = str,
+        default = 'b',
+    )
+
+    parser.add_argument(
+        '-w',
+        '--words',
+        type = str,
+        default = '',
+    )
+
+    parser.add_argument(
+        '-s',
+        '--save-all-html',
+        action = 'store_true',
+        help = "Save a new copy of the page's html on every scrape.",
+    )
+
+    config = parser.parse_args(sys.argv[1:])
+
+    if config.words:
+        # if it was passed on the command line, it came in as a string.
+        # later code will assume it's a list
+        config.words = config.words.split(',')
+
+    if config.page:
+        if config.page.startswith('http'):
+            config.page_is_url = True
+            config.dirname = os.path.basename(config.page)
+            config.words = [config.dirname]
+        else:
+            config.page_is_url = False
+            config.dirname = config.page
+            config.words = [config.page]
+    else:
+        config.dirname = f"wget4chan-{config.board}"
+    return config
+
+
+async def get_board_page(board, n, session):
+
+    base_url = f"http://boards.4chan.org/{board}"
+    url = f"{base_url}/{n}" if n > 1 else base_url
+
+    async with session.get(url) as response:
+
+        content = await response.read()
+
+        page = content.decode()
+
+        rel_links = re.findall(r'(?<=href=")[^"]*thread/\d+/[^"]+', page)
+
+        links = [f"http://boards.4chan.org/{board}/{link}" for link in rel_links]
+
+        return links
+
+def timestamp():
+    return datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+async def get_urls(page, session, save_all_html=False):
+
+    page_name = os.path.basename(page)
+
+    async with session.get(page) as response:
+
+        content = await response.read()
+
+        html = content.decode()
+
+        os.makedirs(page_name, exist_ok = True)
+
+        if save_all_html:
+            html_dir = f"{page_name}/html"
+            os.makedirs(html_dir, exist_ok=True)
+            html_path = f"{html_dir}/{timestamp()}.html"
+        else:
+            html_path = f"{page_name}/html.html"
+
+        async with aiofiles.open(f"{html_path}", 'w') as fp:
+            await fp.write(html)
+
+        partial_links = []
+        partial_links += [x[0] for x in re.findall('((//is2.4chan.org[^"]*[.])(jpg|png|webm|gif))', html, re.I)]
+        partial_links += [x[0] for x in re.findall('((//i.4cdn.org/?[a-z]*/?[^"[]*[^s][.])(jpe?g|png|webm|gif))', html, re.I)]
+
+        full_links = [f"http:{link}" for link in partial_links]
+
+        links = sorted(set(full_links))
+
+        return [(page_name, link) for link in links]
+
+
+async def fetch(page_and_url, session, attempt = 1):
+
+    if attempt > 10:
+        print(f"Too many failures for {url}. Giving up.")
+        return
+
+    page, url = page_and_url
+
+    filename = f"{page}/{os.path.basename(url)}"
+
+    if os.path.exists(filename):
+        return
+
+    try:
+        async with session.get(url) as response:
+            content = await response.read()
+
+    except asyncio.TimeoutError:
+        print(f"Retrying url: {url}")
+        await fetch(page_and_url, session, attempt = attempt + 1)
+        return
+
+    if attempt > 1:
+        print(f"Retry job worked: {url}")
+
+    async with aiofiles.open(filename, 'wb+') as fp:
+        await fp.write(content)
+
+    print(f"Got {filename}")
+
+
+async def main_loop_get_board(config):
+
+    timeout = aiohttp.client.ClientTimeout(total = 100)
+    board = config.board
+    save_all_html = config.save_all_html
+
+    async with aiohttp.ClientSession(timeout = timeout) as session:
+
+        page_lists = await asyncio.gather(
+            *(get_board_page(board, n, session) for n in range(1, 9))
+        )
+
+        pages = sorted(set(sum(page_lists, [])))
+
+        if config.words:
+            matching_pages = [page for page in pages if any([re.search(word, page.lower(), flags=re.I) for word in config.words])]
+        else:
+            matching_pages = pages
+
+        url_lists = await asyncio.gather(
+           *(get_urls(page, session, save_all_html) for page in matching_pages)
+        )
+
+        urls = sorted(set(sum(url_lists, [])))
+
+        await asyncio.gather(
+            *(fetch(page_and_url, session) for page_and_url in urls)
+        )
+
+        await session.close()
+
+
+async def main_loop_get_page(config):
+
+    timeout = aiohttp.client.ClientTimeout(total = 100)
+    board = config.board
+    save_all_html = config.save_all_html
+
+    async with aiohttp.ClientSession(timeout = timeout) as session:
+
+        url_lists = await asyncio.gather(
+           *(get_urls(page, session, save_all_html) for page in [config.page])
+        )
+
+        urls = sorted(set(sum(url_lists, [])))
+
+        await asyncio.gather(
+            *(fetch(page_and_url, session) for page_and_url in urls)
+        )
+
+        await session.close()
+
+if __name__ == '__main__':
+    config = parse_command_line()
+
+    if not config.page:
+        saved_dir = os.getcwd()
+        os.makedirs(config.dirname, exist_ok = True)
+        os.chdir(config.dirname)
+
+    while True:
+        try:
+            asyncio.run(main_loop_get_board(config))
+        except KeyboardInterrupt:
+            print("\b\bExiting at user's request.")
+            break
+        except:
+            continue
+
+    if not config.page:
+        os.chdir(saved_dir)
