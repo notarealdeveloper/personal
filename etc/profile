@@ -4,4 +4,5 @@ export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
 export IBUS_COMPONENT_PATH=/run/current-system/sw/share/ibus/component
+export PYTHONDONTWRITEBYTECODE=1
 setxkbmap -option compose:ralt
