@@ -82,15 +82,10 @@ dirs+=(
 
     # documents
     [documents]="${DOCUMENTS}"
-    [apartments]="${DOCUMENTS}/apartments"
-    [austin]="${DOCUMENTS}/austin"
     [banks]="${DOCUMENTS}/banks"
     [car]="${DOCUMENTS}/car"
-    [finances]="${DOCUMENTS}/finances"
     [health]="${DOCUMENTS}/health"
-    [house]="${DOCUMENTS}/house"
     [landlording]="${DOCUMENTS}/landlording"
-    [marriage]="${DOCUMENTS}/marriage"
     [resources]="${DOCUMENTS}/resources"
     [resumes]="${DOCUMENTS}/resumes"
     [taxes]="${DOCUMENTS}/taxes"
