@@ -127,6 +127,8 @@ def clean_hebrew(s: str) -> str:
     s = unicodedata.normalize("NFC", s)
     s = s.replace("\u00a0", " ")
     s = s.replace("\u2009", " ")
+    s = s.replace("־", " ")   # Hebrew maqaf
+    s = s.replace("`", " ")   # stray backticks, if any
     s = re.sub(r"\s*\{[פס]\}\s*$", "", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
@@ -365,10 +367,10 @@ def emit_tex(
         ])
 
         if foot:
-            chunks.append("\t\\footnote{")
+            chunks.append("%\t\\footnote{")
             for line in wrap_english(foot, width=72):
-                chunks.append(f"\t\t{line}")
-            chunks.append("\t}")
+                chunks.append(f"%\t\t{line}")
+            chunks.append("%\t}")
 
         chunks.extend(["}", ""])
 
