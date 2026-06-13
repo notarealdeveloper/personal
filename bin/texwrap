@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+
+# texwrap
+import argparse
+import difflib
+import re
+import sys
+import textwrap
+from pathlib import Path
+
+HEBREW = re.compile(r"[\u0590-\u05ff]")
+SINGLE_MACRO = re.compile(r"^(\s*\\[A-Za-z@]+\{)(.*)(\}\s*)$")
+
+SKIP_STARTS = (
+    "\\begin", "\\end", "\\newpage", "\\footnote", "\\raisebox",
+    "\\hP", "\\hBP", "\\hAJ",
+    "{", "}", "%",
+)
+
+def has_hebrew(s: str) -> bool:
+    return bool(HEBREW.search(s))
+
+def wrappable_line(line: str) -> bool:
+    s = line.strip()
+    if not s:
+        return False
+    if has_hebrew(line):
+        return False
+    if s.startswith(SKIP_STARTS):
+        return False
+    # Avoid ASCII-art / deliberate layout.
+    if "%%%" in s or "\\\\" in s:
+        return False
+    return True
+
+def wrap_plain_paragraph(lines: list[str], width: int) -> list[str]:
+    indent = re.match(r"^\s*", lines[0]).group(0)
+    text = " ".join(x.strip() for x in lines)
+    return textwrap.wrap(
+        text,
+        width=width,
+        initial_indent=indent,
+        subsequent_indent=indent,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+
+def wrap_single_macro(line: str, width: int) -> list[str] | None:
+    m = SINGLE_MACRO.match(line)
+    if not m:
+        return None
+
+    prefix, body, suffix = m.groups()
+
+    if has_hebrew(body):
+        return None
+    if len(line) <= width:
+        return [line]
+
+    name = prefix.strip()
+    if name.startswith((r"\hP", r"\hBP", r"\hAJ")):
+        return None
+
+    inner_indent = re.match(r"^\s*", line).group(0) + "\t"
+    wrapped = textwrap.wrap(
+        body,
+        width=max(20, width - len(inner_indent)),
+        initial_indent=inner_indent,
+        subsequent_indent=inner_indent,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+
+    return [prefix.rstrip()] + wrapped + [re.match(r"^\s*", line).group(0) + suffix.strip()]
+
+def format_tex(text: str, width: int) -> str:
+    raw = text.splitlines()
+    out = []
+    para = []
+
+    def flush():
+        nonlocal para
+        if para:
+            out.extend(wrap_plain_paragraph(para, width))
+            para = []
+
+    for line in raw:
+        macro_wrapped = wrap_single_macro(line, width)
+
+        if macro_wrapped is not None and len(macro_wrapped) > 1:
+            flush()
+            out.extend(macro_wrapped)
+            continue
+
+        if wrappable_line(line):
+            para.append(line)
+        else:
+            flush()
+            out.append(line)
+
+    flush()
+    return "\n".join(out) + ("\n" if text.endswith("\n") else "")
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("file")
+    ap.add_argument("-w", "--width", type=int, default=80)
+    ap.add_argument("-i", "--in-place", action="store_true")
+    ap.add_argument("--check", action="store_true")
+    args = ap.parse_args()
+
+    path = Path(args.file)
+    old = path.read_text(encoding="utf-8")
+    new = format_tex(old, args.width)
+
+    if args.check:
+        if old == new:
+            return 0
+        sys.stdout.writelines(difflib.unified_diff(
+            old.splitlines(True),
+            new.splitlines(True),
+            fromfile=str(path),
+            tofile=str(path) + " formatted",
+        ))
+        return 1
+
+    if args.in_place:
+        path.write_text(new, encoding="utf-8")
+    else:
+        print(new, end="")
+
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
