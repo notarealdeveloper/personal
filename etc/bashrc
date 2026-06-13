@@ -158,6 +158,7 @@ fi
 ###############
 alias brcp="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/bashrc && source ${HOME}/.bashrc"
 alias crc="c personal && ${EDITOR:-vim} ${PERSONAL}/etc/XCompose && ibus restart"
+alias ccrc="cat ${PERSONAL}/etc/XCompose"
 
 # ranger
 alias r='ranger'
