@@ -46,4 +46,6 @@ EOF
 )"
 
 echo "$output"
-echo "$output" | xc
+[ -t 1 ] && {
+    echo "$output" | xc
+}
