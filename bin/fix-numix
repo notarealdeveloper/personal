@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+src="$HOME/.nix-profile/share/themes/Numix"
+dst="$HOME/.local/share/themes/Numix"
+
+sudo rm -rf "$dst"
+mkdir -p "$(dirname "$dst")"
+cp -aL "$src" "$dst"
+sudo chown -R "$USER:$(id -gn)" "$dst"
+chmod -R u+w "$dst"
+
+for ver in gtk-3.0 gtk-3.20; do
+  dir="$dst/$ver"
+  res="$dir/gtk.gresource"
+  work="$(mktemp -d)"
+  trap 'rm -rf "$work"' EXIT
+
+  prefix="/org/numixproject/$ver"
+
+  gresource list "$res" | while read -r path; do
+    rel="${path#$prefix/}"
+    mkdir -p "$work/$(dirname "$rel")"
+    gresource extract "$res" "$path" > "$work/$rel"
+  done
+
+  grep -RIl 'border-top-width: 1;' "$work" |
+    xargs -r sed -i 's/border-top-width: 1;/border-top-width: 1px;/g'
+
+  cat > "$work/gtk.gresource.xml" <<EOF
+<gresources>
+  <gresource prefix="$prefix">
+$(cd "$work" && find . -type f ! -name 'gtk.gresource.xml' \
+  | sed 's@^\./@@' \
+  | sort \
+  | sed 's@.*@    <file>&</file>@')
+  </gresource>
+</gresources>
+EOF
+
+  glib-compile-resources \
+    --sourcedir="$work" \
+    --target="$res" \
+    "$work/gtk.gresource.xml"
+
+  rm -rf "$work"
+done
