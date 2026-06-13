@@ -19,7 +19,7 @@ c="$(printf "%02d\n" "$chapter")"
 
 eng="$(cat src/*-${b}/${c}*.md)"
 
-cat << EOF
+output="$(cat << EOF
 
 ###################################################
 ### Format of the LaTeX project that I want you ###
@@ -43,3 +43,7 @@ ${heb}
 
 ${eng}
 EOF
+)"
+
+echo "$output"
+echo "$output" | xc
