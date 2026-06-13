@@ -20,6 +20,7 @@ export STUFF="$DESKTOP/stuff"
 export DROPBOX="${HOME}/Dropbox"
 export OBSIDIAN="${HOME}/obsidian"
 export IH="${STUFF}/ih"
+export BOOKS="${STUFF}/books"
 export CODE="${STUFF}/code"
 export LEAN="${CODE}/lean"
 export GITHUB='https://github.com/notarealdeveloper'
@@ -64,6 +65,7 @@ dirs+=(
     # obsidian
     [sudocode]="${OBSIDIAN}/Sudocode"
     [we]="${OBSIDIAN}/We"
+    [we-the-nameless]="${BOOKS}/we-the-nameless"
 
     # code
     [code]="${CODE}"
