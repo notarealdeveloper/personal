@@ -329,3 +329,40 @@ include "%L"
 <Multi_key> <i> <x> : "χ" U03C7
 <Multi_key> <i> <y> : "ʎ" U028E
 <Multi_key> <i> <z> : "ɛ" U025B
+
+# ------------------------------------------------------------
+# Semitic transliteration / scholarly romanization
+# Compose t <letter>
+# ------------------------------------------------------------
+
+<Multi_key> <t> <a> : "ʾ" U02BE  # aleph
+<Multi_key> <t> <o> : "ʿ" U02BF  # ayin
+
+<Multi_key> <t> <h> : "ḥ" U1E25  # het
+<Multi_key> <t> <H> : "Ḥ" U1E24
+
+<Multi_key> <t> <k> : "ḵ" U1E35  # spirant kaf
+<Multi_key> <t> <K> : "Ḵ" U1E34
+
+<Multi_key> <t> <s> : "š" U0161  # shin
+<Multi_key> <t> <S> : "Š" U0160
+
+<Multi_key> <t> <c> : "ṣ" U1E63  # tsade
+<Multi_key> <t> <C> : "Ṣ" U1E62
+
+<Multi_key> <t> <t> : "ṭ" U1E6D  # tet
+<Multi_key> <t> <T> : "Ṭ" U1E6C
+
+<Multi_key> <t> <d> : "ḏ" U1E0F  # dhalet
+<Multi_key> <t> <D> : "Ḏ" U1E0E
+
+<Multi_key> <t> <z> : "ẓ" U1E93  # emphatic zade
+<Multi_key> <t> <Z> : "Ẓ" U1E92
+
+<Multi_key> <t> <g> : "ġ" U0121  # ghayin
+<Multi_key> <t> <G> : "Ġ" U0120
+
+<Multi_key> <t> <x> : "ḫ" U1E2B  # khet / ḫ
+<Multi_key> <t> <X> : "Ḫ" U1E2A
+
+<Multi_key> <t> <w> : "š́"        # sin (optional)
