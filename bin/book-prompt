@@ -19,7 +19,20 @@ c="$(printf "%02d\n" "$chapter")"
 
 eng="$(cat src/*-${b}/${c}*.md)"
 
+tex="$(cat *-${b}/${c}*.md)"
+
 output="$(cat << EOF
+
+#################
+### Your Task ###
+#################
+
+Read the text below, and turn the separate
+english and hebrew text into a combined LuaLaTeX
+file of the form given below, with attributions
+to the J, E, P, R, D, etc sources using the provided
+source map.
+
 
 ########################################################
 ### Hebrew Text to Use for Generating the Latex File ###
@@ -35,6 +48,15 @@ ${heb}
 ${eng}
 
 
+########################################################
+### Source map I want you to use for the attribution ###
+### of sources like J, E, P, R, D, etc to the verses ###
+### according to the Documentary Hypothesis.         ###
+########################################################
+
+$(book-source-map)
+
+
 ###################################################
 ### Format of the LaTeX project that I want you ###
 ### to generate a new file for, containing both ###
@@ -43,13 +65,14 @@ ${eng}
 
 $(make c)
 
-########################################################
-### Source map I want you to use for the attribution ###
-### of sources like J, E, P, R, D, etc to the verses ###
-### according to the Documentary Hypothesis.         ###
-########################################################
 
-$(book-source-map)
+###############
+### Summary ###
+###############
+
+Using the above english and hebrew text, generate a
+new LuaLaTeX file to match the format of the LuaLaTeX
+example file you just read.
 
 EOF
 )"
