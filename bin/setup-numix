@@ -4,10 +4,10 @@ set -euo pipefail
 src="$HOME/.nix-profile/share/themes/Numix"
 dst="$HOME/.local/share/themes/Numix"
 
-sudo rm -rf "$dst"
+rm -rf "$dst"
 mkdir -p "$(dirname "$dst")"
 cp -aL "$src" "$dst"
-sudo chown -R "$USER:$(id -gn)" "$dst"
+chown -R "$USER:$(id -gn)" "$dst"
 chmod -R u+w "$dst"
 
 for ver in gtk-3.0 gtk-3.20; do
