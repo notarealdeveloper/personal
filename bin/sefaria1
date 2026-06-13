@@ -132,6 +132,14 @@ def strip_niqqud(text):
     return HEBREW_MARKS_RE.sub("", text)
 
 
+def strip_excess_hebrew_marks(text):
+    return re.sub(
+        r"[\u0591-\u05AF\u05BD\u05BF\u05C0\u05C4-\u05C7]",
+        "",
+        text,
+    )
+
+
 def slugify(s):
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-") or "book"
 
@@ -309,6 +317,7 @@ def format_lines(data, text, strip=False, base_sections=None):
     out = []
     for ref, line in iter_verse_lines(text, book, sections, to_sections):
         line = html.unescape(line)
+        line = strip_excess_hebrew_marks(line)
         if strip:
             line = strip_niqqud(line)
         out.append(f"{ref}\t{line}")
