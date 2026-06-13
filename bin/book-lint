@@ -101,27 +101,38 @@ def format_tex(text: str, width: int) -> str:
     flush()
     return "\n".join(out) + ("\n" if text.endswith("\n") else "")
 
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("file")
+    ap.add_argument("file", nargs="?")
     ap.add_argument("-w", "--width", type=int, default=80)
     ap.add_argument("-i", "--in-place", action="store_true")
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
 
-    path = Path(args.file)
-    old = path.read_text(encoding="utf-8")
+    if args.file:
+        path = Path(args.file)
+        old = path.read_text(encoding="utf-8")
+    else:
+        if args.in_place:
+            ap.error("--in-place requires a file")
+        old = sys.stdin.read()
+        path = None
+
     new = format_tex(old, args.width)
 
     if args.check:
         if old == new:
             return 0
-        sys.stdout.writelines(difflib.unified_diff(
-            old.splitlines(True),
-            new.splitlines(True),
-            fromfile=str(path),
-            tofile=str(path) + " formatted",
-        ))
+
+        sys.stdout.writelines(
+            difflib.unified_diff(
+                old.splitlines(True),
+                new.splitlines(True),
+                fromfile=str(path) if path else "<stdin>",
+                tofile=(str(path) + " formatted") if path else "<stdout>",
+            )
+        )
         return 1
 
     if args.in_place:
