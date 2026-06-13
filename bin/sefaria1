@@ -34,7 +34,13 @@ from urllib.request import Request, urlopen
 
 
 API_BASE = "https://www.sefaria.org/api/v3/texts"
-HEBREW_MARKS_RE = re.compile(r"[\u0591-\u05BD\u05BF-\u05C7]")
+#HEBREW_MARKS_RE = re.compile(r"[\u0591-\u05BD\u05BF-\u05C7]")
+
+# Strip cantillation / weird Masoretic extras, but keep ordinary vowels + dagesh + shin/sin dots.
+HEBREW_MARKS_RE = re.compile(
+    r"[\u0591-\u05AF\u05BD\u05BF\u05C0\u05C3-\u05C7]"
+)
+
 PREFERRED_ENGLISH_VERSIONS = [
     "HarperCollins Study Bible, New Revised Standard Version",
     "Harper Collins Study Bible, New Revised Standard Version",
