@@ -17,7 +17,7 @@ b="$(tr A-Z a-z <<< "$book")"
 # pad the chapter
 c="$(printf "%02d\n" "$chapter")"
 
-eng="$(cat src/*-${b}/${c}*.md)"
+eng="$(cat eng/*-${b}/${c}*.md)"
 
 # tex="$(cat *-${b}/${c}*.tex)"
 
