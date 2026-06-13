@@ -1,0 +1,201 @@
+#!/usr/bin/env python
+
+import re
+import sys
+import unicodedata
+from collections import OrderedDict
+
+BOOK_NUM = {
+    "genesis": 1,
+    "exodus": 2,
+    "leviticus": 3,
+    "numbers": 4,
+    "deuteronomy": 5,
+}
+
+HEADER_HE = "### Hebrew Text to Use for Generating the Latex File ###"
+HEADER_EN = "### English Text to Use for Generating the Latex File ###"
+
+HEBREW_LINE = re.compile(r"^(.+?)\s+(\d+):(\d+)\s+(.+)$")
+EN_VERSE = re.compile(
+    r"^##\s+(.+?)\s+(\d+):(\d+)\s*$",
+    re.MULTILINE,
+)
+
+SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+
+def section_after(text, header):
+    i = text.find(header)
+    if i < 0:
+        return ""
+    return text[i + len(header):]
+
+
+def split_sections(prompt):
+    he_plus = section_after(prompt, HEADER_HE)
+    he, _, en = he_plus.partition(HEADER_EN)
+    return he, en
+
+
+def clean_hebrew(s):
+    s = unicodedata.normalize("NFC", s)
+
+    # Remove cantillation but keep standard niqqud/dagesh/shin-dot/sin-dot.
+    out = []
+    for ch in s:
+        o = ord(ch)
+        if 0x0591 <= o <= 0x05AF:   # cantillation
+            continue
+        if ch in "׃׀":
+            continue
+        if ch in "-־":
+            out.append(" ")
+        elif ch in "\u2009\u200a\u200b\u200c\u200d":
+            out.append(" ")
+        else:
+            out.append(ch)
+
+    s = "".join(out)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def latex_escape_text(s):
+    # Keep curly quotes, em dashes, apostrophes, Hebrew, etc.
+    return (
+        s.replace("\\", r"\textbackslash{}")
+         .replace("&", r"\&")
+         .replace("%", r"\%")
+         .replace("$", r"\$")
+         .replace("#", r"\#")
+         .replace("_", r"\_")
+         .replace("{", r"\{")
+         .replace("}", r"\}")
+    )
+
+
+def parse_hebrew(block):
+    verses = OrderedDict()
+    book = None
+    chapter = None
+
+    for line in block.splitlines():
+        line = line.strip()
+        m = HEBREW_LINE.match(line)
+        if not m:
+            continue
+
+        b, ch, vs, heb = m.groups()
+        book = book or b
+        chapter = chapter or int(ch)
+        verses[int(vs)] = clean_hebrew(heb)
+
+    if not verses:
+        raise SystemExit("No Hebrew verses found.")
+
+    return book, chapter, verses
+
+
+def clean_english_body(body):
+    # Drop markdown rules and footnote blocks.
+    lines = body.splitlines()
+    kept = []
+    in_footnote = False
+
+    for line in lines:
+        raw = line.rstrip()
+
+        if re.match(r"^-{3,}\s*$", raw):
+            continue
+
+        if re.match(r"^Footnote\s+\d+:\d+\.", raw):
+            in_footnote = True
+            continue
+
+        if in_footnote:
+            # Footnotes in your generated md continue until a blank + next separator/header.
+            continue
+
+        kept.append(raw)
+
+    text = "\n".join(kept).strip()
+
+    # Remove leading superscript verse number.
+    text = text.translate(SUPERSCRIPTS)
+    text = re.sub(r"^\s*\d+\s+", "", text)
+
+    # Paragraph breaks become \par; soft line wraps become spaces.
+    paras = [
+        re.sub(r"\s+", " ", p.strip())
+        for p in re.split(r"\n\s*\n+", text)
+        if p.strip()
+    ]
+
+    return r"\par ".join(latex_escape_text(p) for p in paras)
+
+
+def parse_english(block):
+    matches = list(EN_VERSE.finditer(block))
+    verses = {}
+
+    for i, m in enumerate(matches):
+        _, ch, vs = m.groups()
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(block)
+        body = block[start:end]
+        verses[int(vs)] = clean_english_body(body)
+
+    return verses
+
+
+def chapter_path(book, chapter):
+    b = book.lower()
+    n = BOOK_NUM.get(b, 0)
+    return f"{n}-{b}/{chapter:02d}.tex" if n else f"{b}/{chapter:02d}.tex"
+
+
+def generate(prompt, source="J"):
+    he_block, en_block = split_sections(prompt)
+
+    book, chapter, hebrew = parse_hebrew(he_block)
+    english = parse_english(en_block)
+
+    path = chapter_path(book, chapter)
+    width = max(24, len(path) + 8)
+
+    lines = []
+    lines.append("%" * width)
+    lines.append(f"%%% {path} %%%")
+    lines.append("%" * width)
+    lines.append("")
+    lines.append(f"\\Chapter{{{chapter}}}")
+    lines.append("")
+
+    for verse in hebrew:
+        h = hebrew[verse]
+        e = english.get(verse, "")
+
+        lines.extend([
+            f"\\Verse{{{verse}}}",
+            "{",
+            f"\t\\h{source}{{{h}}}",
+            "}",
+            "{",
+            f"\t\\e{source}{{{e}}}",
+            "}",
+            "{",
+            "}",
+            "",
+        ])
+
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def main():
+    prompt = sys.stdin.read()
+    print(generate(prompt), end="")
+
+
+if __name__ == "__main__":
+    main()
