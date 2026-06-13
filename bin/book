@@ -29,6 +29,14 @@ output="$(cat << EOF
 
 $(make c)
 
+########################################################
+### Source map I want you to use for the attribution ###
+### of sources like J, E, P, R, D, etc to the verses ###
+### according to the Documentary Hypothesis.         ###
+########################################################
+
+$(book-source-map)
+
 
 ########################################################
 ### Hebrew Text to Use for Generating the Latex File ###
