@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+source ~/.bashrc
 source colors.sh
 
 die   () { printf "${red}ERROR${whi}: ${1}${end}\n"; exit 1;  }
@@ -60,6 +61,7 @@ TEMPLATE=
 raw_filename=
 while [[ -n "$1" ]]; do
     case "$1" in
+        x|exec)             TEMPLATE="exec";;
         b|bash)             TEMPLATE="bash";;
         p|python)           TEMPLATE="python.py";;
         a|argparse)         TEMPLATE="python-argparse.py";;
@@ -85,3 +87,5 @@ done
 filename="$(auto_create_filename "${raw_filename:-$TEMPLATE}")"
 
 cp -nv "$HOME/Templates/$TEMPLATE" "$filename"
+chmod +x "$filename"
+$EDITOR "$filename"
