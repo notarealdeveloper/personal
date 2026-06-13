@@ -19,7 +19,7 @@ c="$(printf "%02d\n" "$chapter")"
 
 eng="$(cat src/*-${b}/${c}*.md)"
 
-tex="$(cat *-${b}/${c}*.md)"
+# tex="$(cat *-${b}/${c}*.tex)"
 
 output="$(cat << EOF
 
