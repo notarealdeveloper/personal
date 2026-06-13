@@ -1,200 +1,327 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+import argparse
+import json
 import re
 import sys
+import textwrap
 import unicodedata
-from collections import OrderedDict
+from pathlib import Path
 
-BOOK_NUM = {
-    "genesis": 1,
-    "exodus": 2,
-    "leviticus": 3,
-    "numbers": 4,
-    "deuteronomy": 5,
-}
+SECTION_RE = re.compile(r"^#{3,}\s*(.*?)\s*#{3,}\s*$", re.M)
 
-HEADER_HE = "### Hebrew Text to Use for Generating the Latex File ###"
-HEADER_EN = "### English Text to Use for Generating the Latex File ###"
-
-HEBREW_LINE = re.compile(r"^(.+?)\s+(\d+):(\d+)\s+(.+)$")
-EN_VERSE = re.compile(
-    r"^##\s+(.+?)\s+(\d+):(\d+)\s*$",
-    re.MULTILINE,
+HEBREW_LINE_RE = re.compile(
+    r"^(?P<book>[1-3]?\s?[A-Za-z]+)\s+"
+    r"(?P<chapter>\d+):(?P<verse>\d+)\s+"
+    r"(?P<text>.*)$"
 )
 
-SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+ENGLISH_HEADER_RE = re.compile(
+    r"^##\s+(?P<book>[1-3]?\s?[A-Za-z]+)\s+"
+    r"(?P<chapter>\d+):(?P<verse>\d+)\s*$"
+)
+
+SOURCE_RANGE_RE = re.compile(
+    r"^(?P<book>[1-3]?\s?[A-Za-z]+)\s+"
+    r"(?P<c1>\d+)"
+    r"(?::(?P<v1>\d+))?"
+    r"(?:[–-](?:(?P<c2>\d+):)?(?P<v2>\d+))?$"
+)
+
+SUPERSCRIPTS = str.maketrans({
+    "⁰": "", "¹": "", "²": "", "³": "", "⁴": "",
+    "⁵": "", "⁶": "", "⁷": "", "⁸": "", "⁹": "",
+})
+
+SOURCE_MACRO = {
+    "J": "J",
+    "E": "E",
+    "P": "P",
+    "R": "R",
+    "RJE": "RJE",
+    "Other": "Other",
+    "O": "Other",
+    "BR": "BookOfRecords",
+    "Records": "BookOfRecords",
+}
 
 
-def section_after(text, header):
-    i = text.find(header)
-    if i < 0:
-        return ""
-    return text[i + len(header):]
+def die(msg: str) -> None:
+    print(f"{Path(sys.argv[0]).name}: {msg}", file=sys.stderr)
+    raise SystemExit(1)
 
 
-def split_sections(prompt):
-    he_plus = section_after(prompt, HEADER_HE)
-    he, _, en = he_plus.partition(HEADER_EN)
-    return he, en
+def section_after(prompt: str, title_part: str) -> str:
+    matches = list(SECTION_RE.finditer(prompt))
+    for i, m in enumerate(matches):
+        if title_part.lower() in m.group(1).lower():
+            start = m.end()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(prompt)
+            return prompt[start:end].strip()
+    die(f"could not find section containing: {title_part!r}")
 
 
-def clean_hebrew(s):
-    s = unicodedata.normalize("NFC", s)
-
-    # Remove cantillation but keep standard niqqud/dagesh/shin-dot/sin-dot.
-    out = []
-    for ch in s:
-        o = ord(ch)
-        if 0x0591 <= o <= 0x05AF:   # cantillation
-            continue
-        if ch in "׃׀":
-            continue
-        if ch in "-־":
-            out.append(" ")
-        elif ch in "\u2009\u200a\u200b\u200c\u200d":
-            out.append(" ")
-        else:
-            out.append(ch)
-
-    s = "".join(out)
-    s = re.sub(r"\s+", " ", s).strip()
-    return s
-
-
-def latex_escape_text(s):
-    # Keep curly quotes, em dashes, apostrophes, Hebrew, etc.
-    return (
-        s.replace("\\", r"\textbackslash{}")
-         .replace("&", r"\&")
-         .replace("%", r"\%")
-         .replace("$", r"\$")
-         .replace("#", r"\#")
-         .replace("_", r"\_")
-         .replace("{", r"\{")
-         .replace("}", r"\}")
-    )
-
-
-def parse_hebrew(block):
-    verses = OrderedDict()
+def parse_hebrew(block: str) -> tuple[str, int, dict[int, str]]:
+    verses = {}
     book = None
     chapter = None
 
-    for line in block.splitlines():
-        line = line.strip()
-        m = HEBREW_LINE.match(line)
+    for raw in block.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+
+        m = HEBREW_LINE_RE.match(line)
         if not m:
             continue
 
-        b, ch, vs, heb = m.groups()
-        book = book or b
-        chapter = chapter or int(ch)
-        verses[int(vs)] = clean_hebrew(heb)
+        book = m.group("book")
+        chapter = int(m.group("chapter"))
+        verse = int(m.group("verse"))
+        text = clean_hebrew(m.group("text"))
+        verses[verse] = text
 
-    if not verses:
-        raise SystemExit("No Hebrew verses found.")
+    if book is None or chapter is None or not verses:
+        die("could not parse Hebrew verses")
 
     return book, chapter, verses
 
 
-def clean_english_body(body):
-    # Drop markdown rules and footnote blocks.
-    lines = body.splitlines()
-    kept = []
-    in_footnote = False
+def parse_english(block: str) -> dict[int, tuple[str, str]]:
+    """
+    Returns:
+      verse -> (main_text, footnote_text)
+    """
+    lines = block.splitlines()
+    out = {}
+    i = 0
 
-    for line in lines:
-        raw = line.rstrip()
-
-        if re.match(r"^-{3,}\s*$", raw):
+    while i < len(lines):
+        m = ENGLISH_HEADER_RE.match(lines[i].strip())
+        if not m:
+            i += 1
             continue
 
-        if re.match(r"^Footnote\s+\d+:\d+\.", raw):
-            in_footnote = True
+        verse = int(m.group("verse"))
+        i += 1
+        buf = []
+
+        while i < len(lines) and not ENGLISH_HEADER_RE.match(lines[i].strip()):
+            buf.append(lines[i])
+            i += 1
+
+        main, foot = split_english_body("\n".join(buf), verse)
+        out[verse] = (main, foot)
+
+    if not out:
+        die("could not parse English verses")
+
+    return out
+
+
+def split_english_body(body: str, verse: int) -> tuple[str, str]:
+    body = body.strip()
+    body = re.sub(r"^-{5,}\s*$", "", body, flags=re.M).strip()
+
+    footnote = ""
+    parts = re.split(r"(?m)^---+\s*$", body, maxsplit=1)
+    if len(parts) == 2:
+        body, footnote = parts[0].strip(), parts[1].strip()
+
+    # Remove stray chapter number line and leading verse superscript.
+    lines = [ln.rstrip() for ln in body.splitlines()]
+    lines = [ln for ln in lines if ln.strip() and ln.strip() != str(verse)]
+    body = " ".join(ln.strip() for ln in lines).strip()
+    body = body.translate(SUPERSCRIPTS).strip()
+
+    footnote = re.sub(rf"^Footnote\s+\d+:{verse}\.\s*", "", footnote.strip(), flags=re.I | re.S)
+    footnote = re.sub(r"\s+", " ", footnote).strip()
+
+    return body, footnote
+
+
+def clean_hebrew(s: str) -> str:
+    s = unicodedata.normalize("NFC", s)
+    s = re.sub(r"\s*\{[פס]\}\s*$", "", s)
+    s = s.replace("\u00a0", " ")
+    s = s.replace("\u2009", " ")
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def parse_source_map(block: str) -> dict[str, str]:
+    start = block.find("{")
+    end = block.rfind("}")
+    if start < 0 or end < start:
+        die("could not find JSON object in source map section")
+    return json.loads(block[start:end + 1])
+
+
+def parse_source_key(key: str):
+    m = SOURCE_RANGE_RE.match(key.strip())
+    if not m:
+        return None
+
+    book = m.group("book")
+    c1 = int(m.group("c1"))
+    v1 = int(m.group("v1") or 1)
+
+    c2 = int(m.group("c2") or c1)
+    v2 = int(m.group("v2") or m.group("v1") or 999)
+
+    return book, c1, v1, c2, v2
+
+
+def source_for(book: str, chapter: int, verse: int, source_map: dict[str, str]) -> str:
+    want_book = normalize_book(book)
+
+    for key, src in source_map.items():
+        parsed = parse_source_key(key)
+        if not parsed:
             continue
 
-        if in_footnote:
-            # Footnotes in your generated md continue until a blank + next separator/header.
+        b, c1, v1, c2, v2 = parsed
+        if normalize_book(b) != want_book:
             continue
 
-        kept.append(raw)
+        here = (chapter, verse)
+        lo = (c1, v1)
+        hi = (c2, v2)
 
-    text = "\n".join(kept).strip()
+        if lo <= here <= hi:
+            return normalize_source(src)
 
-    # Remove leading superscript verse number.
-    text = text.translate(SUPERSCRIPTS)
-    text = re.sub(r"^\s*\d+\s+", "", text)
-
-    # Paragraph breaks become \par; soft line wraps become spaces.
-    paras = [
-        re.sub(r"\s+", " ", p.strip())
-        for p in re.split(r"\n\s*\n+", text)
-        if p.strip()
-    ]
-
-    return r"\par ".join(latex_escape_text(p) for p in paras)
+    return "Other"
 
 
-def parse_english(block):
-    matches = list(EN_VERSE.finditer(block))
-    verses = {}
-
-    for i, m in enumerate(matches):
-        _, ch, vs = m.groups()
-        start = m.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(block)
-        body = block[start:end]
-        verses[int(vs)] = clean_english_body(body)
-
-    return verses
-
-
-def chapter_path(book, chapter):
-    b = book.lower()
-    n = BOOK_NUM.get(b, 0)
-    return f"{n}-{b}/{chapter:02d}.tex" if n else f"{b}/{chapter:02d}.tex"
+def normalize_book(book: str) -> str:
+    aliases = {
+        "genesis": "gen",
+        "gen": "gen",
+        "exodus": "exod",
+        "exod": "exod",
+        "leviticus": "lev",
+        "lev": "lev",
+        "numbers": "num",
+        "num": "num",
+        "deuteronomy": "deut",
+        "deut": "deut",
+    }
+    return aliases.get(book.lower().replace(" ", ""), book.lower().replace(" ", ""))
 
 
-def generate(prompt, source="J"):
-    he_block, en_block = split_sections(prompt)
-
-    book, chapter, hebrew = parse_hebrew(he_block)
-    english = parse_english(en_block)
-
-    path = chapter_path(book, chapter)
-    width = max(24, len(path) + 8)
-
-    lines = []
-    lines.append("%" * width)
-    lines.append(f"%%% {path} %%%")
-    lines.append("%" * width)
-    lines.append("")
-    lines.append(f"\\Chapter{{{chapter}}}")
-    lines.append("")
-
-    for verse in hebrew:
-        h = hebrew[verse]
-        e = english.get(verse, "")
-
-        lines.extend([
-            f"\\Verse{{{verse}}}",
-            "{",
-            f"\t\\h{source}{{{h}}}",
-            "}",
-            "{",
-            f"\t\\e{source}{{{e}}}",
-            "}",
-            "{",
-            "}",
-            "",
-        ])
-
-    return "\n".join(lines).rstrip() + "\n"
+def normalize_source(src: str) -> str:
+    # Prefer first concrete source in comma lists.
+    # R,BR,R -> R; P,R -> P; RJE,E -> RJE.
+    first = src.split(",")[0].strip()
+    return SOURCE_MACRO.get(first, first)
 
 
-def main():
-    prompt = sys.stdin.read()
-    print(generate(prompt), end="")
+def tex_escape(s: str) -> str:
+    repl = {
+        "\\": r"\textbackslash{}",
+        "&": r"\&",
+        "%": r"\%",
+        "$": r"\$",
+        "#": r"\#",
+        "_": r"\_",
+        "{": r"\{",
+        "}": r"\}",
+        "~": r"\textasciitilde{}",
+        "^": r"\textasciicircum{}",
+    }
+    return "".join(repl.get(ch, ch) for ch in s)
+
+
+def wrap_english(s: str, width: int = 58) -> list[str]:
+    if not s:
+        return []
+    return textwrap.wrap(
+        tex_escape(s),
+        width=width,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+
+
+def macro_block(kind: str, source: str, text: str, english: bool = False) -> str:
+    prefix = "e" if english else "h"
+    macro = f"{prefix}{source}"
+
+    if english:
+        lines = wrap_english(text)
+        if len(lines) <= 1:
+            body = lines[0] if lines else ""
+            return f"\t\\{macro}{{{body}}}"
+
+        joined = "\\\\\n\t\t".join(lines) + r"\\"
+        return f"\t\\{macro}{{\n\t\t{joined}\n\t}}"
+
+    return f"\t\\{macro}{{{text}}}"
+
+
+def emit_tex(book: str, chapter: int, heb: dict[int, str], eng: dict[int, tuple[str, str]], smap: dict[str, str]) -> str:
+    width = 24
+    header = "\n".join([
+        "%" * width,
+        f"%%% {normalize_book(book)} {chapter} %%%",
+        "%" * width,
+        "",
+        f"\\Chapter{{{chapter}}}",
+        "",
+    ])
+
+    chunks = [header]
+
+    for verse in sorted(heb):
+        source = source_for(book, chapter, verse, smap)
+        main, foot = eng.get(verse, ("", ""))
+
+        chunks.append(f"\\Verse{{{verse}}}")
+        chunks.append("{")
+        chunks.append(macro_block("h", source, heb[verse], english=False))
+        chunks.append("}")
+        chunks.append("{")
+        chunks.append(macro_block("e", source, main, english=True))
+        chunks.append("}")
+        chunks.append("{")
+        if foot:
+            chunks.append("\t\\footnote{")
+            for line in wrap_english(foot, width=72):
+                chunks.append(f"\t\t{line}")
+            chunks.append("\t}")
+        chunks.append("}")
+        chunks.append("")
+
+    return "\n".join(chunks).rstrip() + "\n"
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(
+        description="Generate a LuaLaTeX chapter file from a book-prompt generated prompt."
+    )
+    ap.add_argument("prompt", nargs="?", help="prompt file; stdin is used if omitted")
+    ap.add_argument("-o", "--output", help="write output to file instead of stdout")
+    args = ap.parse_args()
+
+    if args.prompt:
+        prompt = Path(args.prompt).read_text(encoding="utf-8")
+    else:
+        prompt = sys.stdin.read()
+
+    heb_block = section_after(prompt, "Hebrew Text")
+    eng_block = section_after(prompt, "English Text")
+    map_block = section_after(prompt, "Source map")
+
+    book, chapter, heb = parse_hebrew(heb_block)
+    eng = parse_english(eng_block)
+    smap = parse_source_map(map_block)
+
+    tex = emit_tex(book, chapter, heb, eng, smap)
+
+    if args.output:
+        Path(args.output).write_text(tex, encoding="utf-8")
+    else:
+        sys.stdout.write(tex)
 
 
 if __name__ == "__main__":
