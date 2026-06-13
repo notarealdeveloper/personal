@@ -21,23 +21,6 @@ eng="$(cat src/*-${b}/${c}*.md)"
 
 output="$(cat << EOF
 
-###################################################
-### Format of the LaTeX project that I want you ###
-### to generate a new file for, containing both ###
-### english and hebrew that I will provide soon ###
-###################################################
-
-$(make c)
-
-########################################################
-### Source map I want you to use for the attribution ###
-### of sources like J, E, P, R, D, etc to the verses ###
-### according to the Documentary Hypothesis.         ###
-########################################################
-
-$(book-source-map)
-
-
 ########################################################
 ### Hebrew Text to Use for Generating the Latex File ###
 ########################################################
@@ -50,6 +33,24 @@ ${heb}
 #########################################################
 
 ${eng}
+
+
+###################################################
+### Format of the LaTeX project that I want you ###
+### to generate a new file for, containing both ###
+### english and hebrew text above               ###
+###################################################
+
+$(make c)
+
+########################################################
+### Source map I want you to use for the attribution ###
+### of sources like J, E, P, R, D, etc to the verses ###
+### according to the Documentary Hypothesis.         ###
+########################################################
+
+$(book-source-map)
+
 EOF
 )"
 
