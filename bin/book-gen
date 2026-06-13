@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]; then
+    echo "usage: $(basename $0) <input-to-sefaria-command>"
+    exit 1
+fi
+
+heb="$(sefaria $@ -l he)"
+
+book_and_chapter="$(echo "$heb" | head -1 | cut -f1 -d:)"
+
+read book chapter <<< "$book_and_chapter"
+
+# lowercase the book
+b="$(tr A-Z a-z <<< "$book")"
+
+# pad the chapter
+c="$(printf "%02d\n" "$chapter")"
+
+eng="$(cat src/*-${b}/${c}*.md)"
+
+cat << EOF
+
+###################################################
+### Format of the LaTeX project that I want you ###
+### to generate a new file for, containing both ###
+### english and hebrew that I will provide soon ###
+###################################################
+
+$(make c)
+
+
+########################################################
+### Hebrew Text to Use for Generating the Latex File ###
+########################################################
+
+${heb}
+
+
+#########################################################
+### English Text to Use for Generating the Latex File ###
+#########################################################
+
+${eng}
+EOF
