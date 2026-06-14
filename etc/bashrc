@@ -137,6 +137,9 @@ add_to_path        "${PERSONAL}/bin/o"
 add_to_path        "${PERSONAL}/lib/bash"
 add_to_python_path "${PERSONAL}/lib/python"
 
+# add we-the-nameless/bin
+add_to_path        "${dirs[we-the-nameless]}/bin"
+
 if [[ -n ${BASH_VERSION:-} && $- == *i* ]]; then
     for completion in "${PERSONAL}/lib/bash/completions"/*.sh; do
         source "$completion"
