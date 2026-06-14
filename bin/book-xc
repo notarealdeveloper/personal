@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-ls | sort | sed -r 's@.*@![[&]]\n\n@g' | xc
