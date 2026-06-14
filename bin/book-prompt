@@ -5,7 +5,7 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-heb="$(sefaria $@ -l he)"
+heb="$(book-hebrew $@ -l he)"
 
 book_and_chapter="$(echo "$heb" | head -1 | cut -f1 -d:)"
 
