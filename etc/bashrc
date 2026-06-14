@@ -6,7 +6,7 @@
 export PERSONAL="$HOME/src/personal"
 export PATH="${PERSONAL}/bin:${PERSONAL}/lib/bash:${PATH}"
 
-export PAGER='vim'
+#export PAGER='vim'
 
 ######################
 ### the dirs array ###
