@@ -3,23 +3,23 @@
 """
 Examples:
 
-  sefaria gen 1 1
-  sefaria Genesis 1 1
-  sefaria "Genesis 1:1"
-  sefaria "I Samuel" 17 4
-  sefaria 1sam 17 4
-  sefaria song 2 3
+  book-hebrew gen 1 1
+  book-hebrew Genesis 1 1
+  book-hebrew "Genesis 1:1"
+  book-hebrew "I Samuel" 17 4
+  book-hebrew 1sam 17 4
+  book-hebrew song 2 3
 
-  sefaria gen 1 1 --lang both
-  sefaria gen 1 1 --strip-niqqud
-  sefaria gen 1 1 -o gen-1-1.md
-  sefaria gen 1 1 --json
+  book-hebrew gen 1 1 --lang both
+  book-hebrew gen 1 1 --strip-niqqud
+  book-hebrew gen 1 1 -o gen-1-1.md
+  book-hebrew gen 1 1 --json
 
   # Whole book download
-  sefaria gen
-  sefaria genesis
-  sefaria exo --lang both
-  sefaria 1sam -o samuel
+  book-hebrew gen
+  book-hebrew genesis
+  book-hebrew exo --lang both
+  book-hebrew 1sam -o samuel
 """
 
 import re
