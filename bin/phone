@@ -68,9 +68,11 @@ if __name__ == '__main__':
         p = pull(src_path, dst_path)
 
     elif config.action == 'push':
-        dst_path = config.src_path
-        src_path = config.dst_path
-        p = pull(src_path, dst_path)
+        if src_path is None:
+            raise ValueError("push requires src_path")
+        src_path = config.src_path
+        dst_path = config.dst_path or '/sdcard/stuff/laptop-stuff'
+        p = push(src_path, dst_path)
 
     elif config.action == 'shell':
         args = sys.argv[2:]
