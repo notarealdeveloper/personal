@@ -67,6 +67,7 @@ while [[ -n "$1" ]]; do
         a|argparse)         TEMPLATE="python-argparse.py";;
         c|c)                TEMPLATE="c.c";;
         m|makefile)         TEMPLATE="Makefile";;
+        2|TODO)             TEMPLATE="TODO";;
         -n|--name)          shift; raw_filename="$1";;
         -l|--list)          list_options;;
         -h|--help)          usage;;
