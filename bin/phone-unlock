@@ -3,15 +3,15 @@
 # If you have access over adb but the screen is black, do this:
 
 # 1. get scrcpy
-sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR scrcpy --no-audio &
+sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR scrcpy -d --no-audio &
 
 # 2. Do this
 sleep 3
-adb shell input keyevent 224
+adb -d shell input keyevent 224
 sleep 1
-adb shell input swipe 500 1800 500 300 500
+adb -d shell input swipe 500 1800 500 300 500
 sleep 2
-adb shell input text 1337
+adb -d shell input text 1337
 sleep 1
-adb shell input keyevent ENTER
+adb -d shell input keyevent ENTER
 sleep 5
