@@ -279,4 +279,4 @@ export GIT_TERMINAL_PROMPT=1
 
 alias n="new 2 && $EDITOR TODO"
 alias h="./TODO"
-alias s="cat TODO | xc && cat TODO && rm TODO && git add . | git commit -F -"
+alias s="cat TODO | after verbose | before EOF && rm TODO && git add . | git commit -F -"
