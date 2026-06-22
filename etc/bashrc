@@ -276,7 +276,3 @@ fi
 
 unset GIT_ASKPASS SSH_ASKPASS
 export GIT_TERMINAL_PROMPT=1
-
-alias n="new 2 && vim -c 'normal 4ggi' -c 'startinsert' TODO"
-alias h="./TODO"
-alias s="{ printf 'And the Authors spoke to the lord command, saying:\n\n'; cat TODO | after verbose | before EOF; } && mv TODO ~/.local/share/Trash/ && git add . | git commit -F -"
