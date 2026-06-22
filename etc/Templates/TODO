@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-lord --verbose --dont-panic << "EOF"
+lord --verbose << "EOF"
 
 EOF
