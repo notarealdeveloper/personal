@@ -2,16 +2,24 @@
 
 # If you have access over adb but the screen is black, do this:
 
+randsleep() {
+    python -c "import random, time; r = 5*random.random(); print(f'sleeping for {r:.02f} secs'); time.sleep(r)"
+}
+
 # 1. get scrcpy
-sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR scrcpy -d --no-audio &
+if ! ps aux | grep -v grep | grep -c scrcpy &>/dev/null; then
+    echo "running scrcpy"
+    sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR scrcpy -d --no-audio &
+else
+    echo "scrcpy already running"
+fi
 
 # 2. Do this
-sleep 3
 adb -d shell input keyevent 224
-sleep 1
+randsleep
 adb -d shell input swipe 500 1800 500 300 500
-sleep 2
+randsleep
 adb -d shell input text 1337
-sleep 1
+randsleep
 adb -d shell input keyevent ENTER
-sleep 5
+randsleep
