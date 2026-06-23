@@ -89,3 +89,4 @@ filename="$(auto_create_filename "${raw_filename:-$TEMPLATE}")"
 
 cp -nv "$HOME/Templates/$TEMPLATE" "$filename"
 chmod +x "$filename"
+$EDITOR "$filename"
