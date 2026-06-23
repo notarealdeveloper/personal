@@ -276,3 +276,5 @@ fi
 
 unset GIT_ASKPASS SSH_ASKPASS
 export GIT_TERMINAL_PROMPT=1
+
+alias n="new 2 && vim -c 'normal 4ggi' -c 'startinsert' TODO"
