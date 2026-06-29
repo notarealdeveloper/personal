@@ -2,6 +2,15 @@
 
 # Probably the first bash script I ever wrote.
 # At that point, it was just two commands in a file.
+# Now it sort of is again.
+
+xinput | grep -P 'Logitech USB Receiver.*pointer' | grep -Po '(?<=id=)\d+' | while read -r id; do
+    xinput --set-prop "$id" "libinput Accel Speed" "${1:--0.65}"
+done
+
+xset m 1/1 0
+
+exit 0
 
 determine_xinput_type() {
 
@@ -197,4 +206,3 @@ xinput | grep -P 'Logitech USB Receiver.*pointer' | grep -Po '(?<=id=)\d+' | whi
 done
 
 xset m 1/1 0
-
