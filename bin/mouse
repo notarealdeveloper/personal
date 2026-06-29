@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+
+# Probably the first bash script I ever wrote.
+# At that point, it was just two commands in a file.
+
+determine_xinput_type() {
+
+    # arch, as of 2018-07-01
+    LIBINPUT="$(xinput | grep -Po '(?<=id=)\d+' | while read id; do
+        xinput --list-props "$id"
+    done | grep -ci 'libinput')"
+
+    # gentoo, as of 2018-07-01
+    DEVICEACCEL="$(xinput | grep -Po '(?<=id=)\d+' | while read id; do
+        xinput --list-props "$id"
+    done | grep -ci 'device accel constant deceleration')"
+
+    [[ $DEVICEACCEL -gt 0 ]] && [[ $LIBINPUT -gt 0 ]] && {
+        echo "Detected both 'device accel' and 'libinput' versions of xinput."
+        echo "Dying out of cautious confusion."
+        exit 1
+    }
+
+    if [[ $LIBINPUT -gt 0 ]]; then
+
+        echo 'libinput Accel Speed'
+
+        HAVE_LIBINPUT=1
+
+    elif [[ $DEVICEACCEL -gt 0 ]]; then
+
+        echo 'Device Accel Constant Deceleration'
+
+        HAVE_LIBINPUT=
+
+    fi
+
+}
+
+if [[ -z "$1" ]]; then
+
+    # set defaults for different machines
+
+    xinput_type="$(determine_xinput_type)"
+
+    if   [[ $(hostname) == 'Shannon' ]]; then
+
+        if [[ -n $HAVE_LIBINPUT ]]; then
+            echo "On Shannon with libinput"
+            DEFAULT_HIRES="-0.75"
+            DEFAULT_LORES="-0.75"
+        else
+            echo "On Shannon without libinput"
+            DEFAULT_HIRES="1.00"
+            DEFAULT_LORES="0.00"
+            #DEFAULT_HIRES="-0.75"
+            #DEFAULT_LORES="-0.75"
+        fi
+
+        # set speed depending on what resolution we are
+        if   [[ $(getresolution) == '2560x1440' ]]; then
+            speed="$DEFAULT_HIRES"
+        elif [[ $(getresolution) == '1280x720' ]]; then
+            speed="$DEFAULT_LORES"
+        else
+            speed="$DEFAULT_HIRES"
+            xcowsay "ERROR: mouse script doesn't recognize your resolution."
+        fi
+
+    elif [[ $(hostname) == 'Turing' || $(hostname) == 'turing' ]]; then
+
+        if [[ -n $HAVE_LIBINPUT ]]; then
+            echo "On Turing with libinput"
+            DEFAULT_HIRES="-0.75"
+            DEFAULT_LORES="-0.75"
+        else
+            echo "On Turing without libinput"
+            #DEFAULT_HIRES="1.00"
+            #DEFAULT_LORES="0.00"
+            DEFAULT_HIRES="-0.75"
+            DEFAULT_LORES="-0.75"
+        fi
+
+        #speed="$DEFAULT_HIRES"
+        speed="$DEFAULT_LORES"
+
+    else
+        if [[ -n $HAVE_LIBINPUT ]]; then
+            echo "On Unknown machine with libinput"
+            DEFAULT_HIRES="-0.75"
+            DEFAULT_LORES="-0.75"
+        else
+            echo "On Unknown machine without libinput"
+            DEFAULT_HIRES="1.20"
+            DEFAULT_LORES="1.20"
+        fi
+    fi
+
+    # use whichever default makes sense for current resolution
+
+
+else
+
+    speed="$1"
+
+fi
+
+logitech_mouse="Logitech USB Receiver"
+insignia_kbd="MOSART Semi. 2.4G RF Keyboard & Mouse   	"
+xinput | grep -Pi "(${logitech_mouse}|${insignia_kbd})" | grep -Po '(?<=id=)\d+' | while read device; do
+    echo xinput --set-prop "${device}" "${xinput_type}" "${speed}"
+    xinput --set-prop "${device}" "${xinput_type}" "${speed}"
+done
+
+# Set mouse acceleration
+xset m 1/1 0
+
+exit 0
+
+
+# if [[ -n "$1" ]]; then speed="$1"; else speed="2.0"; fi
+# xinput --set-prop 9 "Device Accel Constant Deceleration" "${speed}"
+# xset m 1/1 0
+
+### 20161030: Updated to new version. Revert to this code-block if it borks or gets weird.
+# if [[ -n "$1" ]]; then speed="$1"; else speed="1.5"; fi
+# xinput | grep -i 'Logitech USB Receiver' | grep -Po '(?<=id=)\d+' | while read device; do
+#     xinput --set-prop "${device}" "Device Accel Constant Deceleration" "${speed}"
+# done
+# xset m 1/1 0
+
+#DEFAULT_HIRES="1.5"
+# Trying this out b/c the new Arch version of xinput has different property names,
+# and so we're gonna have to change our parameter values eventually anyways.
+# Arch feels faster, and it isn't so bad. May as well adapt my brain now.
+
+if [[ -n "$1" ]]; then
+    # If they specify a speed, set speed to that.
+    speed="$1"
+else
+    # If they don't specify a speed, decide on a default using the resolution.
+    if [[ $(hostname) -eq 'Shannon' ]]; then
+        if   [[ $(getresolution) == '2560x1440' ]]; then
+            speed="$DEFAULT_HIRES"
+        elif [[ $(getresolution) == '1280x720' ]]; then
+            speed="$DEFAULT_LORES"
+        else
+            speed="$DEFAULT_HIRES"
+            xcowsay "mouse: Unfamiliar resolution on Shannon."
+        fi
+    elif [[ $(hostname) -eq 'Turing' ]]; then
+        if   [[ $(getresolution) == '1600x900' ]]; then
+            speed="$DEFAULT_HIRES"
+        else
+            echo "mouse: Unfamiliar resolution on Turing. Dying."
+            exit 1
+        fi
+    fi
+
+fi
+
+# Set mouse velocity (weirdly called acceleration & deceleration)
+xinput | grep -i 'Logitech USB Receiver' | grep -Po '(?<=id=)\d+' | while read device; do
+    xinput --set-prop "${device}" "Device Accel Constant Deceleration" "${speed}"
+done
+# Set mouse acceleration
+xset m 1/1 0
+
+
+exit 0
+
+# This version seems not to work anymore
+
+if [[ -n "$1" ]]; then
+    speed="$1"
+else
+    if   [[ $(hostname) == 'Shannon' ]]; then
+        speed="-0.85"
+    elif [[ $(hostname) == 'Turing' ]]; then
+        speed="-0.50"
+    else
+        speed="-0.65"
+    fi
+fi
+
+# New version: Wtf is this new xinput shit?
+
+property="libinput Accel Speed"
+
+# Get the relevant ids
+xinput | grep -P 'Logitech USB Receiver.*pointer' | grep -Po '(?<=id=)\d+' | while read id; do
+    xinput --set-prop "$id" "$property" "$speed" && 
+    echo "Setting \"$property\" to $speed"
+done
+
+xset m 1/1 0
+
