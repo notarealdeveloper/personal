@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+# Only for log, die, and colors
+source ~/.bashrc
+
+usage() {
+    # We can optionally pass in an explanation of what went wrong.
+    [[ -n "$1" ]] && log "${1}"
+    cat << EOF
+USAGE
+    $(basename $0) [OPTIONS] <thing>
+
+OPTIONS
+    -l,--list-things        List the things we can get (for bash completion)
+    -L,--list-options       List the available options (for bash completion)
+    -h,--help               Show this help
+EOF
+    exit 1
+}
+
+list_all_things() {
+    cat "$0" | grep -Po '(?<=^get_)[A-Za-z0-9-_]+'
+    exit 0
+}
+
+list_all_options() {
+    cat "$0" | pcregrep -M 'OPTIONS(\n|.)*\nEOF\n' | grep -Po '[-]{2}[A-Za-z0-9-_]+'
+    exit 0
+}
+
+get_pagesize() {
+    # getconf is in glibc
+    getconf PAGESIZE
+}
+
+get_name_collisions() {
+    # For colors
+    source ~/.bashrc
+    find -L $HOME/bin/ $HOME/bin/o/ -maxdepth 1 -type f -not -path '*/\.*' -and -not -path '\.' -exec basename '{}' ';' \
+    | while read f; do
+        ans="$(type -a "$f")"
+        num="$(echo "$ans" | wc -l)"
+        if [[ "$num" -gt 1 ]]; then
+            printf "${red}${f}${end}\n${ans}\n"
+        fi
+    done
+}
+
+get_partition_from_file() {
+    # Get block device where a file is located
+    [[ -z "$1" ]] && log "USAGE: ${FUNCNAME} <file>" && die
+    partition="$(df "$1" | awk '/^\/dev/ {print $1}')"
+
+    [[ "$partition" == "/dev/root" ]] && {
+        # partition=$(sed -n -r '\@on / @{s@([^ ]+).*@\1@;p;q}' <(mount))
+        # This is simpler
+        partition=$(grep -Po '^/[^ ]+(?= on / )' <(mount))
+    }
+
+    echo "$partition"
+}
+
+get_blocks_allocated_to_file() {
+    [[ -z "$1" ]] && log "USAGE: ${FUNCNAME} <file>" && die
+
+    sudo true
+    filename="$(readlink -f ${1})"
+    file_partition="$(get_partition_from_file ${filename})"
+
+    # rootdev=$(sed -n -r '\@on / @{s@([^ ]+).*@\1@;p;q}' <(mount))
+    # This works too.
+    # rootdev=$(awk '/ on \/ / {print $1}' <(mount))
+
+    # Show the blocks allocated to the file
+    blocks=($(sudo debugfs -R "blocks $filename" "$file_partition"))
+
+    for block in "${blocks[@]}"; do
+        sudo hexdump -Cv -n 512 -s $((block * 4096)) "$file_partition"
+    done
+}
+
+get_country_code() {
+    [[ -z "$1" ]] && echo "Usage: ${FUNCNAME} <any-pattern-present-in-country-name>" && exit 1
+
+    cat /usr/share/xml/iso-codes/iso_3166.xml     \
+        | pcregrep -Mi "alpha(\n|[^>])*${1}[^/]*" \
+        | sed -e 's@/>@@g' -e 's/^\s*//'
+}
+
+get_cachesize() {
+
+    numcores=$(($(ls -d /sys/devices/system/cpu/cpu[[:digit:]] | wc -l)/2))
+    L1=$(cat /sys/devices/system/cpu/cpu0/cache/index1/size)
+    L2=$(cat /sys/devices/system/cpu/cpu0/cache/index2/size)
+    L3=$(cat /sys/devices/system/cpu/cpu0/cache/index3/size)
+
+    linesize="$(cat /proc/cpuinfo | grep cache_alignment \
+              | head -n 1 | grep -Po '(?<=\s:\s).+$')"
+    log "The size of a cache line is ${linesize} bytes\n"
+
+    log "Our per-core L1 cache for code is ${L1}"
+    log "Our per-core L1 cache for data is ${L1}"
+    log "Our per-core L1 cache for both is $((2*${L1%K}))K"
+    log "Our total L1 cache for code is $((${L1%K}*${numcores}))K"
+    log "Our total L1 cache for data is $((${L1%K}*${numcores}))K"
+    log "Our total L1 cache for both is $((2*${L1%K}*${numcores}))K\n"
+
+    log "Our per-core L2 cache is ${L2}"
+    log "Our total L2 cache is $((${L2%K}*${numcores}))K\n"
+
+    log "Our per-core L3 cache is ${L3}"
+    log "Our total L3 cache is $((${L3%K}*${numcores}))K"
+
+    # We can also get some very useful information by running:
+    # sudo dmidecode -t cache
+}
+
+get_resolution() {
+    which xrandr &> /dev/null || die "Get xrandr, yo."
+    xrandr | grep -P '(eDP-?\d|HDMI-?\d|LVDS-?\d) connected' | grep -Po '\d{3,4}x\d{3,4}(?=[+])'
+}
+
+get_hostbyname() {
+    [[ -z "$1" ]] && echo "Usage: ${FUNCNAME} <hostname>" && exit 1
+    getent hosts "$1" | awk '{ print $1 }'
+}
+
+get_date() {
+    get-date "$@"
+}
+#get_date() {
+#    case $1 in
+#        -l|--long)      DATE="$(date +%Y%m%d-%H%M%S)";;
+#        -s|--short)     DATE="$(date +%Y%m%d)";;
+#        *)              DATE="$(date +%Y%m%d)";;
+#    esac
+#
+#    printf "${DATE}" | xclip -selection p &&
+#    printf "${DATE}" | xclip -selection c &&
+#    printf "${DATE}\n"
+#}
+
+[[ -z "$1" ]] && usage
+
+thing=
+args=()
+
+while [[ -z "$thing" ]]; do
+    case "$1" in
+        -h|--help)          usage;;
+        -l|--list-things)   list_all_things;;
+        -L|--list-options)  list_all_options;;
+        -*)                 usage "Unrecognized option: ${1}";;
+        *)                  thing="${1}";;
+    esac
+    shift
+done
+
+while [[ -n "$1" ]]; do
+    args+=("$1")
+    shift
+done
+
+# echo "$thing"
+# echo "${args[@]}"
+
+"get_${thing}" "${args[@]}"
