@@ -62,6 +62,8 @@ if [[ -z "$1" ]]; then
             speed="$DEFAULT_HIRES"
         elif [[ $(getresolution) == '1280x720' ]]; then
             speed="$DEFAULT_LORES"
+        elif [[ $(getresolution) == '1920x1080' ]]; then
+            speed="$DEFAULT_MIDRES"
         else
             speed="$DEFAULT_HIRES"
             xcowsay "ERROR: mouse script doesn't recognize your resolution."
