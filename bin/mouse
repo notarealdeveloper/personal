@@ -23,25 +23,61 @@ determine_xinput_type() {
 
     if [[ $LIBINPUT -gt 0 ]]; then
 
-        echo 'libinput Accel Speed'
-
+        xinput_type='libinput Accel Speed'
         HAVE_LIBINPUT=1
 
     elif [[ $DEVICEACCEL -gt 0 ]]; then
 
-        echo 'Device Accel Constant Deceleration'
-
+        xinput_type='Device Accel Constant Deceleration'
         HAVE_LIBINPUT=
 
     fi
 
 }
 
+resolution_size() {
+    getresolution | awk -Fx '{ print $1, $2 }'
+}
+
+scale_speed_for_resolution() {
+    local width="$1"
+    local height="$2"
+    local lores_speed="$3"
+    local hires_speed="$4"
+
+    awk \
+        -v width="$width" \
+        -v height="$height" \
+        -v lores_width=1280 \
+        -v lores_height=720 \
+        -v hires_width=2560 \
+        -v hires_height=1440 \
+        -v lores_speed="$lores_speed" \
+        -v hires_speed="$hires_speed" '
+            BEGIN {
+                if (width <= 0 || height <= 0) {
+                    print hires_speed
+                    exit
+                }
+
+                resolution = sqrt(width * width + height * height)
+                lores = sqrt(lores_width * lores_width + lores_height * lores_height)
+                hires = sqrt(hires_width * hires_width + hires_height * hires_height)
+                resolution_scale = (resolution - lores) / (hires - lores)
+                print lores_speed + (hires_speed - lores_speed) * resolution_scale
+            }
+        '
+}
+
+xinput_type=
+HAVE_LIBINPUT=
+determine_xinput_type
+
 if [[ -z "$1" ]]; then
 
     # set defaults for different machines
 
-    xinput_type="$(determine_xinput_type)"
+    read -r resolution_width resolution_height < <(resolution_size)
 
     if   [[ $(hostname) == 'Shannon' ]]; then
 
@@ -55,18 +91,6 @@ if [[ -z "$1" ]]; then
             DEFAULT_LORES="0.00"
             #DEFAULT_HIRES="-0.75"
             #DEFAULT_LORES="-0.75"
-        fi
-
-        # set speed depending on what resolution we are
-        if   [[ $(getresolution) == '2560x1440' ]]; then
-            speed="$DEFAULT_HIRES"
-        elif [[ $(getresolution) == '1280x720' ]]; then
-            speed="$DEFAULT_LORES"
-        elif [[ $(getresolution) == '1920x1080' ]]; then
-            speed="$DEFAULT_MIDRES"
-        else
-            speed="$DEFAULT_HIRES"
-            xcowsay "ERROR: mouse script doesn't recognize your resolution."
         fi
 
     elif [[ $(hostname) == 'Turing' || $(hostname) == 'turing' ]]; then
@@ -84,9 +108,6 @@ if [[ -z "$1" ]]; then
             DEFAULT_LORES="-0.75"
         fi
 
-        #speed="$DEFAULT_HIRES"
-        speed="$DEFAULT_LORES"
-
     else
         if [[ -n $HAVE_LIBINPUT ]]; then
             echo "On Unknown machine with libinput"
@@ -99,8 +120,7 @@ if [[ -z "$1" ]]; then
         fi
     fi
 
-    # use whichever default makes sense for current resolution
-
+    speed="$(scale_speed_for_resolution "$resolution_width" "$resolution_height" "$DEFAULT_LORES" "$DEFAULT_HIRES")"
 
 else
 
@@ -197,4 +217,3 @@ xinput | grep -P 'Logitech USB Receiver.*pointer' | grep -Po '(?<=id=)\d+' | whi
 done
 
 xset m 1/1 0
-
