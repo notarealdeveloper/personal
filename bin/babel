@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-font="${1:-Noto Sans Mono 22}"
-
+font="${1:-Noto Sans Mono}"
+size="${2:-22}"
 tmp=$(mktemp --suffix=.png)
 
-pango-view --font="$font" -q --output="$tmp" --text="$(cat <<'EOF'
-Cuneiform                 𒀭𒂗𒆤
-Egyptian Hieroglyphs      𓂀𓈖𓏏
+egyptian_hiero_font="Noto Sans Egyptian Hieroglyphs ${size}"
+proto_sinaitic_font="OHFontBold ${size}"
+proto_canaanite_font="Protosinaitic ${size}"
+
+#Cuneiform                 𒀭𒂗𒆤
+pango-view --font="${font} ${size}" -q --markup --output="$tmp" --text="$(cat <<EOF
+Egyptian Hieroglyphs      <span font="${egyptian_hiero_font}" weight="bold">𓂀𓈖𓏏</span>
+Proto-Sinaitic            <span font="${proto_sinaitic_font}">אבגדהוזח</span>
+Proto-Canaanite           <span font="${proto_canaanite_font}">ABGDHWZX</span>
+Paleo-Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅
 Ugaritic                  𐎀𐎁𐎂𐎃𐎄
-Paleo Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅
-Phoenician                𐤀𐤁𐤂𐤃𐤄𐤅
 Old South Arabian         𐩱𐩨𐩴𐩣
 Imperial Aramaic          𐡀𐡁𐡂𐡃𐡄
 Old Persian               𐎠𐎼𐎶
@@ -57,4 +62,3 @@ EOF
 )"
 
 eog "$tmp"
-
