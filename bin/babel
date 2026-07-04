@@ -7,27 +7,27 @@ tmp=$(mktemp --suffix=.png)
 trap 'rm -f "$tmp"' EXIT
 
 egyptian_hiero_font="Noto Sans Egyptian Hieroglyphs ${size}"
-proto_sinaitic_font="OHFontBold ${size}"
-proto_canaanite_font="Protosinaitic ${size}"
-
+proto_sinaitic_font="OHFontBold $((size * 130 / 100))"
+proto_canaanite_font="Protosinaitic $((size * 150 / 100))"
+paleo_hebrew_font="Noto Sans Mono $((size * 140 / 100))"
 hebrew_order_hieroglyphs="𓏴𓌔𓁶𓎗𓇑𓊋𓂋𓁹𓊽𓆓𓈖𓍢𓂧𓂝𓄤𓉗𓏭𓌉𓀠𓆟𓌙𓉐𓃾"
 
 pango-view --font="${font} ${size}" -q --markup --output="$tmp" --text="$(cat <<EOF
 Sumerian Cuneiform        <span line_height="0.6">𒀭𒂗𒆤 𒂗𒆠 𒀭𒉣𒈾 𒆠 𒂍</span>
 Akkadian Cuneiform        <span line_height="0.6">𒀀𒈾 𒀭𒂗𒆤 𒈗 𒆠 𒄿𒇻</span>
 Babylonian Cuneiform      <span line_height="0.6">𒄑𒂆𒈦 𒀀 𒈾 𒄿 𒉌</span>
+Ugaritic Cuneiform        𐎀𐎁𐎂𐎃𐎄𐎆𐎇𐎈𐎉𐎊𐎋𐎌𐎍𐎎𐎏𐎐𐎒𐎓𐎔𐎕𐎖𐎗𐎘𐎙𐎚𐎛𐎜𐎝𐎟
+Old Persian               𐎠𐎡𐎢𐎣𐎤𐎥𐎦𐎧𐎨𐎩𐎪𐎫𐎬𐎭𐎮𐎯𐎰𐎱𐎲𐎳𐎴𐎵𐎶𐎷𐎸𐎹𐎺𐎻𐎼𐎽𐎾𐎿
 Egyptian Hieroglyphs      <span font="${egyptian_hiero_font}" weight="bold">${hebrew_order_hieroglyphs}</span>
 Proto-Sinaitic            <span font="${proto_sinaitic_font}">אבגדהוזחטיכלמנסעפצקרשת</span>
-Proto-Canaanite           <span font="${proto_canaanite_font}">ABGDHWZXVYKLMNOPCRFST</span>
-Paleo-Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕
-Ugaritic                  𐎀𐎁𐎂𐎃𐎄𐎆𐎇𐎈𐎉𐎊𐎋𐎌𐎍𐎎𐎏𐎐𐎒𐎓𐎔𐎕𐎖𐎗𐎘𐎙𐎚𐎛𐎜𐎝𐎟
-Old South Arabian         𐩠𐩡𐩢𐩣𐩤𐩥𐩦𐩧𐩨𐩩𐩪𐩫𐩬𐩭𐩮𐩯𐩰𐩱𐩲𐩳𐩴𐩵𐩶𐩷𐩸𐩹𐩺𐩻
+Proto-Canaanite           <span font="${proto_canaanite_font}">TSFRCPONMLKYVXZWHDGBA</span>
+Paleo-Hebrew              <span font="${paleo_hebrew_font}">𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕</span>
 Imperial Aramaic          𐡀𐡁𐡂𐡃𐡄𐡅𐡆𐡇𐡈𐡉𐡊𐡋𐡌𐡍𐡎𐡏𐡐𐡑𐡒𐡓𐡔𐡕
-Old Persian               𐎠𐎡𐎢𐎣𐎤𐎥𐎦𐎧𐎨𐎩𐎪𐎫𐎬𐎭𐎮𐎯𐎰𐎱𐎲𐎳𐎴𐎵𐎶𐎷𐎸𐎹𐎺𐎻𐎼𐎽𐎾𐎿
 Hebrew                    אבגדהוזחטיכלמנסעפצקרשת
 Samaritan                 ࠀࠁࠂࠃࠄࠅࠆࠇࠈࠉࠊࠋࠌࠍࠎࠏࠐࠑࠒࠓࠔࠕ
 Syriac                    ܐܒܓܕܗܘܙܚܛܝܟܠܡܢܣܥܦܨܩܪܫܬ
 Mandaic                   ࡀࡁࡂࡃࡄࡅࡆࡇࡈࡉࡊࡋࡌࡍࡎࡏࡐࡑࡒࡓࡔࡕࡖࡗ
+Old South Arabian         𐩠𐩡𐩢𐩣𐩤𐩥𐩦𐩧𐩨𐩩𐩪𐩫𐩬𐩭𐩮𐩯𐩰𐩱𐩲𐩳𐩴𐩵𐩶𐩷𐩸𐩹𐩺𐩻
 Nabataean                 𐢀𐢁𐢂𐢃𐢄𐢅𐢆𐢇𐢈𐢉𐢊𐢋𐢌𐢍𐢎𐢏𐢐𐢑𐢒𐢓𐢔𐢕
 Palmyrene                 𐡠𐡡𐡢𐡣𐡤𐡥𐡦𐡧𐡨𐡩𐡪𐡫𐡬𐡭𐡮𐡯𐡰𐡱𐡲𐡳𐡴𐡵
 Greek                     ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ  αβγδεζηθικλμνξοπρστυφχψω
