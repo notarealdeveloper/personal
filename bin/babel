@@ -10,7 +10,7 @@ egyptian_hiero_font="Noto Sans Egyptian Hieroglyphs ${size}"
 proto_sinaitic_font="OHFontBold ${size}"
 proto_canaanite_font="Protosinaitic ${size}"
 
-hebrew_order_hieroglyphs="𓃾 𓉐 𓇉 𓆟 𓀠 𓊋 𓌙 𓎛 𓇋 𓂧 𓍢 𓈖 𓆓 𓁹 𓂋 𓎗 𓁶 𓌔 𓏴 𓇑 𓌉 𓄤 𓏭"
+hebrew_order_hieroglyphs="𓏴𓌔𓁶𓎗𓇑𓊋𓂋𓁹𓊽𓆓𓈖𓍢𓂧𓂝𓄤𓉗𓏭𓌉𓀠𓆟𓌙𓉐𓃾"
 
 pango-view --font="${font} ${size}" -q --markup --output="$tmp" --text="$(cat <<EOF
 Sumerian Cuneiform        <span line_height="0.6">𒀭𒂗𒆤 𒂗𒆠 𒀭𒉣𒈾 𒆠 𒂍</span>
