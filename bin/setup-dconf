@@ -7,15 +7,35 @@ set -euo pipefail
 ###################
 
 dconf load / <<- EOF
-	[org/gnome/desktop/interface]
-	gtk-theme='Numix'
-	icon-theme='Numix-Circle'
+    [org/cinnamon/desktop/interface]
+    gtk-theme='Numix'
+    icon-theme='Numix-Circle'
+    font-name='Noto Sans 10'
+
+    [org/cinnamon/desktop/wm/preferences]
+    titlebar-font='Noto Sans Bold 10'
+
+    [org/gnome/desktop/interface]
+    gtk-theme='Numix'
+    icon-theme='Numix-Circle'
+    font-name='Noto Sans 10'
+    document-font-name='Noto Sans 10'
+    monospace-font-name='Noto Sans Mono 10'
+
+    [org/gnome/desktop/wm/preferences]
+    titlebar-font='Noto Sans Bold 10'
+    titlebar-uses-system-font=false
+
+    [org/nemo/desktop]
+    font='Noto Sans 10'
+    volumes-visible=false
 
 	[org/gnome/gedit/preferences/editor]
+    editor-font='Noto Sans Mono 12'
+    use-default-font=false
 	insert-spaces=true
 	style-scheme-for-light-theme-variant='classic'
 	tabs-size=uint32 4
-	use-default-font=false
 	wrap-last-split-mode='word'
 
 	[org/gnome/desktop/privacy]
@@ -324,7 +344,7 @@ dconf load / <<- EOF
 	cursor-blink-mode='off'
 	cursor-shape='ibeam'
 	default-size-columns=80
-	font='Monospace 14'
+    font='Noto Sans Mono 14'
 	foreground-color='rgb(255,255,255)'
 	use-system-font=false
 	use-theme-colors=true
