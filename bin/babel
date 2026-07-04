@@ -4,60 +4,65 @@ set -euo pipefail
 font="${1:-Noto Sans Mono}"
 size="${2:-22}"
 tmp=$(mktemp --suffix=.png)
+trap 'rm -f "$tmp"' EXIT
 
 egyptian_hiero_font="Noto Sans Egyptian Hieroglyphs ${size}"
 proto_sinaitic_font="OHFontBold ${size}"
 proto_canaanite_font="Protosinaitic ${size}"
 
-#Cuneiform                 𒀭𒂗𒆤
+hebrew_order_hieroglyphs="𓃾 𓉐 𓇉 𓆟 𓀠 𓊋 𓌙 𓎛 𓇋 𓂧 𓍢 𓈖 𓆓 𓁹 𓂋 𓎗 𓁶 𓌔 𓏴 𓇑 𓌉 𓄤 𓏭"
+
 pango-view --font="${font} ${size}" -q --markup --output="$tmp" --text="$(cat <<EOF
-Egyptian Hieroglyphs      <span font="${egyptian_hiero_font}" weight="bold">𓂀𓈖𓏏</span>
-Proto-Sinaitic            <span font="${proto_sinaitic_font}">אבגדהוזח</span>
-Proto-Canaanite           <span font="${proto_canaanite_font}">ABGDHWZX</span>
-Paleo-Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅
-Ugaritic                  𐎀𐎁𐎂𐎃𐎄
-Old South Arabian         𐩱𐩨𐩴𐩣
-Imperial Aramaic          𐡀𐡁𐡂𐡃𐡄
-Old Persian               𐎠𐎼𐎶
-Hebrew                    עברית
-Samaritan                 ࠔࠌࠓࠉࠕ
-Syriac                    ܣܘܪܝܝܐ
-Mandaic                   ࡌࡀࡍࡃࡀࡉࡀ
-Nabataean                 𐢕𐢃𐢋𐢈
-Palmyrene                 𐡯𐡥𐡫𐡩𐡠
-Greek                     Ελληνικά
-Etruscan                  𐌀𐌁𐌂𐌃
-Old Italic                𐌀𐌁𐌂𐌃
-Latin                     ABCDEFG
-Runic                     ᚠᚢᚦᚨᚱᚲ
-Gothic                    𐌰𐌱𐌲𐌳
-Armenian                  Հայերեն
-Georgian                  ქართული
-Arabic                    العربية
-Devanagari                संस्कृतम्
-Bengali                   বাংলা
-Gujarati                  ગુજરાતી
-Gurmukhi                  ਪੰਜਾਬੀ
-Kannada                   ಕನ್ನಡ
-Malayalam                 മലയാളം
-Tamil                     தமிழ்
-Telugu                    తెలుగు
-Thai                      ไทย
-Khmer                     ខ្មែរ
-Lao                       ລາວ
-Tibetan                   བོད་ཡིག
-Mongolian                 ᠮᠣᠩᠭᠣᠯ
-Linear A                  𐘀𐘁𐘂
-Linear B                  𐀀𐀁𐀂
-Cypriot                   𐠀𐠁𐠂
-Coptic                    ⲀⲂⲄⲆ
-Cherokee                  ᏣᎳᎩ
-Canadian Aboriginal       ᐃᓄᒃᑎᑐᑦ
-Chinese                   中文
-Japanese                  日本語
-Korean                    한국어
-Yi                        ꆈꌠꁱ
-Emoji                     😀🐍📜🔥
+Sumerian Cuneiform        <span line_height="0.6">𒀭𒂗𒆤 𒂗𒆠 𒀭𒉣𒈾 𒆠 𒂍</span>
+Akkadian Cuneiform        <span line_height="0.6">𒀀𒈾 𒀭𒂗𒆤 𒈗 𒆠 𒄿𒇻</span>
+Babylonian Cuneiform      <span line_height="0.6">𒄑𒂆𒈦 𒀀 𒈾 𒄿 𒉌</span>
+Egyptian Hieroglyphs      <span font="${egyptian_hiero_font}" weight="bold">${hebrew_order_hieroglyphs}</span>
+Proto-Sinaitic            <span font="${proto_sinaitic_font}">אבגדהוזחטיכלמנסעפצקרשת</span>
+Proto-Canaanite           <span font="${proto_canaanite_font}">ABGDHWZXVYKLMNOPCRFST</span>
+Paleo-Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅𐤆𐤇𐤈𐤉𐤊𐤋𐤌𐤍𐤎𐤏𐤐𐤑𐤒𐤓𐤔𐤕
+Ugaritic                  𐎀𐎁𐎂𐎃𐎄𐎆𐎇𐎈𐎉𐎊𐎋𐎌𐎍𐎎𐎏𐎐𐎒𐎓𐎔𐎕𐎖𐎗𐎘𐎙𐎚𐎛𐎜𐎝𐎟
+Old South Arabian         𐩠𐩡𐩢𐩣𐩤𐩥𐩦𐩧𐩨𐩩𐩪𐩫𐩬𐩭𐩮𐩯𐩰𐩱𐩲𐩳𐩴𐩵𐩶𐩷𐩸𐩹𐩺𐩻
+Imperial Aramaic          𐡀𐡁𐡂𐡃𐡄𐡅𐡆𐡇𐡈𐡉𐡊𐡋𐡌𐡍𐡎𐡏𐡐𐡑𐡒𐡓𐡔𐡕
+Old Persian               𐎠𐎡𐎢𐎣𐎤𐎥𐎦𐎧𐎨𐎩𐎪𐎫𐎬𐎭𐎮𐎯𐎰𐎱𐎲𐎳𐎴𐎵𐎶𐎷𐎸𐎹𐎺𐎻𐎼𐎽𐎾𐎿
+Hebrew                    אבגדהוזחטיכלמנסעפצקרשת
+Samaritan                 ࠀࠁࠂࠃࠄࠅࠆࠇࠈࠉࠊࠋࠌࠍࠎࠏࠐࠑࠒࠓࠔࠕ
+Syriac                    ܐܒܓܕܗܘܙܚܛܝܟܠܡܢܣܥܦܨܩܪܫܬ
+Mandaic                   ࡀࡁࡂࡃࡄࡅࡆࡇࡈࡉࡊࡋࡌࡍࡎࡏࡐࡑࡒࡓࡔࡕࡖࡗ
+Nabataean                 𐢀𐢁𐢂𐢃𐢄𐢅𐢆𐢇𐢈𐢉𐢊𐢋𐢌𐢍𐢎𐢏𐢐𐢑𐢒𐢓𐢔𐢕
+Palmyrene                 𐡠𐡡𐡢𐡣𐡤𐡥𐡦𐡧𐡨𐡩𐡪𐡫𐡬𐡭𐡮𐡯𐡰𐡱𐡲𐡳𐡴𐡵
+Greek                     ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ  αβγδεζηθικλμνξοπρστυφχψω
+Etruscan                  𐌀𐌁𐌂𐌄𐌅𐌆𐌇𐌈𐌉𐌊𐌋𐌌𐌍𐌏𐌐𐌑𐌒𐌓𐌔𐌕𐌖𐌗𐌘
+Old Italic                𐌀𐌁𐌂𐌃𐌄𐌅𐌆𐌇𐌈𐌉𐌊𐌋𐌌𐌍𐌎𐌏𐌐𐌑𐌒𐌓𐌔𐌕𐌖𐌗𐌘𐌙𐌚𐌛𐌜𐌝𐌞𐌠𐌡𐌢𐌣
+Latin                     ABCDEFGHIJKLMNOPQRSTUVWXYZ  abcdefghijklmnopqrstuvwxyz
+Runic                     ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚻᚾᛁᛃᛇᛈᛉᛊᛋᛏᛒᛖᛗᛚᛜᛞᛟ
+Gothic                    𐌰𐌱𐌲𐌳𐌴𐌵𐌶𐌷𐌸𐌹𐌺𐌻𐌼𐌽𐌾𐌿𐍀𐍂𐍃𐍄𐍅𐍆𐍇𐍈𐍉
+Armenian                  ԱԲԳԴԵԶԷԸԹԺԻԼԽԾԿՀՁՂՃՄՅՆՇՈՉՊՋՌՍՎՏՐՑՒՓՔՕՖ
+Georgian                  აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ
+Arabic                    ابتثجحخدذرزسشصضطظعغفقكلمنهوي
+Devanagari                अआइईउऊऋॠऌॡएऐओऔ कखगघङ चछजझञ टठडढण तथदधन पफबभम यरलव शषसह
+Bengali                   অআইঈউঊঋৠঌৡএঐওঔ কখগঘঙ চছজঝঞ টঠডঢণ তਥদধন পফবভম যরলশষসহ
+Gujarati                  અઆઇઈઉઊઋૠઌૡએઐઓઔ કખગઘઙ ચછજઝઞ ટઠડઢણ તથદધન પફબભમ યરલવ શષસહ
+Gurmukhi                  ਅਆਇਈਉਊਏਐਓਔ ਕਖਗਘਙ ਚਛਜਝਞ ਟਠਡਢਣ ਤਥਦਧਨ ਪਫਬਭਮ ਯਰਲਵ ਸ਼ਸਹ
+Kannada                   ಅಆಇಈಉಊಋೠಌೡಎಏಐಒಓಔ ಕಖಗಘಙ ಚಛಜಝಞ ಟಠಡಢಣ ತಥದಧನ ಪಫಬಭಮ ಯರಲವಶಷಸಹ
+Malayalam                 അആഇഈഉഊഋൠഌൡഎഏഐഒഓഔ കഖഗഘങ ചഛജഝഞ ടഠഡഢണ തഥദധന പഫബഭമ യരലവശഷസഹ
+Tamil                     அஆஇஈஉஊஎஏஐஒஓஔ கஙசஞடணதநபமயரலவழளறனஷஸஹ
+Telugu                    అఆఇఈఉఊఋౠఌౡఎఏఐఒఓఔ కఖగఘఙ చఛజఝఞ టఠడఢణ తథదధన పఫబభమ యరలవశషసహ
+Thai                      กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ
+Khmer                     កខគឃង ចឆជឈញ ដឋឌឍណ តថទធន បផពភម យរលវ សហឡអ
+Lao                       ກຂຄງຈສຊຍດຕຖທນບປຜຝພຟມຢຣລວຫອຮ
+Tibetan                   <span line_height="0.5">ཀཁགང ཅཆཇཉ ཏཐདན པཕབམ ཙཚཛ ཞཟའཡརལཤསཧ</span>
+Mongolian                 <span line_height="0.5">ᠠᠡᠢᠣᠤᠥᠦᠧ ᠨᠩᠪᠫᠬᠭᠮᠯᠰᠱᠲᠳᠴᠵᠶᠷᠸᠹᠺᠻᠼᠽᠾ</span>
+Linear A                  𐘀𐘁𐘂𐘃𐘄𐘅𐘆𐘇𐘈𐘉𐘊𐘋𐘌𐘍𐘎𐘏
+Linear B                  𐀀𐀁𐀂𐀃𐀄𐀅𐀆𐀇𐀈𐀉𐀊𐀋𐀍𐀏𐀐𐀑𐀒𐀓𐀔𐀕𐀖𐀗
+Cypriot                   𐠀𐠁𐠂𐠃𐠄𐠅𐠈𐠊𐠋𐠌𐠍𐠎𐠏𐠐𐠑𐠒𐠓𐠔𐠕𐠖𐠗𐠘𐠙
+Coptic                    ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰ
+Cherokee                  ᎠᎡᎢᎣᎤᎥᎦᎧᎨᎩᎪᎫᎬᎭᎮᎯᎰᎱᎲᏂᏃᏄᏅᏆᏇᏈᏉᏊᏍᏎᏏᏐᏑᏒᏓᏔᏕᏖᏗ
+Canadian Aboriginal       ᐁᐃᐅᐊ ᐯᐱᐳᐸ ᑌᑎᑐᑕ ᑫᑭᑯᑲ ᒉᒋᒍᒐ ᒣᒥᒧᒪ ᓀᓂᓄᓇ ᓭᓯᓱᓴ
+Chinese                   天地人日月山水火木金土 中文漢字
+Japanese                  あいうえお かきくけこ さしすせそ 日本語 漢字 カタカナ
+Korean                    ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ 가나라마바사아자차카타파하 한국어
+Yi                        ꀀꀁꀂꀃꀄꀅꀆꀇꀈꀉꀊꀋꀌꀍꀎꀏ
+Emoji                     😀😃😄😁😆😅😂🙂😉😍😎🤯😡👍👎👋✌️🤘✍️🐍📜🏛️🌍🔥
 EOF
 )"
 
