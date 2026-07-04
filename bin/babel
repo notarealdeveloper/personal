@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+font="${1:-Noto Sans Mono 22}"
+
+tmp=$(mktemp --suffix=.png)
+
+pango-view --font="$font" -q --output="$tmp" --text="$(cat <<'EOF'
+Cuneiform                 𒀭𒂗𒆤
+Egyptian Hieroglyphs      𓂀𓈖𓏏
+Ugaritic                  𐎀𐎁𐎂𐎃𐎄
+Paleo Hebrew              𐤀𐤁𐤂𐤃𐤄𐤅
+Phoenician                𐤀𐤁𐤂𐤃𐤄𐤅
+Old South Arabian         𐩱𐩨𐩴𐩣
+Imperial Aramaic          𐡀𐡁𐡂𐡃𐡄
+Old Persian               𐎠𐎼𐎶
+Hebrew                    עברית
+Samaritan                 ࠔࠌࠓࠉࠕ
+Syriac                    ܣܘܪܝܝܐ
+Mandaic                   ࡌࡀࡍࡃࡀࡉࡀ
+Nabataean                 𐢕𐢃𐢋𐢈
+Palmyrene                 𐡯𐡥𐡫𐡩𐡠
+Greek                     Ελληνικά
+Etruscan                  𐌀𐌁𐌂𐌃
+Old Italic                𐌀𐌁𐌂𐌃
+Latin                     ABCDEFG
+Runic                     ᚠᚢᚦᚨᚱᚲ
+Gothic                    𐌰𐌱𐌲𐌳
+Armenian                  Հայերեն
+Georgian                  ქართული
+Arabic                    العربية
+Devanagari                संस्कृतम्
+Bengali                   বাংলা
+Gujarati                  ગુજરાતી
+Gurmukhi                  ਪੰਜਾਬੀ
+Kannada                   ಕನ್ನಡ
+Malayalam                 മലയാളം
+Tamil                     தமிழ்
+Telugu                    తెలుగు
+Thai                      ไทย
+Khmer                     ខ្មែរ
+Lao                       ລາວ
+Tibetan                   བོད་ཡིག
+Mongolian                 ᠮᠣᠩᠭᠣᠯ
+Linear A                  𐘀𐘁𐘂
+Linear B                  𐀀𐀁𐀂
+Cypriot                   𐠀𐠁𐠂
+Coptic                    ⲀⲂⲄⲆ
+Cherokee                  ᏣᎳᎩ
+Canadian Aboriginal       ᐃᓄᒃᑎᑐᑦ
+Chinese                   中文
+Japanese                  日本語
+Korean                    한국어
+Yi                        ꆈꌠꁱ
+Emoji                     😀🐍📜🔥
+EOF
+)"
+
+eog "$tmp"
+
