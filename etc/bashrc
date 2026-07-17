@@ -137,6 +137,7 @@ done
 add_to_path        "${HOME}/.local/bin"
 add_to_path        "${PERSONAL}/bin/o"
 add_to_path        "${PERSONAL}/lib/bash"
+add_to_path        "${HOME}/.ipython/profile_default/startup"
 add_to_python_path "${PERSONAL}/lib/python"
 
 # add we-the-nameless/bin
