@@ -278,7 +278,6 @@ fi
 unset GIT_ASKPASS SSH_ASKPASS
 export GIT_TERMINAL_PROMPT=1
 
-alias n="new 2 && vim -c 'normal 4ggi' -c 'startinsert' TODO"
 export MPLBACKEND=qtcairo
 
 ###########################################
@@ -291,5 +290,8 @@ export MPLBACKEND=qtcairo
 export DISPLAY=:0.0
 
 # We're gonna need more aliases boys!
-alias cdw='c we-the-nameless'
+alias we='c we-the-nameless'
 alias m='make'
+alias q='clear'
+alias n="new 2 && vim -c 'normal 4ggi' -c 'startinsert' TODO"
+alias 🙏='codex'
