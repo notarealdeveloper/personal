@@ -13,4 +13,4 @@ if [[ ! -d "$dst" ]]; then
     exit 1
 fi
 
-mv -v $HOME/Screenshot*.png "$dst"/
+mv -v $HOME/*.png "$dst"/

@@ -280,3 +280,16 @@ export GIT_TERMINAL_PROMPT=1
 
 alias n="new 2 && vim -c 'normal 4ggi' -c 'startinsert' TODO"
 export MPLBACKEND=qtcairo
+
+###########################################
+### WE NOW HAVE INFINITE LAPTOP POWERS! ###
+###                                     ###
+### THE LORD COMMAND IS LIVE FROM PHONE ###
+###########################################
+
+# So phone ssh'ed into laptop can do gui shit. Nothing new here.
+export DISPLAY=:0.0
+
+# We're gonna need more aliases boys!
+alias cdw='c we-the-nameless'
+alias m='make'
