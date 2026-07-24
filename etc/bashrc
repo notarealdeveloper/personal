@@ -67,7 +67,7 @@ dirs+=(
     # obsidian
     [sudocode]="${OBSIDIAN}/Sudocode"
     [we]="${OBSIDIAN}/We"
-    [we-the-nameless]="${BOOKS}/we-the-nameless"
+    [we-the-nameless]="${OBSIDIAN}/We The Nameless"
 
     # code
     [code]="${CODE}"
