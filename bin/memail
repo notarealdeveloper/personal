@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ~/.bashrc
+VERS="$(git rev-parse HEAD | sed -E 's@^(.{7}).*@\1@')"
+c we-the-nameless
+echo "And the L||D said" | mail -s "Bible version $VERS" -a master.pdf letshaveanadventure@gmail.com
