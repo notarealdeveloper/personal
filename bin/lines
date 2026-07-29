@@ -8,7 +8,7 @@ elif [[ $name == unlines ]]; then
     if [[ -z "$1" ]]; then
         sed -E 's@(.*)@"&"@g' <&0 | sed -Ez "s@\n+@\t@g"
     elif [[ "$1" = '-s' ]]; then
-        sed -Ez "s@\n+@@g" <&0
+        sed -Ez "s@\n+@ @g" <&0
     elif [[ "$1" = '-t' ]]; then
         # tab doesn't work well with double quotes o_O
         sed -Ez 's@\n+@\t@g' <&0
