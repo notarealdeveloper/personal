@@ -294,5 +294,14 @@ export DISPLAY=:0.0
 alias we='c we-the-nameless'
 alias m='make'
 alias q='clear'
-alias n='new 2 && vim -c "normal 4ggi" -c startinsert $(ls TODO* | sort | tail -1)'
 alias 🙏='codex'
+
+n() {
+  new 2 || return
+  vim -c 'normal 4ggi' -c startinsert "$(
+    find . -maxdepth 1 -type f -name 'TODO*' -printf '%T@ %p\n' |
+      sort -nr |
+      head -n 1 |
+      cut -d' ' -f2-
+  )"
+}
