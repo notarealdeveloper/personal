@@ -1,0 +1,110 @@
+#!/usr/bin/env python
+
+import re
+import argparse
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+
+
+START_TIME = datetime(2026, 7, 30, 17, 50)
+START_VERSE = "Genesis 7:1"
+VERSES_PER_MINUTE = 2
+
+@dataclass(frozen=True)
+class VerseRef:
+    book: str
+    chapter: int
+    verse: int
+
+    def __str__(self) -> str:
+        return f"{self.book} {self.chapter}:{self.verse}"
+
+
+def book_name(dirname: str) -> str:
+    _, _, slug = dirname.partition("-")
+    return " ".join(part.capitalize() for part in slug.split("-"))
+
+
+def parse_ref(text: str) -> VerseRef:
+    match = START_RE.match(text.strip())
+    if not match:
+        raise ValueError(f"Could not parse verse reference: {text!r}")
+    return VerseRef(
+        match.group("book"),
+        int(match.group("chapter")),
+        int(match.group("verse")),
+    )
+
+
+def load_verses(root: Path) -> list[VerseRef]:
+    verses: list[VerseRef] = []
+
+    for book_dir in sorted(root.glob("[0-9][0-9]-*")):
+        if not book_dir.is_dir():
+            continue
+
+        book = book_name(book_dir.name)
+        for chapter_file in sorted(book_dir.glob("[0-9][0-9].tex")):
+            chapter = int(chapter_file.stem)
+            text = chapter_file.read_text(encoding="utf-8")
+            for match in VERSE_RE.finditer(text):
+                verses.append(VerseRef(book, chapter, int(match.group(1))))
+
+    return verses
+
+
+def parse_when(text: str | None) -> datetime:
+    if text is None:
+        return datetime.now()
+
+    formats = (
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M",
+        "%Y-%m-%dT%H:%M:%S",
+    )
+    for fmt in formats:
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            pass
+
+    raise SystemExit(
+        "Could not parse --at. Use a format like '2026-07-30 17:51'."
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Print the verse you should be on by the current time."
+    )
+    parser.add_argument(
+        "--at",
+        help="Check a specific local time instead of now, e.g. '2026-07-30 17:51'.",
+    )
+    args = parser.parse_args()
+
+    root = Path(__file__).resolve().parent
+    verses = load_verses(root)
+    start = parse_ref(START_VERSE)
+
+    try:
+        start_index = verses.index(start)
+    except ValueError:
+        raise SystemExit(f"Start verse {start} was not found in {root}.")
+
+    when = parse_when(args.at)
+    elapsed_minutes = max(0, int((when - START_TIME).total_seconds() // 60))
+    target_index = start_index + elapsed_minutes * VERSES_PER_MINUTE
+
+    if target_index >= len(verses):
+        print(f"Past the final loaded verse: {verses[-1]}")
+        return 0
+
+    print(verses[target_index])
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

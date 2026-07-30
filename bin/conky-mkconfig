@@ -274,6 +274,7 @@ conky.config = {
 conky.text = [[
 ${if_existing FACE_IMAGE_PATH}${image FACE_IMAGE_PATH -p 0,20 -s FACE_IMAGE_SIZE}${endif}
 ${color grey}${alignc}${time %a %b %e, %l:%M %p}
+${color lightgreen}${execi 30 progress}
 ${color lightblue}     ${execi 300 temperature}\
 ${color lightgreen}${alignr}${execi 300 gmail}
 ${color lightblue}$hr
