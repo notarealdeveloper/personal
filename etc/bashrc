@@ -234,9 +234,8 @@ else
     #shopt -q login_shell || penv master
     #penv master
 fi
-penv master
-#penv hate
-#venv hate
+# penv master
+venv mistress
 
 shorter_prompt # let's do this by default
 
