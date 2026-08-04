@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime
 
 
-START_TIME = datetime(2026, 7, 30, 18, 0, 0)
-START_VERSE = "Genesis 7:1"
+START_TIME = datetime(2026, 8, 4, 13, 48, 0)
+START_VERSE = "Genesis 16:1"
 VERSES_PER_MINUTE = 2
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
 

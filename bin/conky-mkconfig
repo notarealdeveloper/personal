@@ -277,7 +277,7 @@ ${color grey}${alignc}${time %a %b %e, %l:%M %p}
 ${color lightblue}     ${execi 300 temperature}\
 ${color lightgreen}${alignr}${execi 300 gmail}
 ${color lightblue}$hr
-${color lightblue}Are you on: ${color lightgreen}${execi 30 progress}
+${color lightblue}Are you on: ${color lightgreen}${execi 30 we-progress}
 ${color lightblue}BATTERY_STRING: ${color lightgreen}${battery_percent}% ${battery_bar BAR_H}
 ${color}Memory (TOTAL_MEMORY): ${color lightgreen}${memperc}% ${membar BAR_H}
 ${color}CPU Count: ${color lightgreen}CPU_COUNT ${alignr}\
