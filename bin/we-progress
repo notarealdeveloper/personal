@@ -8,10 +8,10 @@ from datetime import datetime
 
 YEAR=2026
 MON=8
-DAY=6
+DAY=8
 
 HOUR=13
-MIN=18
+MIN=10
 SEC=0
 
 START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
