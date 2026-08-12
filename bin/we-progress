@@ -8,7 +8,7 @@ from datetime import datetime
 
 YEAR=2026
 MON=8
-DAY=10
+DAY=12
 
 HOUR=14
 MIN=0
