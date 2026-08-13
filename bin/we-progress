@@ -10,13 +10,13 @@ YEAR=2026
 MON=8
 DAY=13
 
-HOUR=16
-MIN=25
+HOUR=17
+MIN=26
 SEC=0
 
 START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
 
-START_VERSE = "Genesis 30:1"
+START_VERSE = "Genesis 30:41"
 VERSES_PER_MINUTE = 2
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
 
