@@ -8,15 +8,15 @@ from datetime import datetime
 
 YEAR=2026
 MON=8
-DAY=18
+DAY=22
 
-HOUR=12
+HOUR=15
 MIN=0
 SEC=0
 
 START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
 
-START_VERSE = "Genesis 1:1"
+START_VERSE = "Genesis 33:1"
 VERSES_PER_MINUTE = 1
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
 
