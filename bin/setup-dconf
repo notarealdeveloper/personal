@@ -134,8 +134,8 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 
 	[custom-keybindings/custom0]
 	binding=['<Primary><Alt>b']
-	command='terminal we-the-nameless'
-	name='terminal -d we-the-nameless'
+	command='terminal'
+	name='terminal'
 
 	[custom-keybindings/custom38]
 	binding=['<Primary><Alt>t']
