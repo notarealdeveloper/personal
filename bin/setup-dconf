@@ -127,11 +127,16 @@ EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
-	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33', 'custom34', 'custom35', 'custom36', 'custom37', '__dummy__']
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33', 'custom34', 'custom35', 'custom36', 'custom37', 'custom38', '__dummy__']
 	show-desklets=@as []
 
 	[custom-keybindings/custom0]
 	binding=['<Primary><Alt>b']
+	command='terminal we-the-nameless'
+	name='terminal we-the-nameless'
+
+	[custom-keybindings/custom38]
+	binding=['<Primary><Alt>t']
 	command='terminal'
 	name='terminal'
 
