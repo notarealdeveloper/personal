@@ -70,7 +70,7 @@ dconf load / <<- EOF
 	decrease-opacity=['<Primary><Alt>j']
 	increase-opacity=['<Primary><Alt>k']
 	minimize=['<Primary><Alt>space']
-	show-desktop=['<Super>d', '<Primary><Alt>d']
+	show-desktop=['<Primary><Alt>d']
 	toggle-maximized=['<Alt>F10', '<Super>Return']
 
 	[org/cinnamon/desktop/peripherals/keyboard]
@@ -117,6 +117,8 @@ dconf load / <<- EOF
 	home=['XF86Explorer']
 	screenshot=['Print']
 	screenshot-clip=['<Primary>Print']
+	terminal=@as []
+	video-rotation-lock=@as []
 	window-screenshot=['<Super>Print']
 	window-screenshot-clip=['<Primary><Shift><Super>Print']
 
@@ -325,6 +327,8 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	area-screenshot-clip=['<Primary><Shift>F9']
 	screenshot=['F9']
 	screenshot-clip=['<Primary>F9']
+	terminal=@as []
+	video-rotation-lock=@as []
 	window-screenshot=['<Alt>F9']
 	window-screenshot-clip=['<Primary>Alt_L']
 
@@ -332,7 +336,7 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	decrease-opacity=['<Primary><Alt>j']
 	increase-opacity=['<Primary><Alt>k']
 	minimize=['<Primary><Alt>space']
-	show-desktop=['<Super>d', '<Primary><Alt>d']
+	show-desktop=['<Primary><Alt>d']
 	toggle-maximized=['<Alt>F10', '<Super>Return']
 EOF
 
