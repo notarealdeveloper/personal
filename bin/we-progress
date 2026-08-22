@@ -4,9 +4,10 @@ import re
 import argparse
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 
 
-YEAR=2026
+DEFAULT_CONFIG = '''YEAR=2026
 MON=8
 DAY=22
 
@@ -18,6 +19,7 @@ START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
 
 START_VERSE = "Genesis 33:1"
 VERSES_PER_MINUTE = 1
+'''
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
 
 CHAPTER_VERSES: dict[str, tuple[int, ...]] = {
@@ -154,6 +156,16 @@ def parse_when(text: str | None) -> datetime:
     )
 
 
+def load_config() -> tuple[datetime, str, int]:
+    path = Path.home() / ".we-progress"
+    if not path.exists():
+        path.write_text(DEFAULT_CONFIG)
+
+    values = {"datetime": datetime}
+    exec(compile(path.read_text(), path, "exec"), values)
+    return values["START_TIME"], values["START_VERSE"], values["VERSES_PER_MINUTE"]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Print the verse you should be on by the current time."
@@ -164,8 +176,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    start_time, start_verse, verses_per_minute = load_config()
     verses = load_verses()
-    start = parse_ref(START_VERSE)
+    start = parse_ref(start_verse)
 
     try:
         start_index = verses.index(start)
@@ -173,8 +186,8 @@ def main() -> int:
         raise SystemExit(f"Start verse {start} was not found.")
 
     when = parse_when(args.at)
-    elapsed_minutes = max(0, int((when - START_TIME).total_seconds() // 60))
-    target_index = start_index + elapsed_minutes * VERSES_PER_MINUTE
+    elapsed_minutes = max(0, int((when - start_time).total_seconds() // 60))
+    target_index = start_index + elapsed_minutes * verses_per_minute
 
     if target_index >= len(verses):
         print(f"Past the final loaded verse: {verses[-1]}")
