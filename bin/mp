@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bashrc
+
 for f in "$@"; do
-    xdg-open "$OBSIDIAN/We the Nameless/01-genesis/${f}.tex"
+    xdg-open "$OBSIDIAN/We The Nameless/01-genesis/${f}.tex"
 done
