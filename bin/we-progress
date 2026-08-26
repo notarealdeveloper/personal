@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-import re
 import argparse
+import os
+import re
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +23,48 @@ START_VERSE = "Genesis 33:1"
 VERSES_PER_MINUTE = 1
 '''
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
+CONFIG_VALUE_RE = re.compile(
+    r"^(?P<name>YEAR|MON|DAY|HOUR|MIN|SEC)\s*=.*$", re.MULTILINE
+)
+START_VERSE_RE = re.compile(r'^START_VERSE\s*=.*$', re.MULTILINE)
+
+# Conventional abbreviations which are not prefixes of the normalized name.
+BOOK_ALIASES = {
+    "dt": "Deuteronomy",
+    "jdg": "Judges",
+    "neh": "Nehemiah",
+    "est": "Esther",
+    "ps": "Psalms",
+    "psa": "Psalms",
+    "eccl": "Ecclesiastes",
+    "sos": "Song of Solomon",
+    "cant": "Song of Solomon",
+    "isa": "Isaiah",
+    "jer": "Jeremiah",
+    "lam": "Lamentations",
+    "ezek": "Ezekiel",
+    "dan": "Daniel",
+    "hos": "Hosea",
+    "obad": "Obadiah",
+    "mic": "Micah",
+    "hab": "Habakkuk",
+    "zeph": "Zephaniah",
+    "zech": "Zechariah",
+    "mal": "Malachi",
+    "mt": "Matthew",
+    "mk": "Mark",
+    "lk": "Luke",
+    "jn": "John",
+    "rom": "Romans",
+    "gal": "Galatians",
+    "eph": "Ephesians",
+    "phil": "Philippians",
+    "col": "Colossians",
+    "phlm": "Philemon",
+    "heb": "Hebrews",
+    "jas": "James",
+    "rev": "Revelation",
+}
 
 CHAPTER_VERSES: dict[str, tuple[int, ...]] = {
     "Genesis": (31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24, 21, 16, 27, 33, 38, 18, 34, 24, 20, 67, 34, 35, 46, 22, 35, 43, 55, 32, 20, 31, 29, 43, 36, 30, 23, 23, 57, 38, 34, 34, 28, 34, 31, 22, 33, 26),
@@ -106,7 +150,7 @@ def parse_ref(text: str) -> VerseRef:
     if not match:
         raise ValueError(f"Could not parse verse reference: {text!r}")
 
-    book = match.group("book")
+    book = parse_book(match.group("book"))
     chapter = int(match.group("chapter"))
     verse = int(match.group("verse"))
 
@@ -121,6 +165,32 @@ def parse_ref(text: str) -> VerseRef:
         book,
         chapter,
         verse,
+    )
+
+
+def normalize_book(text: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", text.casefold())
+
+
+def parse_book(text: str) -> str:
+    """Return the canonical name for a case-insensitive name or abbreviation."""
+    wanted = normalize_book(text)
+    if not wanted:
+        raise ValueError("Book cannot be empty.")
+
+    names = {normalize_book(book): book for book in CHAPTER_VERSES}
+    if wanted in names:
+        return names[wanted]
+    if wanted in BOOK_ALIASES:
+        return BOOK_ALIASES[wanted]
+
+    matches = [book for key, book in names.items() if key.startswith(wanted)]
+    if len(matches) == 1:
+        return matches[0]
+    if not matches:
+        raise ValueError(f"Unknown book: {text!r}")
+    raise ValueError(
+        f"Ambiguous book abbreviation {text!r}: {', '.join(matches)}"
     )
 
 
@@ -156,14 +226,88 @@ def parse_when(text: str | None) -> datetime:
     )
 
 
+def config_path() -> Path:
+    return Path.home() / ".we-progress"
+
+
 def load_config() -> tuple[datetime, str, int]:
-    path = Path.home() / ".we-progress"
+    path = config_path()
     if not path.exists():
         path.write_text(DEFAULT_CONFIG)
 
     values = {"datetime": datetime}
     exec(compile(path.read_text(), path, "exec"), values)
     return values["START_TIME"], values["START_VERSE"], values["VERSES_PER_MINUTE"]
+
+
+def update_config(when: datetime, verse: VerseRef) -> None:
+    path = config_path()
+    if not path.exists():
+        path.write_text(DEFAULT_CONFIG)
+
+    replacements = {
+        "YEAR": when.year,
+        "MON": when.month,
+        "DAY": when.day,
+        "HOUR": when.hour,
+        "MIN": when.minute,
+        "SEC": when.second,
+    }
+
+    def replace_value(match: re.Match[str]) -> str:
+        name = match.group("name")
+        return f"{name}={replacements[name]}"
+
+    text, value_count = CONFIG_VALUE_RE.subn(replace_value, path.read_text())
+    if value_count != len(replacements):
+        raise SystemExit(f"Could not find all date and time fields in {path}.")
+    text, count = START_VERSE_RE.subn(f'START_VERSE = "{verse}"', text)
+    if count != 1:
+        raise SystemExit(f"Could not find START_VERSE in {path}.")
+
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        temporary.write_text(text)
+        temporary.chmod(path.stat().st_mode)
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def prompt_value(label: str, current: int, maximum: int) -> int:
+    while True:
+        value = input(f"  {label:<8} [{current}]: ").strip()
+        if not value:
+            return current
+        if value.isdigit() and 1 <= int(value) <= maximum:
+            return int(value)
+        print(f"  Enter a number from 1 to {maximum}.")
+
+
+def interactive_ref(current: VerseRef) -> VerseRef:
+    if not sys.stdin.isatty():
+        raise SystemExit("--interactive requires a terminal.")
+
+    print("\n┌─ Update reading progress ─────────────────────┐")
+    print("│ Press Enter to keep the value shown in [brackets].")
+    while True:
+        entered = input(f"  Book     [{current.book}]: ").strip()
+        try:
+            book = parse_book(entered or current.book)
+            break
+        except ValueError as error:
+            print(f"  {error}")
+
+    default_chapter = current.chapter if book == current.book else 1
+    chapter = prompt_value("Chapter", default_chapter, len(CHAPTER_VERSES[book]))
+    default_verse = (
+        current.verse
+        if book == current.book and chapter == current.chapter
+        else 1
+    )
+    verse = prompt_value("Verse", default_verse, CHAPTER_VERSES[book][chapter - 1])
+    print("└───────────────────────────────────────────────┘")
+    return VerseRef(book, chapter, verse)
 
 
 def main() -> int:
@@ -174,11 +318,47 @@ def main() -> int:
         "--at",
         help="Check a specific local time instead of now, e.g. '2026-07-30 17:51'.",
     )
+    parser.add_argument(
+        "-u", "--update", action="store_true",
+        help="Set the start time to now and optionally set a new start verse.",
+    )
+    parser.add_argument(
+        "-i", "--interactive", action="store_true",
+        help="Interactively choose the start verse (with --update).",
+    )
+    parser.add_argument(
+        "verse", nargs="*", metavar="VERSE",
+        help="New start verse for --update, e.g. 'Gen 3:4'.",
+    )
     args = parser.parse_args()
 
     start_time, start_verse, verses_per_minute = load_config()
+    try:
+        start = parse_ref(start_verse)
+    except ValueError as error:
+        parser.error(str(error))
+
+    if args.interactive and not args.update:
+        parser.error("--interactive requires --update")
+    if args.verse and not args.update:
+        parser.error("a verse may only be supplied with --update")
+    if args.interactive and args.verse:
+        parser.error("supply a verse or use --interactive, not both")
+
+    if args.update:
+        if args.interactive:
+            start = interactive_ref(start)
+        elif args.verse:
+            try:
+                start = parse_ref(" ".join(args.verse))
+            except ValueError as error:
+                parser.error(str(error))
+        start_time = parse_when(args.at)
+        update_config(start_time, start)
+        print(f"Updated {config_path()}: {start} at {start_time:%Y-%m-%d %H:%M:%S}")
+        return 0
+
     verses = load_verses()
-    start = parse_ref(start_verse)
 
     try:
         start_index = verses.index(start)
