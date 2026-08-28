@@ -313,17 +313,18 @@ include "%L"
 # Mnemonic = shape only.
 # Sound/history intentionally unrelated.
 
-<Multi_key> <w> <a> : "ʌ" U028C   # uh          IPA open-mid back unrounded vowel
-<Multi_key> <w> <A> : "∀" U2200   # all         mathematical universal quantifier
+<Multi_key> <w> <a> : "ᗅ"  U15C5   # gho         Canadian Syllabics Carrier GHO
+<Multi_key> <w> <A> : "Ꭺ"  U13AA   # go          Cherokee GO
 
-<Multi_key> <w> <b> : "ь"  U044C   # soft sign   Cyrillic
-<Multi_key> <w> <B> : "𐌇"  U10307  # H           Old Italic HE
+<Multi_key> <w> <b> : "ᑲ"  U1472   # ka          Canadian Syllabics KA
+<Multi_key> <w> <B> : "Ᏼ"  U13F4   # jə̃          Cherokee YV (roughly english "young")
+<Multi_key> <w> <6> : "Ꮟ"  U13CF   # si          Cherokee SI
 
 <Multi_key> <w> <c> : "ς"  U03C2   # s           Greek final sigma
 <Multi_key> <w> <C> : "⊂"  U2282   # sub         subset of, mathematics
 
-<Multi_key> <w> <d> : "ð"  U00F0   # /ð/         eth
-<Multi_key> <w> <D> : "Ꞁ"  UA780   # turned L    Latin; historically related caveat
+<Multi_key> <w> <d> : "ժ"  U056A   # /ʒ/         Armenian zhe
+<Multi_key> <w> <D> : "ᗞ"  U15DE   # the         Canadian Syllabics Carrier The
 
 <Multi_key> <w> <e> : "ヨ" U30E8  # yo           Japanese katakana
 <Multi_key> <w> <E> : "三" U4E09  # three        Chinese san
@@ -331,8 +332,8 @@ include "%L"
 <Multi_key> <w> <f> : "ϝ"  U03DD   # /w/         Greek digamma
 <Multi_key> <w> <F> : "Ғ"  U0492   # /ʁ~ɣ/       Cyrillic ghe with stroke
 
-<Multi_key> <w> <g> : "ɡ"  U0261   # /ɡ/         IPA voiced velar stop
-<Multi_key> <w> <G> : "Γ"  U0393   # /ɣ~ʝ/       Greek gamma
+<Multi_key> <w> <g> : "ց"  U0581   # /tsʰ/       Armenian c'o
+<Multi_key> <w> <G> : "Ᏻ"  U13F3   # yu          Cherokee YU
 
 <Multi_key> <w> <h> : "н"  U043D   # /n/         Cyrillic en
 <Multi_key> <w> <H> : "Н"  U041D   # /n/         Cyrillic en
@@ -341,7 +342,7 @@ include "%L"
 <Multi_key> <w> <I> : "し" U3057   # shi         Japanese hiragana
 
 <Multi_key> <w> <j> : "ل"  U0644   # /l/         Arabic lām
-<Multi_key> <w> <J> : "⅃"  U2143   # reversed L  Roman-symbol letterform
+<Multi_key> <w> <j> : "ل"  U0644   # /l/         Arabic lām
 
 <Multi_key> <w> <k> : "ɔ"  U0254   # /ɔ/         IPA open-mid back rounded vowel
 <Multi_key> <w> <K> : "𐤀"  U10900  # /ʔ/         Phoenician aleph
@@ -389,7 +390,31 @@ include "%L"
 <Multi_key> <w> <Y> : "丫" U4E2B   # yā          Chinese "fork"
 
 <Multi_key> <w> <z> : "乙" U4E59   # yǐ          Chinese second heavenly stem
-<Multi_key> <w> <Z> : "乙" U4E59   # yǐ          Chinese second heavenly stem
+<Multi_key> <w> <z> : "之" U4E4B   # zhī         Chinese "of; it"
+
+# Different rules for these, just keep em here
+#<Multi_key> <x> <a> : "A"  U2200   # All; universal quantifier
+#<Multi_key> <x> <l> : "L"          # ALphabet starts with א ל
+#<Multi_key> <x> <d> : "Ꞁ"  UA780   # Latin; historically related caveat
+#<Multi_key> <x> <g> : "Γ"  U0393   # Greek gamma
+#<Multi_key> <x> <e> : "E"  UA780
+#<Multi_key> <x> <f> : "F"  UA780
+#<Multi_key> <x> <j> : "⅃"  U2143   # Roman-symbol letterform
+#<Multi_key> <x> <h> : "Η"          # Eta
+#<Multi_key> <x> <o> : "⊐"  U2290   # ɔ sound
+#<Multi_key> <x> <k> : "⊏"  U228F   # c sound
+#<Multi_key> <x> <p> : "⊓"  U2293   # p sound
+#<Multi_key> <x> <u> : "⊔"  U2294   # ʊ
+#<Multi_key> <x> <n> : "⊥"  U22A5   # F
+#<Multi_key> <x> <r> : "⊢"  UA780   # Provable
+#<Multi_key> <x> <l> : "⊣"  U22A3   # Opposite of P
+#<Multi_key> <x> <x> : "𐌇"  U10307  # Old Italic HE
+#<Multi_key> <x> <3> : "ꟻ"  UA7FB   # reversed F  Latin epigraphic reversed F
+#<Multi_key> <x> <y> : "⊤"  U22A4   # T
+#<Multi_key> <x> <v> : "Ⅎ"  U2132   # Claudian digamma inversum
+#<Multi_key> <x> <w> : "Ł"  U0141   # /w/         Polish L with stroke
+#<Multi_key> <x> <x> : "Ǝ"  U018E   # Latin reversed E
+#<Multi_key> <x> <z> : "∀"  U2200   # All; universal quantifier
 
 # ------------------------------------------------------------
 # IPA / historical linguistics symbols
