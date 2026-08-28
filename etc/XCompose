@@ -317,7 +317,7 @@ include "%L"
 <Multi_key> <w> <A> : "∀" U2200   # all         mathematical universal quantifier
 
 <Multi_key> <w> <b> : "ь"  U044C   # soft sign   Cyrillic
-<Multi_key> <w> <h> : "𐌇"  U10307  # H           Old Italic HE
+<Multi_key> <w> <B> : "𐌇"  U10307  # H           Old Italic HE
 
 <Multi_key> <w> <c> : "ς"  U03C2   # s           Greek final sigma
 <Multi_key> <w> <C> : "⊂"  U2282   # sub         subset of, mathematics
