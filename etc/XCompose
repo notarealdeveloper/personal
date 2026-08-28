@@ -316,80 +316,80 @@ include "%L"
 <Multi_key> <w> <a> : "ʌ" U028C   # uh          IPA open-mid back unrounded vowel
 <Multi_key> <w> <A> : "∀" U2200   # all         mathematical universal quantifier
 
-<Multi_key> <w> <b> : "ь" U044C   # soft sign   Cyrillic
-<Multi_key> <w> <h> : "𐌇" U10307  # H           Old Italic HE
+<Multi_key> <w> <b> : "ь"  U044C   # soft sign   Cyrillic
+<Multi_key> <w> <h> : "𐌇"  U10307  # H           Old Italic HE
 
-<Multi_key> <w> <c> : "ς" U03C2   # s           Greek final sigma
-<Multi_key> <w> <C> : "⊂" U2282   # sub         subset of, mathematics
+<Multi_key> <w> <c> : "ς"  U03C2   # s           Greek final sigma
+<Multi_key> <w> <C> : "⊂"  U2282   # sub         subset of, mathematics
 
-<Multi_key> <w> <d> : "ð" U00F0   # /ð/         eth
-<Multi_key> <w> <D> : "Ꞁ" UA780   # turned L    Latin; historically related caveat
+<Multi_key> <w> <d> : "ð"  U00F0   # /ð/         eth
+<Multi_key> <w> <D> : "Ꞁ"  UA780   # turned L    Latin; historically related caveat
 
-<Multi_key> <w> <e> : "ヨ" U30E8  # yo          Japanese katakana
-<Multi_key> <w> <E> : "三" U4E09  # three       Chinese san
+<Multi_key> <w> <e> : "ヨ" U30E8  # yo           Japanese katakana
+<Multi_key> <w> <E> : "三" U4E09  # three        Chinese san
 
-<Multi_key> <w> <f> : "ϝ" U03DD   # /w/         Greek digamma
-<Multi_key> <w> <F> : "Ғ" U0492   # /ʁ~ɣ/       Cyrillic ghe with stroke
+<Multi_key> <w> <f> : "ϝ"  U03DD   # /w/         Greek digamma
+<Multi_key> <w> <F> : "Ғ"  U0492   # /ʁ~ɣ/       Cyrillic ghe with stroke
 
-<Multi_key> <w> <g> : "ɡ" U0261   # /ɡ/         IPA voiced velar stop
-<Multi_key> <w> <G> : "Γ" U0393   # /ɣ~ʝ/       Greek gamma
+<Multi_key> <w> <g> : "ɡ"  U0261   # /ɡ/         IPA voiced velar stop
+<Multi_key> <w> <G> : "Γ"  U0393   # /ɣ~ʝ/       Greek gamma
 
-<Multi_key> <w> <h> : "н" U043D   # /n/         Cyrillic en
-<Multi_key> <w> <H> : "Н" U041D   # /n/         Cyrillic en
+<Multi_key> <w> <h> : "н"  U043D   # /n/         Cyrillic en
+<Multi_key> <w> <H> : "Н"  U041D   # /n/         Cyrillic en
 
-<Multi_key> <w> <i> : "ו" U05D5   # /v/         Hebrew waw/vav
-<Multi_key> <w> <I> : "し" U3057  # shi         Japanese hiragana
+<Multi_key> <w> <i> : "ו"  U05D5   # /v/         Hebrew waw/vav
+<Multi_key> <w> <I> : "し" U3057   # shi         Japanese hiragana
 
-<Multi_key> <w> <j> : "ل" U0644   # /l/         Arabic lām
-<Multi_key> <w> <J> : "⅃" U2143   # reversed L  Roman-symbol letterform
+<Multi_key> <w> <j> : "ل"  U0644   # /l/         Arabic lām
+<Multi_key> <w> <J> : "⅃"  U2143   # reversed L  Roman-symbol letterform
 
-<Multi_key> <w> <k> : "ɔ" U0254   # /ɔ/         IPA open-mid back rounded vowel
-<Multi_key> <w> <K> : "𐤀" U10900  # /ʔ/         Phoenician aleph
+<Multi_key> <w> <k> : "ɔ"  U0254   # /ɔ/         IPA open-mid back rounded vowel
+<Multi_key> <w> <K> : "𐤀"  U10900  # /ʔ/         Phoenician aleph
 
-<Multi_key> <w> <l> : "ł" U0142   # /w/         Polish ł
-<Multi_key> <w> <L> : "Ł" U0141   # /w/         Polish Ł
+<Multi_key> <w> <l> : "ł"  U0142   # /w/         Polish ł
+<Multi_key> <w> <L> : "Ł"  U0141   # /w/         Polish Ł
 
-<Multi_key> <w> <m> : "ϻ" U03FB   # /s/         Greek san
-<Multi_key> <w> <M> : "Ϻ" U03FA   # /s/         Greek san
+<Multi_key> <w> <m> : "ϻ"  U03FB   # /s/         Greek san
+<Multi_key> <w> <M> : "Ϻ"  U03FA   # /s/         Greek san
 
-<Multi_key> <w> <n> : "א" U05D0   # /ʔ/         Hebrew aleph
-<Multi_key> <w> <N> : "И" U0418   # /i/         Cyrillic i
+<Multi_key> <w> <n> : "א"  U05D0   # /ʔ/         Hebrew aleph
+<Multi_key> <w> <N> : "И"  U0418   # /i/         Cyrillic i
 
-<Multi_key> <w> <o> : "𐤏" U1090F  # /ʕ/         Phoenician ayin
-<Multi_key> <w> <O> : "〇" U3007   # líng       Chinese zero
+<Multi_key> <w> <o> : "𐤏"  U1090F  # /ʕ/         Phoenician ayin
+<Multi_key> <w> <O> : "〇" U3007   # líng        Chinese zero
 
-<Multi_key> <w> <p> : "ρ" U03C1   # /r/         Greek rho
-<Multi_key> <w> <P> : "Р" U0420   # /r/         Cyrillic er
+<Multi_key> <w> <p> : "ρ"  U03C1   # /r/         Greek rho
+<Multi_key> <w> <P> : "Р"  U0420   # /r/         Cyrillic er
 
-<Multi_key> <w> <q> : "ϙ" U03D9   # /k/         Greek archaic koppa
-<Multi_key> <w> <Q> : "Ϙ" U03D8   # /k/         Greek archaic koppa
+<Multi_key> <w> <q> : "ϙ"  U03D9   # /k/         Greek archaic koppa
+<Multi_key> <w> <Q> : "Ϙ"  U03D8   # /k/         Greek archaic koppa
 
-<Multi_key> <w> <r> : "г" U0433   # /ɡ/         Cyrillic ghe
-<Multi_key> <w> <R> : "Я" U042F   # /ja/        Cyrillic ya
+<Multi_key> <w> <r> : "г"  U0433   # /ɡ/         Cyrillic ghe
+<Multi_key> <w> <R> : "Я"  U042F   # /ja/        Cyrillic ya
 
-<Multi_key> <w> <s> : "ʃ" U0283   # /ʃ/         IPA voiceless postalveolar fricative
-<Multi_key> <w> <S> : "∫" U222B   # integral    mathematics
+<Multi_key> <w> <s> : "ʃ"  U0283   # /ʃ/         IPA voiceless postalveolar fricative
+<Multi_key> <w> <S> : "∫"  U222B   # integral    mathematics
 
-<Multi_key> <w> <t> : "十" U5341   # shí        Chinese "ten"
-<Multi_key> <w> <T> : "ㄒ" U3112   # x          Bopomofo xī
+<Multi_key> <w> <t> : "十" U5341   # shí         Chinese "ten"
+<Multi_key> <w> <T> : "ㄒ" U3112   # x           Bopomofo xī
 
-<Multi_key> <w> <u> : "ʊ" U028A   # /ʊ/         IPA near-close back rounded vowel
-<Multi_key> <w> <U> : "∪" U222A   # union       mathematics
+<Multi_key> <w> <u> : "ʊ"  U028A   # /ʊ/         IPA near-close back rounded vowel
+<Multi_key> <w> <U> : "∪"  U222A   # union       mathematics
 
-<Multi_key> <w> <v> : "∨" U2228   # or          logical disjunction
-<Multi_key> <w> <V> : "٧" U0667   # seven       Arabic-Indic seven
+<Multi_key> <w> <v> : "∨"  U2228   # or          logical disjunction
+<Multi_key> <w> <V> : "٧"  U0667   # seven       Arabic-Indic seven
 
-<Multi_key> <w> <w> : "ш" U0448   # /ʂ~ʃ/       Cyrillic sha
-<Multi_key> <w> <W> : "山" U5C71   # shān       Chinese "mountain"
+<Multi_key> <w> <w> : "ш"  U0448   # /ʂ~ʃ/       Cyrillic sha
+<Multi_key> <w> <W> : "山" U5C71   # shān        Chinese "mountain"
 
-<Multi_key> <w> <x> : "メ" U30E1   # me         Japanese katakana
-<Multi_key> <w> <X> : "𐤕" U10915  # /t/         Phoenician taw
+<Multi_key> <w> <x> : "メ" U30E1   # me          Japanese katakana
+<Multi_key> <w> <X> : "𐤕"  U10915  # /t/         Phoenician taw
 
-<Multi_key> <w> <y> : "丫" U4E2B   # yā         Chinese "fork"
-<Multi_key> <w> <Y> : "丫" U4E2B   # yā         Chinese "fork"
+<Multi_key> <w> <y> : "丫" U4E2B   # yā          Chinese "fork"
+<Multi_key> <w> <Y> : "丫" U4E2B   # yā          Chinese "fork"
 
-<Multi_key> <w> <z> : "乙" U4E59   # yǐ         Chinese second heavenly stem
-<Multi_key> <w> <Z> : "乙" U4E59   # yǐ         Chinese second heavenly stem
+<Multi_key> <w> <z> : "乙" U4E59   # yǐ          Chinese second heavenly stem
+<Multi_key> <w> <Z> : "乙" U4E59   # yǐ          Chinese second heavenly stem
 
 # ------------------------------------------------------------
 # IPA / historical linguistics symbols
