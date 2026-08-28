@@ -375,5 +375,17 @@ include "%L"
 
 <Multi_key> <t> <w> : "š́"        # sin (optional)
 
-<Multi_key> <'>     : "‘’"
-<Multi_key> <">     : "“”"
+# Smart quotes
+<Multi_key> <apostrophe> : "‘’"
+<Multi_key> <quotedbl>   : "“”"
+
+<Multi_key> <grave>      : "‘" U2018  # `  → left single quote
+<Multi_key> <asciitilde> : "“" U201C  # ~  → left double quote
+<Multi_key> <apostrophe> : "’" U2019  # '  → right single quote
+<Multi_key> <quotedbl>   : "”" U201D  # "  → right double quote
+
+# Smart quotes - mnemonic punctuation
+<Multi_key> <bracketleft>  : "‘" U2018  # [ → left single
+<Multi_key> <bracketright> : "’" U2019  # ] → right single
+<Multi_key> <braceleft>    : "“" U201C  # { → left double
+<Multi_key> <braceright>   : "”" U201D  # } → right double
