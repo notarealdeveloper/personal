@@ -230,7 +230,7 @@ def config_path() -> Path:
     return Path.home() / ".we-progress"
 
 
-def load_config() -> tuple[datetime, str, int]:
+def load_config() -> tuple[datetime, str, float]:
     path = config_path()
     if not path.exists():
         path.write_text(DEFAULT_CONFIG)
@@ -367,7 +367,8 @@ def main() -> int:
 
     when = parse_when(args.at)
     elapsed_minutes = max(0, int((when - start_time).total_seconds() // 60))
-    target_index = start_index + elapsed_minutes * verses_per_minute
+    verses_elapsed = int(elapsed_minutes * verses_per_minute)
+    target_index = start_index + verses_elapsed
 
     if target_index >= len(verses):
         print(f"Past the final loaded verse: {verses[-1]}")
