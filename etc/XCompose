@@ -305,38 +305,269 @@ include "%L"
 <Multi_key> <r> <z> : "з" U0437
 
 # ------------------------------------------------------------
+# We: Babel Lang Shape Puns
+# Compose w <letter>
+# ------------------------------------------------------------
+
+# Purely visual impostors
+# Mnemonic = shape only.
+# Sound/history intentionally unrelated.
+
+<Multi_key> <w> <a> : "ʌ" U028C   # uh          IPA open-mid back unrounded vowel
+<Multi_key> <w> <A> : "∀" U2200   # all         mathematical universal quantifier
+
+<Multi_key> <w> <b> : "ь" U044C   # soft sign   Cyrillic
+<Multi_key> <w> <h> : "𐌇" U10307  # H           Old Italic HE
+
+<Multi_key> <w> <c> : "ς" U03C2   # s           Greek final sigma
+<Multi_key> <w> <C> : "⊂" U2282   # sub         subset of, mathematics
+
+<Multi_key> <w> <d> : "ð" U00F0   # /ð/         eth
+<Multi_key> <w> <D> : "Ꞁ" UA780   # turned L    Latin; historically related caveat
+
+<Multi_key> <w> <e> : "ヨ" U30E8  # yo          Japanese katakana
+<Multi_key> <w> <E> : "三" U4E09  # three       Chinese san
+
+<Multi_key> <w> <f> : "ϝ" U03DD   # /w/         Greek digamma
+<Multi_key> <w> <F> : "Ғ" U0492   # /ʁ~ɣ/       Cyrillic ghe with stroke
+
+<Multi_key> <w> <g> : "ɡ" U0261   # /ɡ/         IPA voiced velar stop
+<Multi_key> <w> <G> : "Γ" U0393   # /ɣ~ʝ/       Greek gamma
+
+<Multi_key> <w> <h> : "н" U043D   # /n/         Cyrillic en
+<Multi_key> <w> <H> : "Н" U041D   # /n/         Cyrillic en
+
+<Multi_key> <w> <i> : "ו" U05D5   # /v/         Hebrew waw/vav
+<Multi_key> <w> <I> : "し" U3057  # shi         Japanese hiragana
+
+<Multi_key> <w> <j> : "ل" U0644   # /l/         Arabic lām
+<Multi_key> <w> <J> : "⅃" U2143   # reversed L  Roman-symbol letterform
+
+<Multi_key> <w> <k> : "ɔ" U0254   # /ɔ/         IPA open-mid back rounded vowel
+<Multi_key> <w> <K> : "𐤀" U10900  # /ʔ/         Phoenician aleph
+
+<Multi_key> <w> <l> : "ł" U0142   # /w/         Polish ł
+<Multi_key> <w> <L> : "Ł" U0141   # /w/         Polish Ł
+
+<Multi_key> <w> <m> : "ϻ" U03FB   # /s/         Greek san
+<Multi_key> <w> <M> : "Ϻ" U03FA   # /s/         Greek san
+
+<Multi_key> <w> <n> : "א" U05D0   # /ʔ/         Hebrew aleph
+<Multi_key> <w> <N> : "И" U0418   # /i/         Cyrillic i
+
+<Multi_key> <w> <o> : "𐤏" U1090F  # /ʕ/         Phoenician ayin
+<Multi_key> <w> <O> : "〇" U3007   # líng       Chinese zero
+
+<Multi_key> <w> <p> : "ρ" U03C1   # /r/         Greek rho
+<Multi_key> <w> <P> : "Р" U0420   # /r/         Cyrillic er
+
+<Multi_key> <w> <q> : "ϙ" U03D9   # /k/         Greek archaic koppa
+<Multi_key> <w> <Q> : "Ϙ" U03D8   # /k/         Greek archaic koppa
+
+<Multi_key> <w> <r> : "г" U0433   # /ɡ/         Cyrillic ghe
+<Multi_key> <w> <R> : "Я" U042F   # /ja/        Cyrillic ya
+
+<Multi_key> <w> <s> : "ʃ" U0283   # /ʃ/         IPA voiceless postalveolar fricative
+<Multi_key> <w> <S> : "∫" U222B   # integral    mathematics
+
+<Multi_key> <w> <t> : "十" U5341   # shí        Chinese "ten"
+<Multi_key> <w> <T> : "ㄒ" U3112   # x          Bopomofo xī
+
+<Multi_key> <w> <u> : "ʊ" U028A   # /ʊ/         IPA near-close back rounded vowel
+<Multi_key> <w> <U> : "∪" U222A   # union       mathematics
+
+<Multi_key> <w> <v> : "∨" U2228   # or          logical disjunction
+<Multi_key> <w> <V> : "٧" U0667   # seven       Arabic-Indic seven
+
+<Multi_key> <w> <w> : "ш" U0448   # /ʂ~ʃ/       Cyrillic sha
+<Multi_key> <w> <W> : "山" U5C71   # shān       Chinese "mountain"
+
+<Multi_key> <w> <x> : "メ" U30E1   # me         Japanese katakana
+<Multi_key> <w> <X> : "𐤕" U10915  # /t/         Phoenician taw
+
+<Multi_key> <w> <y> : "丫" U4E2B   # yā         Chinese "fork"
+<Multi_key> <w> <Y> : "丫" U4E2B   # yā         Chinese "fork"
+
+<Multi_key> <w> <z> : "乙" U4E59   # yǐ         Chinese second heavenly stem
+<Multi_key> <w> <Z> : "乙" U4E59   # yǐ         Chinese second heavenly stem
+
+# ------------------------------------------------------------
 # IPA / historical linguistics symbols
 # Compose i <letter>
 # ------------------------------------------------------------
 
-<Multi_key> <i> <a> : "ʔ" U0294
-<Multi_key> <i> <b> : "β" U03B2
-<Multi_key> <i> <c> : "ɔ" U0254
-<Multi_key> <i> <d> : "Ꞁ" UA780
-<Multi_key> <i> <e> : "æ" U00E6
-<Multi_key> <i> <f> : "ɸ" U0278
-<Multi_key> <i> <g> : "Γ" U0393
-<Multi_key> <i> <h> : "𐌇" U10307
-<Multi_key> <i> <i> : "ɪ" U026A
-<Multi_key> <i> <j> : "ʒ" U0292
-<Multi_key> <i> <k> : "κ" U03BA
-<Multi_key> <i> <l> : "ʌ" U028C
-<Multi_key> <i> <M> : "Ϻ" U03FA
-<Multi_key> <i> <m> : "ϻ" U03FB
-<Multi_key> <i> <n> : "ŋ" U014B
-<Multi_key> <i> <o> : "ʕ" U0295
-<Multi_key> <i> <p> : "⅃" U2143
-<Multi_key> <i> <Q> : "Ϙ" U03D8
-<Multi_key> <i> <q> : "ϙ" U03D9
-<Multi_key> <i> <r> : "ɚ" U025A
-<Multi_key> <i> <s> : "ʃ" U0283
-<Multi_key> <i> <t> : "ð" U00F0
-<Multi_key> <i> <u> : "ə" U0259
-<Multi_key> <i> <v> : "∨" U2228
-<Multi_key> <i> <w> : "ʊ" U028A
-<Multi_key> <i> <x> : "χ" U03C7
-<Multi_key> <i> <y> : "ʎ" U028E
-<Multi_key> <i> <z> : "ɛ" U025B
+# IPA: mnemonic consonants
+
+<Multi_key> <i> <n> <g> : "ŋ" U014B  # ng → ŋ   sing
+<Multi_key> <i> <N> <g> : "Ŋ" U014A  # Ng → Ŋ
+
+<Multi_key> <i> <s> <h> : "ʃ" U0283  # sh → ʃ   ship
+<Multi_key> <i> <S> <h> : "Ʃ" U01A9  # Sh → Ʃ
+
+<Multi_key> <i> <z> <h> : "ʒ" U0292  # zh → ʒ   measure
+<Multi_key> <i> <Z> <h> : "Ʒ" U01B7  # Zh → Ʒ
+
+<Multi_key> <i> <c> <h> : "tʃ"       # ch → tʃ  church
+<Multi_key> <i> <C> <h> : "TƩ"       # Ch → TƩ
+
+<Multi_key> <i> <j> <h> : "dʒ"       # jh → dʒ  judge
+<Multi_key> <i> <J> <h> : "DƷ"       # Jh → DƷ
+
+<Multi_key> <i> <t> <h> : "θ" U03B8  # th → θ   thin
+<Multi_key> <i> <T> <h> : "Θ" U0398  # Th → Θ
+
+<Multi_key> <i> <d> <h> : "ð" U00F0  # dh → ð   this
+<Multi_key> <i> <D> <h> : "Ð" U00D0  # Dh → Ð
+
+<Multi_key> <i> <n> <y> : "ɲ" U0272  # ny → ɲ   Spanish ñ
+<Multi_key> <i> <N> <y> : "Ɲ" U019D  # Ny → Ɲ
+<Multi_key> <i> <n> <j> : "ɲ" U0272  # nj → ɲ
+
+<Multi_key> <i> <n> <q> : "ɴ" U0274  # nq → ɴ   uvular nasal
+<Multi_key> <i> <N> <q> : "ɴ" U0274  # Nq → ɴ   no uppercase
+
+<Multi_key> <i> <k> <h> : "x" U0078  # kh → x   Bach
+<Multi_key> <i> <K> <h> : "X" U0058  # Kh → X
+
+<Multi_key> <i> <g> <h> : "ɣ" U0263  # gh → ɣ   voiced velar fricative
+<Multi_key> <i> <G> <h> : "Ɣ" U0194  # Gh → Ɣ
+
+<Multi_key> <i> <h> <h> : "ħ" U0127  # hh → ħ   pharyngeal h
+<Multi_key> <i> <H> <h> : "Ħ" U0126  # Hh → Ħ
+
+<Multi_key> <i> <g> <l> : "ʔ" U0294  # gl → ʔ   glottal stop
+<Multi_key> <i> <G> <l> : "ʔ" U0294  # gl → ʔ   no uppercase
+
+<Multi_key> <i> <a> <y> : "ʕ" U0295  # ay → ʕ   Arabic ʿayn
+<Multi_key> <i> <A> <y> : "ʕ" U0295  # Ay → ʕ   no uppercase
+
+<Multi_key> <i> <q> <q> : "q" U0071  # qq → q   uvular k
+<Multi_key> <i> <Q> <q> : "Q" U0051  # Qq → Q
+
+<Multi_key> <i> <g> <q> : "ɢ" U0262  # gq → ɢ   voiced uvular stop
+<Multi_key> <i> <G> <q> : "ɢ" U0262  # Gq → ɢ   no uppercase
+
+<Multi_key> <i> <q> <h> : "χ" U03C7  # qh → χ   uvular fricative
+<Multi_key> <i> <Q> <h> : "Χ" U03A7  # Qh → Χ
+
+<Multi_key> <i> <q> <g> : "ʁ" U0281  # qg → ʁ   voiced uvular fricative
+<Multi_key> <i> <Q> <g> : "ʁ" U0281  # Qg → ʁ   no uppercase
+
+<Multi_key> <i> <r> <r> : "ʁ" U0281  # rr → ʁ   French/German r
+<Multi_key> <i> <R> <r> : "ʁ" U0281  # Rr → ʁ   no uppercase
+
+<Multi_key> <i> <r> <h> : "ɹ" U0279  # rh → ɹ   English r
+<Multi_key> <i> <R> <h> : "ɹ" U0279  # Rh → ɹ   no uppercase
+
+<Multi_key> <i> <r> <t> : "ɾ" U027E  # rt → ɾ   tap/flap
+<Multi_key> <i> <R> <t> : "ɾ" U027E  # Rt → ɾ   no uppercase
+
+<Multi_key> <i> <l> <h> : "ɬ" U026C  # lh → ɬ   Welsh ll
+<Multi_key> <i> <L> <h> : "Ɬ" UA7AD  # Lh → Ɬ
+
+<Multi_key> <i> <l> <z> : "ɮ" U026E  # lz → ɮ   voiced lateral fricative
+<Multi_key> <i> <L> <z> : "ɮ" U026E  # Lz → ɮ   no uppercase
+
+<Multi_key> <i> <l> <y> : "ʎ" U028E  # ly → ʎ   palatal lateral
+<Multi_key> <i> <L> <y> : "ʎ" U028E  # Ly → ʎ   no uppercase
+
+<Multi_key> <i> <w> <h> : "ʍ" U028D  # wh → ʍ   which/witch distinction
+<Multi_key> <i> <W> <h> : "ʍ" U028D  # Wh → ʍ   no uppercase
+
+<Multi_key> <i> <y> <y> : "j" U006A  # yy → j   IPA "y"
+<Multi_key> <i> <Y> <y> : "J" U004A  # Yy → J
+
+<Multi_key> <i> <w> <w> : "ɰ" U0270  # ww → ɰ   velar approximant
+<Multi_key> <i> <W> <w> : "ɰ" U0270  # Ww → ɰ   no uppercase
+
+# IPA: retroflex consonants
+
+<Multi_key> <i> <t> <r> : "ʈ" U0288  # tr → ʈ
+<Multi_key> <i> <T> <r> : "Ʈ" U01AE  # Tr → Ʈ
+
+<Multi_key> <i> <d> <r> : "ɖ" U0256  # dr → ɖ
+<Multi_key> <i> <D> <r> : "Ɖ" U0189  # Dr → Ɖ
+
+<Multi_key> <i> <n> <r> : "ɳ" U0273  # nr → ɳ
+<Multi_key> <i> <N> <r> : "Ƞ" U0220  # Nr → Ƞ   no uppercase, conventionally this
+
+<Multi_key> <i> <s> <r> : "ʂ" U0282  # sr → ʂ
+<Multi_key> <i> <S> <r> : "Ʂ" UA7C5  # Sr → Ʂ
+
+<Multi_key> <i> <z> <r> : "ʐ" U0290  # zr → ʐ
+<Multi_key> <i> <Z> <r> : "ʐ" U0290  # Zr → ʐ   no uppercase
+
+<Multi_key> <i> <l> <r> : "ɭ" U026D  # lr → ɭ
+<Multi_key> <i> <L> <r> : "ɭ" U026D  # Lr → ɭ   no uppercase
+
+<Multi_key> <i> <r> <l> : "ɽ" U027D  # rl → ɽ   retroflex flap
+<Multi_key> <i> <R> <l> : "Ɽ" U2C64  # Rl → Ɽ
+
+#IPA: mnemonic vowels
+
+<Multi_key> <i> <u> <h> : "ə" U0259  # uh → ə   schwa / about
+<Multi_key> <i> <U> <h> : "Ə" U018F  # Uh → Ə
+
+<Multi_key> <i> <e> <h> : "ɛ" U025B  # eh → ɛ   dress
+<Multi_key> <i> <E> <h> : "Ɛ" U0190  # Eh → Ɛ
+
+<Multi_key> <i> <a> <h> : "ɑ" U0251  # ah → ɑ   father
+<Multi_key> <i> <A> <h> : "Ɑ" U2C6D  # Ah → Ɑ
+
+<Multi_key> <i> <a> <w> : "ɔ" U0254  # aw → ɔ   thought
+<Multi_key> <i> <A> <w> : "Ɔ" U0186  # Aw → Ɔ
+
+<Multi_key> <i> <i> <h> : "ɪ" U026A  # ih → ɪ   kit
+<Multi_key> <i> <I> <h> : "Ɪ" UA7AE  # Ih → Ɪ
+
+<Multi_key> <i> <u> <u> : "ʊ" U028A  # uu → ʊ   foot
+<Multi_key> <i> <U> <u> : "Ʊ" U01B1  # Uu → Ʊ
+
+<Multi_key> <i> <e> <r> : "ɚ" U025A  # er → ɚ   unstressed American -er
+<Multi_key> <i> <E> <r> : "ɚ" U025A  # Er → ɚ   no uppercase
+
+<Multi_key> <i> <u> <r> : "ɝ" U025D  # ur → ɝ   stressed American bird
+<Multi_key> <i> <U> <r> : "ɝ" U025D  # Ur → ɝ   no uppercase
+
+<Multi_key> <i> <a> <e> : "æ" U00E6  # ae → æ   trap
+<Multi_key> <i> <A> <e> : "Æ" U00C6  # Ae → Æ
+
+<Multi_key> <i> <a> <a> : "ɐ" U0250  # aa → ɐ
+<Multi_key> <i> <A> <a> : "Ɐ" U2C6F  # Aa → Ɐ
+
+<Multi_key> <i> <o> <e> : "œ" U0153  # oe → œ   French œ
+<Multi_key> <i> <O> <e> : "Œ" U0152  # Oe → Œ
+
+<Multi_key> <i> <o> <o> : "ø" U00F8  # oo → ø   front rounded o
+<Multi_key> <i> <O> <o> : "Ø" U00D8  # Oo → Ø
+
+<Multi_key> <i> <u> <e> : "ɯ" U026F  # ue → ɯ   unrounded u
+<Multi_key> <i> <U> <e> : "Ɯ" U019C  # Ue → Ɯ
+
+<Multi_key> <i> <u> <i> : "ʉ" U0289  # ui → ʉ   central rounded u
+<Multi_key> <i> <U> <i> : "Ʉ" U0244  # Ui → Ʉ
+
+<Multi_key> <i> <e> <u> : "ɜ" U025C  # eu → ɜ   open-mid central
+<Multi_key> <i> <E> <u> : "Ɜ" UA7AB  # Eu → Ɜ
+
+<Multi_key> <i> <e> <e> : "ɘ" U0258  # ee → ɘ   close-mid central
+<Multi_key> <i> <E> <e> : "ɘ" U0258  # Ee → ɘ   no uppercase
+
+<Multi_key> <i> <o> <h> : "ɒ" U0252  # oh → ɒ   British LOT
+<Multi_key> <i> <O> <h> : "Ɒ" U2C70  # Oh → Ɒ
+
+# IPA: useful modifiers and punctuation
+
+<Multi_key> <i> <p> <h> : "ʰ" U02B0  # ph → ʰ   aspiration
+<Multi_key> <i> <w> <s> : "ʷ" U02B7  # ws → ʷ   labialized
+<Multi_key> <i> <y> <s> : "ʲ" U02B2  # ys → ʲ   palatalized
+<Multi_key> <i> <g> <s> : "ˠ" U02E0  # gs → ˠ   velarized
+<Multi_key> <i> <q> <s> : "ˤ" U02E4  # qs → ˤ   pharyngealized
+
+<Multi_key> <i> <l> <n> : "ː" U02D0  # ln → ː   long
+<Multi_key> <i> <h> <l> : "ˑ" U02D1  # hl → ˑ   half-long
+<Multi_key> <i> <s> <t> : "ˈ" U02C8  # st → ˈ   primary stress
+<Multi_key> <i> <s> <s> : "ˌ" U02CC  # ss → ˌ   secondary stress
 
 # ------------------------------------------------------------
 # Semitic transliteration / scholarly romanization
@@ -376,16 +607,7 @@ include "%L"
 <Multi_key> <t> <w> : "š́"        # sin (optional)
 
 # Smart quotes
-<Multi_key> <apostrophe> : "‘’"
-<Multi_key> <quotedbl>   : "“”"
-
-<Multi_key> <grave>      : "‘" U2018  # `  → left single quote
-<Multi_key> <asciitilde> : "“" U201C  # ~  → left double quote
-<Multi_key> <apostrophe> : "’" U2019  # '  → right single quote
-<Multi_key> <quotedbl>   : "”" U201D  # "  → right double quote
-
-# Smart quotes - mnemonic punctuation
-<Multi_key> <bracketleft>  : "‘" U2018  # [ → left single
-<Multi_key> <bracketright> : "’" U2019  # ] → right single
-<Multi_key> <braceleft>    : "“" U201C  # { → left double
-<Multi_key> <braceright>   : "”" U201D  # } → right double
+<Multi_key> <t> <l> : "‘" U2018  # left single
+<Multi_key> <t> <r> : "’" U2019  # right single
+<Multi_key> <t> <L> : "“" U201C  # left double
+<Multi_key> <t> <R> : "”" U201D  # right double
