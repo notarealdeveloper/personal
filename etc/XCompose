@@ -637,3 +637,7 @@ include "%L"
 <Multi_key> <t> <L> : "“" U201C  # left double
 <Multi_key> <t> <R> : "”" U201D  # right double
 
+<Multi_key> <l> : "‘" U2018  # left single
+<Multi_key> <r> : "’" U2019  # right single
+<Multi_key> <L> : "“" U201C  # left double
+<Multi_key> <R> : "”" U201D  # right double
