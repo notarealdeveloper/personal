@@ -250,59 +250,59 @@ include "%L"
 # Compose r <letter>
 # ------------------------------------------------------------
 
-<Multi_key> <r> <A> : "А" U0410
-<Multi_key> <r> <B> : "Б" U0411
-<Multi_key> <r> <C> : "С" U0421
-<Multi_key> <r> <D> : "Д" U0414
-<Multi_key> <r> <E> : "Е" U0415
-<Multi_key> <r> <F> : "Ф" U0424
-<Multi_key> <r> <G> : "Г" U0413
-<Multi_key> <r> <H> : "Х" U0425
-<Multi_key> <r> <I> : "И" U0418
-<Multi_key> <r> <J> : "Ж" U0416
-<Multi_key> <r> <K> : "К" U041A
-<Multi_key> <r> <L> : "Л" U041B
-<Multi_key> <r> <M> : "М" U041C
-<Multi_key> <r> <N> : "Н" U041D
-<Multi_key> <r> <O> : "О" U041E
-<Multi_key> <r> <P> : "П" U041F
-<Multi_key> <r> <Q> : "Я" U042F
-<Multi_key> <r> <R> : "Р" U0420
-<Multi_key> <r> <S> : "С" U0421
-<Multi_key> <r> <T> : "Т" U0422
-<Multi_key> <r> <U> : "У" U0423
-<Multi_key> <r> <V> : "В" U0412
-<Multi_key> <r> <W> : "Ш" U0428
-<Multi_key> <r> <X> : "Ы" U042B
-<Multi_key> <r> <Y> : "Й" U0419
-<Multi_key> <r> <Z> : "З" U0417
-
-<Multi_key> <r> <a> : "а" U0430
-<Multi_key> <r> <b> : "б" U0431
-<Multi_key> <r> <c> : "с" U0441
-<Multi_key> <r> <d> : "д" U0434
-<Multi_key> <r> <e> : "е" U0435
-<Multi_key> <r> <f> : "ф" U0444
-<Multi_key> <r> <g> : "г" U0433
-<Multi_key> <r> <h> : "х" U0445
-<Multi_key> <r> <i> : "и" U0438
-<Multi_key> <r> <j> : "ж" U0436
-<Multi_key> <r> <k> : "к" U043A
-<Multi_key> <r> <l> : "л" U043B
-<Multi_key> <r> <m> : "м" U043C
-<Multi_key> <r> <n> : "н" U043D
-<Multi_key> <r> <o> : "о" U043E
-<Multi_key> <r> <p> : "п" U043F
-<Multi_key> <r> <q> : "я" U044F
-<Multi_key> <r> <r> : "р" U0440
-<Multi_key> <r> <s> : "с" U0441
-<Multi_key> <r> <t> : "т" U0442
-<Multi_key> <r> <u> : "у" U0443
-<Multi_key> <r> <v> : "в" U0432
-<Multi_key> <r> <w> : "ш" U0448
-<Multi_key> <r> <x> : "ы" U044B
-<Multi_key> <r> <y> : "й" U0439
-<Multi_key> <r> <z> : "з" U0437
+#<Multi_key> <r> <A> : "А" U0410
+#<Multi_key> <r> <B> : "Б" U0411
+#<Multi_key> <r> <C> : "С" U0421
+#<Multi_key> <r> <D> : "Д" U0414
+#<Multi_key> <r> <E> : "Е" U0415
+#<Multi_key> <r> <F> : "Ф" U0424
+#<Multi_key> <r> <G> : "Г" U0413
+#<Multi_key> <r> <H> : "Х" U0425
+#<Multi_key> <r> <I> : "И" U0418
+#<Multi_key> <r> <J> : "Ж" U0416
+#<Multi_key> <r> <K> : "К" U041A
+#<Multi_key> <r> <L> : "Л" U041B
+#<Multi_key> <r> <M> : "М" U041C
+#<Multi_key> <r> <N> : "Н" U041D
+#<Multi_key> <r> <O> : "О" U041E
+#<Multi_key> <r> <P> : "П" U041F
+#<Multi_key> <r> <Q> : "Я" U042F
+#<Multi_key> <r> <R> : "Р" U0420
+#<Multi_key> <r> <S> : "С" U0421
+#<Multi_key> <r> <T> : "Т" U0422
+#<Multi_key> <r> <U> : "У" U0423
+#<Multi_key> <r> <V> : "В" U0412
+#<Multi_key> <r> <W> : "Ш" U0428
+#<Multi_key> <r> <X> : "Ы" U042B
+#<Multi_key> <r> <Y> : "Й" U0419
+#<Multi_key> <r> <Z> : "З" U0417
+#
+#<Multi_key> <r> <a> : "а" U0430
+#<Multi_key> <r> <b> : "б" U0431
+#<Multi_key> <r> <c> : "с" U0441
+#<Multi_key> <r> <d> : "д" U0434
+#<Multi_key> <r> <e> : "е" U0435
+#<Multi_key> <r> <f> : "ф" U0444
+#<Multi_key> <r> <g> : "г" U0433
+#<Multi_key> <r> <h> : "х" U0445
+#<Multi_key> <r> <i> : "и" U0438
+#<Multi_key> <r> <j> : "ж" U0436
+#<Multi_key> <r> <k> : "к" U043A
+#<Multi_key> <r> <l> : "л" U043B
+#<Multi_key> <r> <m> : "м" U043C
+#<Multi_key> <r> <n> : "н" U043D
+#<Multi_key> <r> <o> : "о" U043E
+#<Multi_key> <r> <p> : "п" U043F
+#<Multi_key> <r> <q> : "я" U044F
+#<Multi_key> <r> <r> : "р" U0440
+#<Multi_key> <r> <s> : "с" U0441
+#<Multi_key> <r> <t> : "т" U0442
+#<Multi_key> <r> <u> : "у" U0443
+#<Multi_key> <r> <v> : "в" U0432
+#<Multi_key> <r> <w> : "ш" U0448
+#<Multi_key> <r> <x> : "ы" U044B
+#<Multi_key> <r> <y> : "й" U0439
+#<Multi_key> <r> <z> : "з" U0437
 
 # ------------------------------------------------------------
 # We: Babel Lang Shape Puns
@@ -636,3 +636,8 @@ include "%L"
 <Multi_key> <t> <r> : "’" U2019  # right single
 <Multi_key> <t> <L> : "“" U201C  # left double
 <Multi_key> <t> <R> : "”" U201D  # right double
+
+<Multi_key> <l> : "‘" U2018  # left single
+<Multi_key> <r> : "’" U2019  # right single
+<Multi_key> <L> : "“" U201C  # left double
+<Multi_key> <R> : "”" U201D  # right double
