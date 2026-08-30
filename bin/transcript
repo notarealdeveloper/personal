@@ -1,0 +1,646 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# yt-transcript
+#
+# Download YouTube subtitles/transcripts using yt-dlp.
+#
+# Default behavior:
+#   - use Chrome cookies
+#   - use the video title, normalized with the established fixnames rules
+#   - prefer human English subtitles, falling back to auto-generated English
+#   - keep a timestamped VTT and create a clean, greppable Markdown file
+#
+# Examples:
+#
+#   yt-transcript 'https://youtu.be/...'
+#   yt-transcript -p gen49 'https://youtu.be/...'
+#   yt-transcript -o txt 'https://youtu.be/...'
+#   yt-transcript -o vtt 'https://youtu.be/...'
+#   yt-transcript --lang 'en-US' 'https://youtu.be/...'
+#   yt-transcript --human-only 'https://youtu.be/...'
+#   yt-transcript --auto-only 'https://youtu.be/...'
+#   yt-transcript -j 4 URL URL URL
+#
+# Extra/unrecognized options are passed directly to yt-dlp:
+#
+#   yt-transcript --proxy socks5://localhost:9050 URL
+#   yt-transcript --extractor-args 'youtube:player_client=web' URL
+
+prefix=
+format=md
+lang='en.*'
+browser=chrome
+
+human=1
+auto=1
+include_metadata=1
+jobs=1
+
+args=(
+    --no-playlist
+    --no-check-certificate
+    --retries 10
+    --fragment-retries 10
+    --retry-sleep 2
+)
+
+usage() {
+    cat <<'EOF'
+Usage:
+    transcript [OPTIONS] URL...
+    transcript [OPTIONS] -- [YT-DLP OPTIONS...] URL...
+
+Transcript options:
+    -o, --output FORMAT
+        Output format: md, txt, or vtt.
+        Default: md
+
+    -p, --prefix PREFIX
+        Prefix the normalized transcript name. A trailing slash selects a
+        destination directory.
+
+        Example:
+            -p friedman/
+        might produce:
+            friedman/my-video.md
+
+    -l, --lang LANG
+        Subtitle language selector passed to yt-dlp.
+        Default: en.*
+
+        Examples:
+            --lang en
+            --lang en-US
+            --lang 'en.*'
+            --lang 'zh.*'
+            --lang 'en.*,zh.*'
+
+    --human-only
+        Download only uploader-provided subtitles.
+
+    --auto-only
+        Download only automatically generated captions.
+
+    --human-and-auto
+        Request both human and automatic subtitles.
+        This is the default. Human subtitles are preferred when both exist.
+
+    --keep-vtt
+        Compatibility option; VTT files are now always retained.
+
+    -j, --jobs N
+        Download up to N transcripts in parallel. Default: 1.
+
+    --no-metadata
+        For Markdown output, omit the title/source header and write only
+        transcript text.
+
+Browser/cookie options:
+    --browser BROWSER
+        Browser for --cookies-from-browser.
+        Default: chrome
+
+        Examples:
+            chrome
+            chromium
+            firefox
+            brave
+
+Other:
+    -h, --help
+        Show this help.
+
+Any other arguments are passed directly to yt-dlp.
+EOF
+}
+
+urls=()
+extra=()
+
+while (($#)); do
+    case "$1" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+
+        -p|--prefix)
+            shift
+            prefix="${1:?Missing argument for --prefix}"
+            ;;
+
+        -o|--output)
+            shift
+            format="${1:?Missing argument for --output}"
+            case "$format" in
+                md|markdown)
+                    format=md
+                    ;;
+                txt|text)
+                    format=txt
+                    ;;
+                vtt)
+                    ;;
+                *)
+                    echo "Unknown output format: $format" >&2
+                    echo "Expected: md, txt, or vtt" >&2
+                    exit 2
+                    ;;
+            esac
+            ;;
+
+        -l|--lang|--langs|--sub-langs)
+            shift
+            lang="${1:?Missing argument for --lang}"
+            ;;
+
+        --browser|--cookies-browser)
+            shift
+            browser="${1:?Missing argument for --browser}"
+            ;;
+
+        --human-only)
+            human=1
+            auto=0
+            ;;
+
+        --auto-only)
+            human=0
+            auto=1
+            ;;
+
+        --human-and-auto|--both)
+            human=1
+            auto=1
+            ;;
+
+        --keep-vtt)
+            # Retained for compatibility; timestamped VTT is now the default.
+            ;;
+
+        -j|--jobs)
+            shift
+            jobs="${1:?Missing argument for --jobs}"
+            [[ "$jobs" =~ ^[1-9][0-9]*$ ]] || {
+                echo "Error: --jobs must be a positive integer." >&2
+                exit 2
+            }
+            ;;
+
+        --no-metadata)
+            include_metadata=0
+            ;;
+
+        --)
+            shift
+            # After --, URL-looking arguments are inputs and everything else
+            # is passed through to yt-dlp.
+            while (($#)); do
+                case "$1" in
+                    http://*|https://*) urls+=("$1") ;;
+                    *) extra+=("$1") ;;
+                esac
+                shift
+            done
+            break
+            ;;
+
+        http://*|https://*)
+            urls+=("$1")
+            ;;
+
+        *)
+            extra+=("$1")
+            ;;
+    esac
+    shift
+done
+
+if ((${#urls[@]} == 0)); then
+    echo "Error: no URL supplied." >&2
+    echo >&2
+    usage >&2
+    exit 2
+fi
+
+command -v yt-dlp >/dev/null || {
+    echo "Error: yt-dlp not found." >&2
+    exit 127
+}
+
+# ----------------------------------------------------------------------
+# Common yt-dlp arguments
+# ----------------------------------------------------------------------
+
+yd=(
+    --cookies-from-browser "$browser"
+    "${args[@]}"
+    "${extra[@]}"
+)
+
+# Keep the established fixnames spelling without invoking fixnames itself.
+# That program switches to stdin mode whenever this script is non-interactive,
+# silently ignores its filename argument, and was the cause of empty/newline
+# filenames such as `.md` and `...md\n./`.
+normalize_name() {
+    printf '%s\n' "$1" |
+        tr 'A-Z' 'a-z' |
+        sed -E \
+            -e 's/[_ ()]/-/g' \
+            -e 's/-+/-/g' \
+            -e 's/-$//' \
+            -e 's/[!,;]//g' \
+            -e "s/[‘’']//g" \
+            -e 's/-\././g' \
+            -e 's/\.-/-/g' \
+            -e 's/\.+/./g' \
+            -e 's/&/-and-/g' \
+            -e 's/[][]//g' \
+            -e 's/[“”"]//g' \
+            -e 's/^-//' \
+            -e 's/[+#]//g' \
+            -e 's/[：:]//g' \
+            -e 's/[｜⧸]/-/g' \
+            -e 's/[?？＂]//g' \
+            -e 's/-+/-/g' \
+            -e 's/ $//'
+}
+
+process_url() (
+url="$1"
+
+# Each job gets a private directory. This prevents stale or alternate subtitle
+# tracks from being mistaken for the selected transcript.
+workdir="$(mktemp -d "${TMPDIR:-/tmp}/transcript.XXXXXXXX")"
+trap 'rm -rf -- "$workdir"' EXIT
+
+# ----------------------------------------------------------------------
+# Fetch subtitles.
+#
+# We explicitly choose VTT as the intermediate representation because it
+# contains all the caption text and is easy to clean without another
+# dependency.
+#
+# When both --write-subs and --write-auto-subs are enabled, yt-dlp naturally
+# prefers an ordinary subtitle track when one exists; auto-captions cover
+# videos without one.
+# ----------------------------------------------------------------------
+
+sub_args=(
+    --skip-download
+    --sub-langs "$lang"
+    --sub-format vtt
+)
+
+(( human )) && sub_args+=(--write-subs)
+(( auto  )) && sub_args+=(--write-auto-subs)
+
+if (( ! human && ! auto )); then
+    echo "Error: neither human nor automatic subtitles are enabled." >&2
+    exit 2
+fi
+
+# Fetch captions and the title in one yt-dlp invocation. Keeping yt-dlp's
+# files private until we select a track also avoids container extensions and
+# language variants leaking into the output directory.
+yt-dlp \
+    "${yd[@]}" \
+    "${sub_args[@]}" \
+    --print-to-file '%(title)s' "$workdir/title" \
+    -o "$workdir/caption.%(ext)s" \
+    "$url"
+
+if [[ ! -s "$workdir/title" ]]; then
+    echo "Error: yt-dlp did not return a video title for $url" >&2
+    exit 1
+fi
+
+title="$(head -n 1 -- "$workdir/title")"
+# A slash in a remote title must not create a local directory. Slashes in an
+# explicit prefix remain useful (for example: -p friedman/).
+safe_title="${title//\//-}"
+transcript_base="$(normalize_name "${prefix}${safe_title}")"
+
+base_name="$(basename -- "$transcript_base")"
+if [[ -z "$base_name" || "$base_name" == . || "$base_name" == .. ]]; then
+    echo "Error: title normalized to an unsafe empty filename: $title" >&2
+    exit 1
+fi
+
+mkdir -p -- "$(dirname -- "$transcript_base")"
+vtt="${transcript_base}.vtt"
+
+# ----------------------------------------------------------------------
+# Locate subtitle files.
+#
+# Depending on the language selector, yt-dlp normally produces things like:
+#
+#   Video.en.vtt
+#   Video.en-US.vtt
+#
+# rather than simply Video.vtt.
+# ----------------------------------------------------------------------
+
+shopt -s nullglob
+vtts=(
+    "$workdir"/caption.*.vtt
+    "$workdir"/caption.vtt
+)
+shopt -u nullglob
+
+if ((${#vtts[@]} == 0)); then
+    echo "Error: yt-dlp did not produce a VTT subtitle file." >&2
+    echo "Try:" >&2
+    echo "    yt-dlp --cookies-from-browser '$browser' --list-subs '$url'" >&2
+    exit 1
+fi
+
+# If several languages matched en.*, prefer plain ".en.vtt", then en-US,
+# then simply take the first result.
+chosen_vtt=
+
+for candidate in "${vtts[@]}"; do
+    if [[ "$candidate" == "$workdir/caption.en.vtt" ]]; then
+        chosen_vtt="$candidate"
+        break
+    fi
+done
+
+if [[ -z "$chosen_vtt" ]]; then
+    for candidate in "${vtts[@]}"; do
+        if [[ "$candidate" == "$workdir/caption.en-US.vtt" ]]; then
+            chosen_vtt="$candidate"
+            break
+        fi
+    done
+fi
+
+if [[ -z "$chosen_vtt" ]]; then
+    chosen_vtt="${vtts[0]}"
+fi
+
+# Normalize the retained VTT filename too, when possible.
+cp -- "$chosen_vtt" "$vtt"
+
+# ----------------------------------------------------------------------
+# VTT output: nothing further to do.
+# ----------------------------------------------------------------------
+
+if [[ "$format" == vtt ]]; then
+    echo "$vtt"
+    exit 0
+fi
+
+case "$format" in
+    md)
+        outfile="${transcript_base}.md"
+        ;;
+    txt)
+        outfile="${transcript_base}.txt"
+        ;;
+esac
+
+# ----------------------------------------------------------------------
+# Convert VTT -> readable transcript.
+#
+# YouTube auto-captions commonly contain "rolling" captions:
+#
+#     this is
+#     this is a test
+#     this is a test sentence
+#
+# Simply deleting exact duplicate lines still leaves tons of repeated text.
+#
+# This parser:
+#   * removes WEBVTT metadata
+#   * removes timestamps
+#   * removes HTML/VTT tags
+#   * decodes common HTML entities
+#   * collapses exact duplicate caption lines
+#   * detects growing/rolling caption lines and keeps only the new material
+#   * joins the result into readable paragraphs
+# ----------------------------------------------------------------------
+
+python3 - "$vtt" "$outfile" "$format" "$include_metadata" "$title" "$url" <<'PY'
+from __future__ import annotations
+
+import html
+import re
+import sys
+from pathlib import Path
+
+
+src = Path(sys.argv[1])
+dst = Path(sys.argv[2])
+fmt = sys.argv[3]
+include_metadata = sys.argv[4] == "1"
+title = sys.argv[5]
+url = sys.argv[6]
+
+
+TIMESTAMP = re.compile(
+    r"""
+    ^
+    \s*
+    (?:
+        \d{1,2}:
+    )?
+    \d{2}:\d{2}(?:\.\d{3})?
+    \s+-->\s+
+    """,
+    re.X,
+)
+
+TAG = re.compile(r"<[^>]*>")
+VOICE = re.compile(r"^\s*[^:]{1,40}:\s+")
+
+
+def normalize(s: str) -> str:
+    s = html.unescape(s)
+    s = TAG.sub("", s)
+    s = s.replace("\u200b", "")
+    s = re.sub(r"\s+", " ", s)
+    return s.strip()
+
+
+raw_lines = src.read_text(encoding="utf-8", errors="replace").splitlines()
+
+captions: list[str] = []
+current: list[str] = []
+
+
+def flush() -> None:
+    if not current:
+        return
+
+    text = normalize(" ".join(current))
+    current.clear()
+
+    if not text:
+        return
+
+    captions.append(text)
+
+
+for raw in raw_lines:
+    line = raw.strip()
+
+    if not line:
+        flush()
+        continue
+
+    if (
+        line == "WEBVTT"
+        or line.startswith("Kind:")
+        or line.startswith("Language:")
+        or line.startswith("NOTE")
+        or line.startswith("STYLE")
+        or line.startswith("REGION")
+    ):
+        continue
+
+    if "-->" in line or TIMESTAMP.search(line):
+        flush()
+        continue
+
+    # Cue IDs are often plain integers.
+    if line.isdigit():
+        continue
+
+    current.append(line)
+
+flush()
+
+
+# Exact adjacent duplicate removal.
+deduped: list[str] = []
+
+for text in captions:
+    if not deduped or text != deduped[-1]:
+        deduped.append(text)
+
+
+# Handle YouTube's rolling captions.
+#
+# Given:
+#   "I went to"
+#   "I went to the store"
+#
+# emit:
+#   "I went to"
+#   "the store"
+#
+# This is intentionally conservative. If overlap is weak, retain the entire
+# next caption rather than accidentally deleting real speech.
+
+pieces: list[str] = []
+previous_words: list[str] = []
+
+for caption in deduped:
+    words = caption.split()
+
+    if not words:
+        continue
+
+    # If the new caption starts with the complete previous caption, retain
+    # only the added suffix.
+    if (
+        previous_words
+        and len(words) >= len(previous_words)
+        and words[:len(previous_words)] == previous_words
+    ):
+        added = words[len(previous_words):]
+        if added:
+            pieces.append(" ".join(added))
+        previous_words = words
+        continue
+
+    # Otherwise find the largest suffix(previous) == prefix(current).
+    overlap = 0
+    maximum = min(len(previous_words), len(words))
+
+    for n in range(maximum, 1, -1):
+        if previous_words[-n:] == words[:n]:
+            overlap = n
+            break
+
+    # Require useful overlap before removing anything.
+    if overlap >= 2:
+        added = words[overlap:]
+        if added:
+            pieces.append(" ".join(added))
+    else:
+        pieces.append(caption)
+
+    previous_words = words
+
+
+text = " ".join(pieces)
+text = re.sub(r"\s+", " ", text).strip()
+
+# Add paragraph breaks at reasonable sentence boundaries. This isn't trying
+# to reconstruct the speaker's original paragraphs; it merely avoids one
+# enormous Markdown line.
+sentences = re.split(r"(?<=[.!?])\s+", text)
+
+paragraphs: list[str] = []
+buf: list[str] = []
+chars = 0
+
+for sentence in sentences:
+    if not sentence:
+        continue
+
+    buf.append(sentence)
+    chars += len(sentence) + 1
+
+    if chars >= 700:
+        paragraphs.append(" ".join(buf))
+        buf = []
+        chars = 0
+
+if buf:
+    paragraphs.append(" ".join(buf))
+
+body = "\n\n".join(paragraphs).strip()
+
+if fmt == "md" and include_metadata:
+    output = (
+        f"# {title}\n\n"
+        f"Source: {url}\n\n"
+        f"## Transcript\n\n"
+        f"{body}\n"
+    )
+else:
+    output = body + "\n"
+
+dst.write_text(output, encoding="utf-8")
+PY
+
+printf '%s\n%s\n' "$outfile" "$vtt"
+)
+
+# Run independent URLs concurrently, while keeping the default conservative
+# for browsers whose cookie databases dislike heavy concurrent access.
+failed=0
+pids=()
+for url in "${urls[@]}"; do
+    process_url "$url" &
+    pids+=("$!")
+
+    if ((${#pids[@]} >= jobs)); then
+        if ! wait "${pids[0]}"; then
+            failed=1
+        fi
+        pids=("${pids[@]:1}")
+    fi
+done
+
+for pid in "${pids[@]}"; do
+    if ! wait "$pid"; then
+        failed=1
+    fi
+done
+
+exit "$failed"
