@@ -2,6 +2,37 @@
 
 source ~/.bashrc
 
-for f in "$@"; do
-    xdg-open "$OBSIDIAN/We The Nameless/01-genesis/${f}.tex"
+root="$OBSIDIAN/We The Nameless"
+book=genesis
+
+usage() {
+    echo "usage: mp [book] chapter..." >&2
+    exit 2
+}
+
+[[ $# -gt 0 ]] || usage
+
+if [[ ! $1 =~ ^[0-9]+$ ]]; then
+    book=${1,,}
+    shift
+fi
+
+[[ $# -gt 0 ]] || usage
+
+shopt -s nullglob
+matches=("$root"/[0-9][0-9]-"$book"*)
+
+if (( ${#matches[@]} != 1 )); then
+    if (( ${#matches[@]} == 0 )); then
+        echo "mp: unknown book: $book" >&2
+    else
+        echo "mp: ambiguous book: $book" >&2
+    fi
+    exit 1
+fi
+
+for chapter in "$@"; do
+    [[ $chapter =~ ^[0-9]+$ ]] || usage
+    printf -v filename '%02d.tex' "$((10#$chapter))"
+    xdg-open "${matches[0]}/$filename"
 done
