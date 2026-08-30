@@ -11,16 +11,16 @@ from pathlib import Path
 
 DEFAULT_CONFIG = '''YEAR=2026
 MON=8
-DAY=29
+DAY=30
 
-HOUR=12
-MIN=0
+HOUR=10
+MIN=23
 SEC=0
 
 START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
 
-START_VERSE = "Genesis 48:1"
-VERSES_PER_MINUTE = 0.5
+START_VERSE = "Genesis 1:1"
+VERSES_PER_MINUTE = 1
 '''
 START_RE = re.compile(r"^(?P<book>.+?)\s+(?P<chapter>[0-9]+):(?P<verse>[0-9]+)$")
 CONFIG_VALUE_RE = re.compile(
