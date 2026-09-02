@@ -20,7 +20,7 @@ fi
 [[ $# -gt 0 ]] || usage
 
 shopt -s nullglob
-matches=("$root"/[0-9][0-9]-"$book"*)
+matches=("$root"/[0-9][0-9]-"$book"*/)
 
 if (( ${#matches[@]} != 1 )); then
     if (( ${#matches[@]} == 0 )); then
@@ -34,5 +34,5 @@ fi
 for chapter in "$@"; do
     [[ $chapter =~ ^[0-9]+$ ]] || usage
     printf -v filename '%02d.tex' "$((10#$chapter))"
-    xdg-open "${matches[0]}/$filename"
+    xdg-open "${matches[0]}$filename"
 done
