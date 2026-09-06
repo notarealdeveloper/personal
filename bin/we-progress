@@ -11,10 +11,10 @@ from pathlib import Path
 
 DEFAULT_CONFIG = '''YEAR=2026
 MON=9
-DAY=5
+DAY=6
 
-HOUR=17
-MIN=03
+HOUR=8
+MIN=0
 SEC=0
 
 START_TIME = datetime(YEAR, MON, DAY, HOUR, MIN, SEC)
