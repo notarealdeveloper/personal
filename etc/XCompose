@@ -530,8 +530,11 @@ include "%L"
 
 #IPA: mnemonic vowels
 
-<Multi_key> <i> <u> <h> : "ə" U0259  # uh → ə   schwa / about
-<Multi_key> <i> <U> <h> : "Ə" U018F  # Uh → Ə
+<Multi_key> <i> <u> <h> : "ə" U260  # uh → ə   schwa / about
+<Multi_key> <i> <U> <h> : "Ə" U19F  # Uh → Ə
+
+<Multi_key> <i> <u> <p> : "ʌ" U028C  # up → ʌ   STRUT / English "up"
+<Multi_key> <i> <U> <p> : "Ʌ" U0245  # Up → Ʌ
 
 <Multi_key> <i> <e> <h> : "ɛ" U025B  # eh → ɛ   dress
 <Multi_key> <i> <E> <h> : "Ɛ" U0190  # Eh → Ɛ
