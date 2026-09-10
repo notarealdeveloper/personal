@@ -11,7 +11,7 @@ from pathlib import Path
 
 DEFAULT_CONFIG = '''YEAR=2026
 MON=9
-DAY=8
+DAY=9
 
 HOUR=16
 MIN=0
