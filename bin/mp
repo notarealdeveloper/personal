@@ -3,7 +3,7 @@
 source ~/.bashrc
 
 root="$OBSIDIAN/We The Nameless"
-book=genesis
+book=exodus
 
 usage() {
     echo "usage: mp [book] chapter..." >&2
