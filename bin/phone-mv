@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-adb shell mkdir -p /sdcard/stuff/neo/{camera,screenshots,wechat,whatsapp}
+adb shell mkdir -p /sdcard/stuff/neo/{camera,screenshots,wechat,whatsapp,whatsapp-videos,reddit-pics}
 
 adb shell mv -v /sdcard/DCIM/Camera/*       /sdcard/stuff/neo/camera/ 
 adb shell mv -v /sdcard/DCIM/Screenshots/*  /sdcard/stuff/neo/screenshots/
 adb shell mv -v /sdcard/Pictures/WeChat/*   /sdcard/stuff/neo/wechat/
-adb shell mv -v /sdcard/Movies/WhatsApp/*   /sdcard/stuff/neo/whatsapp/
+adb shell mv -v /sdcard/Pictures/WhatsApp/* /sdcard/stuff/neo/whatsapp/
+adb shell mv -v /sdcard/Pictures/Reddit/*   /sdcard/stuff/neo/reddit-pics/
+adb shell mv -v /sdcard/Movies/WhatsApp/*   /sdcard/stuff/neo/whatsapp-videos/
+adb shell mv -v /sdcard/Download/RDT_*.mp4  /sdcard/stuff/vids/reddit/
