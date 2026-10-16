@@ -68,6 +68,7 @@ dirs+=(
     [sudocode]="${OBSIDIAN}/Sudocode"
     [we]="${OBSIDIAN}/We"
     [we-the-nameless]="${OBSIDIAN}/We The Nameless"
+    [hunting]="${OBSIDIAN}/Hunting"
 
     # code
     [code]="${CODE}"
