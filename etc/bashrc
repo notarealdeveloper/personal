@@ -191,6 +191,9 @@ alias rrcs="c personal && $EDITOR etc/ranger/scope.sh"
 alias cs='c src'
 alias cn='c nix'
 
+# tex
+alias lualatex='lualatex -interaction=nonstopmode'
+
 ###################
 ### os specific ###
 ###################
