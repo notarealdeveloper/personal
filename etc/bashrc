@@ -154,13 +154,16 @@ fi
 
 export WE_THE_NAMELESS="${dirs[we-the-nameless]}"
 
-add_to_path        "$WE_THE_NAMELESS/bin"
-add_to_path        "$WE_THE_NAMELESS/bin2"
+if [[ -d "$WE_THE_NAMELESS" ]]; then
+    add_to_path        "$WE_THE_NAMELESS/bin"
+    add_to_path        "$WE_THE_NAMELESS/bin2"
 
-if [[ -n ${BASH_VERSION:-} && $- == *i* ]]; then
-    for completion in "${WE_THE_NAMELESS}/bin/completions"/*.sh; do
-        source "$completion"
-    done
+    if [[ -n ${BASH_VERSION:-} && $- == *i* ]]; then
+        for completion in "${WE_THE_NAMELESS}/bin/completions"/*.sh; do
+            source "$completion"
+        done
+    fi
+
 fi
 
 ###################
