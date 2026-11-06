@@ -31,7 +31,7 @@ python <<- EOF
 		"nemo.desktop",
 		"google-chrome.desktop",
 		"org.gnome.Terminal.desktop",
-		"obsidian.desktop",
+		"md.obsidian.Obsidian.desktop",
 		"cinnamon-settings.desktop"
 	]
 	json.dump(dict, open(file, 'w'))
