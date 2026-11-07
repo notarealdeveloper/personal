@@ -68,6 +68,7 @@ dirs+=(
     [sudocode]="${OBSIDIAN}/Sudocode"
     [we]="${OBSIDIAN}/We"
     [we-the-nameless]="${OBSIDIAN}/We The Nameless"
+    [yhwh]="${OBSIDIAN}/YHWH"
     [hunting]="${OBSIDIAN}/Hunting"
 
     # code
@@ -193,6 +194,7 @@ alias rrcs="c personal && $EDITOR etc/ranger/scope.sh"
 # cds
 alias cs='c src'
 alias cn='c nix'
+alias cy='c YHWH'
 
 # tex
 alias lualatex='lualatex -interaction=nonstopmode'
