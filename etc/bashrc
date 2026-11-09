@@ -69,6 +69,7 @@ dirs+=(
     [we]="${OBSIDIAN}/We"
     [we-the-nameless]="${OBSIDIAN}/We The Nameless"
     [yhwh]="${OBSIDIAN}/YHWH"
+    [root]="${OBSIDIAN}/YHWH/root"
     [hunting]="${OBSIDIAN}/Hunting"
 
     # code
@@ -195,6 +196,7 @@ alias rrcs="c personal && $EDITOR etc/ranger/scope.sh"
 alias cs='c src'
 alias cn='c nix'
 alias cy='c YHWH'
+alias cr='c root'
 
 # tex
 alias lualatex='lualatex -interaction=nonstopmode'
