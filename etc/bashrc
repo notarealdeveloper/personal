@@ -330,10 +330,3 @@ n() {
 
 export NIXPKGS_ALLOW_UNFREE=1
 
-Repo() {
-    git rev-parse --show-toplevel
-}
-
-repo() {
-    git rev-parse --show-toplevel | sed 's@-@@'
-}
