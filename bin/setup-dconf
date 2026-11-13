@@ -129,7 +129,7 @@ EOF
 
 dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	[/]
-	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom15', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33', 'custom34', 'custom35', 'custom36', 'custom37', 'custom38', '__dummy__']
+	custom-list=['custom0', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9', 'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom15', 'custom16', 'custom17', 'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25', 'custom26', 'custom27', 'custom28', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33', 'custom34', 'custom35', 'custom36', '__dummy__']
 	show-desklets=@as []
 
 	[custom-keybindings/custom0]
@@ -141,6 +141,46 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	binding=['<Alt>Delete']
 	command='trash'
 	name='trash'
+
+	[custom-keybindings/custom2]
+	binding=['<Shift><Alt>b']
+	command='focusterm'
+	name='focusterm'
+
+	[custom-keybindings/custom3]
+	binding=['<Shift><Alt>e']
+	command='fm'
+	name='fm'
+
+	[custom-keybindings/custom4]
+	binding=['<Shift><Alt>d']
+	command='get-date --short'
+	name='get-date-short'
+
+	[custom-keybindings/custom5]
+	binding=['<Primary><Shift>d']
+	command='get-date --long'
+	name='get-date-long'
+
+	[custom-keybindings/custom6]
+	binding=['<Primary><Shift><Alt>d']
+	command='my debug'
+	name='my-debug'
+
+	[custom-keybindings/custom7]
+	binding=['<Primary><Alt>r']
+	command='re conky'
+	name='reconky'
+
+	[custom-keybindings/custom8]
+	binding=['<Primary><Alt>q']
+	command='re cinnamon'
+	name='recinnamon'
+
+	[custom-keybindings/custom9]
+	binding=['<Primary><Alt>w']
+	command='re nemo'
+	name='renemo'
 
 	[custom-keybindings/custom10]
 	binding=['<Super>c']
@@ -172,155 +212,110 @@ dconf load /org/cinnamon/desktop/keybindings/ <<- EOF
 	command='obsidian'
 	name='obsidian'
 
-	[custom-keybindings/custom17]
+	[custom-keybindings/custom16]
 	binding=['<Super>s']
 	command='im s'
 	name='im-settings'
 
-	[custom-keybindings/custom18]
+	[custom-keybindings/custom17]
 	binding=['<Super>h']
 	command='im --hebrew'
 	name='im-hebrew'
 
-	[custom-keybindings/custom19]
+	[custom-keybindings/custom18]
 	binding=['<Super>t']
 	command='im --telugu'
 	name='im-telugu'
 
-	[custom-keybindings/custom2]
-	binding=['<Shift><Alt>b']
-	command='focusterm'
-	name='focusterm'
-
-	[custom-keybindings/custom20]
+	[custom-keybindings/custom19]
 	binding=['<Super>d']
 	command='im --devangari'
 	name='im-devangari'
 
-	[custom-keybindings/custom21]
+	[custom-keybindings/custom20]
 	binding=['<Super>a']
 	command='im --arabic'
 	name='im-arabic'
 
-	[custom-keybindings/custom22]
+	[custom-keybindings/custom21]
 	binding=['<Super>i']
 	command='im i'
 	name='im-on'
 
-	[custom-keybindings/custom23]
+	[custom-keybindings/custom22]
 	binding=['<Super>o']
 	command='im o'
 	name='im-off'
 
-	[custom-keybindings/custom24]
+	[custom-keybindings/custom23]
 	binding=['<Super>g']
 	command='im --greek'
 	name='im-greek'
 
-	[custom-keybindings/custom25]
+	[custom-keybindings/custom24]
 	binding=['<Super>r']
 	command='im --russian'
 	name='im-russian'
 
-	[custom-keybindings/custom26]
+	[custom-keybindings/custom25]
 	binding=['<Primary><Shift><Alt>a']
 	command='my address'
 	name='my-address'
 
-	[custom-keybindings/custom27]
+	[custom-keybindings/custom26]
 	binding=['<Primary><Alt>p']
 	command='browser neverssl.com'
 	name='browser-neverssl'
 
-	[custom-keybindings/custom28]
-	binding=['<Primary><Shift><Alt>p']
-	command='my shebang-python'
-	name='my-shebang-python'
-
-	[custom-keybindings/custom29]
+	[custom-keybindings/custom27]
 	binding=['<Primary><Shift><Alt>b']
 	command='my shebang'
 	name='my shebang'
 
-	[custom-keybindings/custom3]
-	binding=['<Shift><Alt>e']
-	command='fm'
-	name='fm'
-
-	[custom-keybindings/custom30]
+	[custom-keybindings/custom28]
 	binding=['<Primary><Alt>g']
 	command='browser'
 	name='browser'
 
-	[custom-keybindings/custom31]
+	[custom-keybindings/custom29]
 	binding=['<Primary><Alt>a']
 	command='my a'
 	name='my a'
 
-	[custom-keybindings/custom32]
+	[custom-keybindings/custom30]
 	binding=['<Primary><Shift><Alt>e']
 	command='my e'
 	name='my e'
 
-	[custom-keybindings/custom33]
+	[custom-keybindings/custom31]
 	binding=['<Primary><Shift><Alt>c']
 	command='my c'
 	name='my c'
 
-	[custom-keybindings/custom34]
+	[custom-keybindings/custom32]
 	binding=['<Primary><Shift><Alt>z']
 	command='my z'
 	name='my z'
 
-	[custom-keybindings/custom35]
+	[custom-keybindings/custom33]
 	binding=['<Primary><Shift><Alt>s']
 	command='ssmv'
 	name='ssmv'
 
-	[custom-keybindings/custom36]
+	[custom-keybindings/custom34]
 	binding=['<Primary><Shift><Alt>o']
 	command='browser chatgpt.com'
 	name='browser chatgpt.com'
 
-    [custom-keybindings/custom37]
-    binding=['<Primary><Shift><Alt>w']
-    command='o we-the-nameless'
-    name='o we-the-nameless'
+	[custom-keybindings/custom35]
+	binding=['<Primary><Shift><Alt>w']
+	command='o we-the-nameless'
+	name='o we-the-nameless'
 
-    [custom-keybindings/custom38]
-    binding=['<Primary><Shift><Alt>t']
-    command='my tex'
-    name='my tex'
-
-	[custom-keybindings/custom4]
-	binding=['<Shift><Alt>d']
-	command='get-date --short'
-	name='get-date-short'
-
-	[custom-keybindings/custom5]
-	binding=['<Primary><Shift>d']
-	command='get-date --long'
-	name='get-date-long'
-
-	[custom-keybindings/custom6]
-	binding=['<Primary><Shift><Alt>d']
-	command='my debug'
-	name='my-debug'
-
-	[custom-keybindings/custom7]
-	binding=['<Primary><Alt>r']
-	command='re conky'
-	name='reconky'
-
-	[custom-keybindings/custom8]
-	binding=['<Primary><Alt>q']
-	command='re cinnamon'
-	name='recinnamon'
-
-	[custom-keybindings/custom9]
-	binding=['<Primary><Alt>w']
-	command='re nemo'
-	name='renemo'
+	[custom-keybindings/custom36]
+	binding=['<Primary><Shift><Alt>t']
+	command='my tex'
+	name='my tex'
 
 	[media-keys]
 	area-screenshot=['<Shift>F9']
