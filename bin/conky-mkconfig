@@ -6,7 +6,7 @@
 # TODO: Make this more general somehow, or just toss it out
 
 # external depends: conky, findmnt, acpi, free, hostname, xcowsay
-# internal depends: gmail, temperature, getresolution, $HOME/.face, some disklabels
+# internal depends: temperature, getresolution, $HOME/.face, some disklabels
 
 import os
 import re
@@ -275,9 +275,8 @@ conky.text = [[
 ${if_existing FACE_IMAGE_PATH}${image FACE_IMAGE_PATH -p 0,20 -s FACE_IMAGE_SIZE}${endif}
 ${color grey}${alignc}${time %a %b %e, %l:%M %p}
 ${color lightblue}     ${execi 300 temperature}\
-${color lightgreen}${alignr}${execi 300 gmail}
+${color lightgreen}${alignr}The definition of insanity is...
 ${color lightblue}$hr
-${color lightblue}Are you on: ${color lightgreen}${execi 30 we-progress}
 ${color lightblue}BATTERY_STRING: ${color lightgreen}${battery_percent}% ${battery_bar BAR_H}
 ${color}Memory (TOTAL_MEMORY): ${color lightgreen}${memperc}% ${membar BAR_H}
 ${color}CPU Count: ${color lightgreen}CPU_COUNT ${alignr}\
