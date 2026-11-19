@@ -275,7 +275,7 @@ conky.text = [[
 ${if_existing FACE_IMAGE_PATH}${image FACE_IMAGE_PATH -p 0,20 -s FACE_IMAGE_SIZE}${endif}
 ${color grey}${alignc}${time %a %b %e, %l:%M %p}
 ${color lightblue}     ${execi 300 temperature}\
-${color lightgreen}${alignr}The definition of insanity is...
+${color lightgreen}${alignr}The definition of insanity is
 ${color lightblue}$hr
 ${color lightblue}BATTERY_STRING: ${color lightgreen}${battery_percent}% ${battery_bar BAR_H}
 ${color}Memory (TOTAL_MEMORY): ${color lightgreen}${memperc}% ${membar BAR_H}
