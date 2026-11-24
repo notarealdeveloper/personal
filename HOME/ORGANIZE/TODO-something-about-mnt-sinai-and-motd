@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+lordhavemercy -f --verbose << "EOF"
+1. Add man sinai to the system man pages package.
+   Make it have the quotes below and a playful unixy explanation of /mnt/sinai.
+   It's the default mount point of yhwh.
+   In the ιχ system (man 9 ix)
+   Something about:
+        man χρ
+            which is grk for man chr
+            not to be confused with man xp
+            which is a set of racist jokes about an unnamed os
+            see also man son
+
+2. When we chroot in, remove the:
+
+    ix: /mnt/sinai is ready
+
+
+    BusyBox v1.37.0 (2026-11-23 11:27:41 UTC) built-in shell (ash)
+
+message and instead make it be an /etc/motd style or fortune commmand
+
+---
+
+# /mnt/sinai
+
+> Set a boundary around the mountain and make it holy.
+>
+> — Exodus 19:23
+
+> Beware of going up the mountain or touching its edge. Whoever touches the mountain shall surely be put to death.
+>
+> — Exodus 19:12
+
+> No one shall come up with you, and no one shall be seen anywhere on the mountain.
+>
+> — Exodus 34:3
+
+> Moses alone shall approach YHWH, but the others shall not approach, and the people shall not come up with him.
+>
+> — Exodus 24:2
+
+> Go down and warn the people not to break through to YHWH to see, lest many of them perish. Even the priests who approach YHWH must sanctify themselves, lest YHWH break out against them.
+>
+> — Exodus 19:21–22
+
+> And there were thunderclaps and lightning and a heavy cloud upon the mountain, and the sound of a trumpet exceedingly loud, and all the people in the camp trembled.
+>
+> — Exodus 19:16
+
+> And Mount Sinai was entirely in smoke, because YHWH had descended upon it in fire. Its smoke went up like the smoke of a furnace, and the whole mountain trembled violently.
+>
+> — Exodus 19:18
+
+> And the people stood at a distance, while Moses approached the thick darkness where God was.
+>
+> — Exodus 20:21
+
+> And the mountain burned with fire to the heart of the heavens: darkness, cloud, and thick gloom. And YHWH spoke to you from the midst of the fire. You heard the sound of words, but you saw no form — only a voice.
+>
+> — Deuteronomy 4:11–12
+
+> And the appearance of the glory of YHWH was like a devouring fire on the summit of the mountain before the eyes of the children of Israel. And Moses entered into the midst of the cloud and went up the mountain. And Moses was on the mountain forty days and forty nights.
+>
+> — Exodus 24:17–18
+EOF

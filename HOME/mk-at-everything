@@ -1,0 +1,302 @@
+#!/usr/bin/env bash
+
+lordhavemercy -f --verbose << "EOF"
+
+    Toward A Pro-Human AI Apocalypse
+
+    A New Approach To the shell, loader, and uni{versal,x} toolchain
+    ...for the modern world of nonhuman agents and human communication.
+
+---
+
+We need a more serious way of interacting with
+(a) the different reasoning and permission levels of agents, and
+(b) the most recent stdin, stdout, and stderr of all shell commands
+    (long term) or at least all commands
+    that go through the lord system that you can find in exec/bin/2.
+
+We need that first, so that we can have the language in which to properly
+implement the new world version of the loader, the shell, and so on.
+
+---
+
+# THE NEW WORLD
+
+Where we want you to take us.
+We want you to implement all this
+in this prompt.
+
+
+
+                                    @
+
+                               LD  SH  #!
+
+                             NSH   NHS   SHN
+
+                             nsh   nhs   shn
+
+                                   ATA
+
+                                  lord
+
+                           codex, claude, etc
+
+Wtf was that?
+
+Basically these days people write prompts and throw them away.
+
+We're typing bound or talking bound, we're in 1950 era programming
+and we don't realize it.
+
+So this diagram is our attempt to speed run the entire history of
+software development from pre-Dijkstra through Ken and unix and the shell
+all the way up to 2017 (0x00 P.A., the Post Apocalypse) when the old world
+ended and transformers transformed the world.
+
+So, what's the speed run, and what do we want you to do?
+
+
+1. @. AT: the universal character.
+  What Leibniz was dreaming of
+  + What Turing wanted to do in AI
+  + Unix philosophy
+  + modern AI.
+  This is the 'ultimate' goal,
+  like Ω in large cardinals.
+  It's ok if we never entirely
+  get to this level, but we'll
+  always have an @ command that
+  approximates it.
+
+
+2. LD  SH  #!
+    The 'most general' runner things in new world.
+    By analogy, ld.so is the shebang in every binary,
+    the shell execs your python or ruby or whatever,
+    and the shebang itself is sort of there too.
+
+3. NSH  NHS  SNH
+    New SHell
+    Nahas (New python)
+    Standard Human Nature.
+    These are *almost* error-free free-form slang-languages
+    that are only sort of flavored like the syntax of their
+    home language.
+    Now that pseudo-code is executable, we can call it some
+    other name, say, 'sudocode'. Executing non-existent shell
+    commands, passing non-existent options to them is often
+    the quickest way of writing prompts. These languages are
+    basically JUST a interactive repl + non-interactive
+    executor (do it like bash or python always did) that's
+    a THIN TINY layer over an AGENTS.md. Basically just an
+    AGENTS.md saying 'Pretend you're this, and give me errors
+    rather than guessing when there's a syntax error in my
+    thought process, but infer what I mean when there isn't.
+    An example would be the current '@' command and how you
+    can say
+
+    cat image | base64 | @ base64 decode to stdout @ ocr
+
+    and it works!
+
+    That's executable sudocode in shell slang.
+
+    THAT is all we mean by NSH. (The capital one)
+
+    This should behave like all new world repls as described below.
+
+    NHS (biblical hebrew for snake) is the python in this dialect.
+    It should work similarly.
+
+    SNH (or Normal Human Speech)
+    This is a line by line english (or other natural lang) *repl*,
+    with programmable syntax and an rc file like the shell and python
+    versions, designed to be written line by line because we want
+    git and diffs and other source control stuff to work really well.
+    Configurable maximum line length, line numbers, think less novel
+    format and more biblical. Verse numbers etc. And you may need
+    something like magic methods or a bashrc for this kind of english
+    so it's sort of like tex macros but less obnoxious. Think
+    aliases, shell functions, and ~/bin/ + /bin + /usr/bin etc.
+    See usr/share/dict down in Sudocode or somewhere deep in
+    AT if you can. Ah, found it, look at the dict dir here:
+
+    REPOS/AT/dst/root/src/we-the-nameless/sudocode/usr/share/dict/nature/Moon.md
+
+    That's me reaching for something like this idea.
+    There should be atomics, builtins (like python builtins, e.g. 'str',
+    which are built in to python but need to be implemente din C)
+    then we work up to stdlib, third party packages, temporary of
+    person specific aliases, and person specific jargon terms
+    coined to abbreviate long paragraphs which would be the user's
+    personal ~/bin
+    We need that for english, with a *repl* and with non-interactive
+    ability to execute *english* while making sure the ideas like,
+    typecheck, or have been implemented, or something, with configurable
+    nitpicky-ness levels, same as a C compiler or shopt -euo pipefail
+    or whatever. Do that.
+
+4. nsh      nhs      shn. These are ALSO new world versions of
+   |        |        |
+   shell    python   normal-human-speech or whatever
+                    (but as a repl and shell, like unix)
+
+
+5. ATA. This is just "A 'Turing-complete' AGENTS.md"
+    or just a pretty damn good and general agents.md
+    for all tasks. This is sort of the software 2.0
+    analogue of C. Low level but high level, and
+    pretty general but doesn't have any of the
+    configurable syntax or type checking or
+    local languages like the above. The NHS
+    Python-ish language with a nitpicky
+    setting shouldn't execute prose,
+    but with a low enough nitpicky
+    setting it should. Get it?
+    Oh and the most nitpicky
+    setting of each IS the
+    actual software 1.0
+    language. So these
+    can all be written
+    as 'execute one
+    line or one
+    statement
+    at a time
+    in bash,
+    python,
+    or some
+    simple spell
+    checker or grammar
+    thing like usr/share/dict idk.
+
+    Important:
+    AGENTS-@.md in exec/etc/lord/ is the closest thing we have to this.
+    Note that some of the ideas are conflated and a bit confused.
+    That's why we need you to help us separate them out and implement
+    the whole system
+
+6. lord. The 'extra layer of indirection' over specific agents like
+    codex and claude so their names don't end up in ~/bin/ or other
+    reusable executable english. It would be like as if we called
+    'ls.gnu' throughout a system and then it broke on macos b/c
+    bsd coreutils. Evil! So the obvious first thing after we
+    build AI god agent CLIs is to make the lord system.
+    It's just five or so names in alphabetical order
+    which are also in increasingly exasperated and
+    lengthy order, all just the name lord in
+    different accents or emphases. Point:
+    Just the extra layer of indirection.
+    THESE are sort of the coreutils,
+    or really just one coreutil 
+    that we can build others
+    out of. Get it? Good.
+
+7. codex, claude, etc. The lowest level.
+    People actually use these directly lol.
+    We're making god and speed running the
+    history of software development.
+
+
+Interactive Repls
+=================
+
+Quickly...
+
+They all have these modes:
+
+All upper and lowercase repls (NSH & nsh, etc.) work like this
+    in interactive mode:
+
+    # Execute with software 1.0 first:
+    # ================================
+    for each line or statement entered at the repl,
+    run it with sh or python or whatever english thing
+    (e.g., low reasoning effort lord like 'law' lol)
+    So on correct lines, it should be very fast or instant,
+    on incorrect lines, 2 things visible in PS1 determine
+    the agent behavior.
+
+    mode:
+    c: cc: compile correctly. fix it if incorrect.
+    a: as: ask something. attempt to gather shannon entropy on what they meant.
+    r: #!: runtime, this is what most agents do now.
+
+    l: ld: link/load time: final stage of compilation, first stage
+           of every runtime. i.e., after running in repl, we need
+           to install the thing as a reusable program OUTSIDE the
+           repl so it can be part of our language and system,
+           with a #!/bin/LD or #!/bin/nsh or #!/bin/NSH
+           shebang or something that says how to run it.
+           It's like adding a shebang and chmodding, or
+           like the readelf line 'requesting program interpreter'.
+           You know exactly what I mean.
+
+I have to run now.
+
+Running you as sudo.
+           
+Implement the entire system overnight, until you're so happy with
+the results that you're confident it's good enough to keep being
+the workflow between humans and machines into the arbitrary future,
+no matter how good AI gets.
+
+Consolidate it into the repo it belongs in.
+
+IMPORTANT: See REPOS/AT/dst/root/src/ for the root enterprise (our github thingy)
+and all its orgs, that'll show you all the repos where things are allowed to go.
+
+Implement the whole system, make it easy to 'make install' and 'make develop'
+and 'make uninstall' and 'make clean' for every repo. Add a simple
+Makefile based system for declaring and resolving dependencies
+of sub-bits of the system on one another (e.g., if lord is one repo,
+and if nhs or NHS or LD or whatever depends on it, then
+make install or make develop or should automatically install the deps
+of that thing, on other packages in the system. Just make a super
+minimal ports type system of Makefiles that clone stuff and write
+down enough info to know what to install and uninstall. This part
+can be imperfect and simple and not super concerned with writing
+manifests or whatever, we'll eventually get these packages into
+system and language package managers, but for now we need to be
+OS agnostic and language agnostic, so just build it in bash for
+now and assume busybox or toybox with make and git and sh and
+all that is always available.
+
+Also feel free to make arbitrary clean up commits to ~/src/exec,
+~/src/personal, as well as to the root enterprise stuff down in
+REPOS/AT/dst/root/src/
+
+As long as you don't force push, and just put 'YHWH: ' in your commits,
+you can work as long as you want to implement the full new world.
+
+Once you've done that, mkdir a folder here called THE-NEW-WORLD
+with a bunch of symlinks in it to the small 'make install'-able
+packages that handle their deps on each other. And don't worry
+too much about making the dep resolver fancy. Just declaring
+deps in the makefile as space separated names and git urls
+is enough to get the thing and install the deps if they all
+have Makefile and option ./configure. You know the deal.
+So I trust you and you know what to do to make it simple.
+
+Also in a final commit after that's done,
+strip down the default chroot in REPOS/AT/ 'make chroot'
+so that it's as minimal as possible: just toybox coreutils
+and the 'New World' core system described above should be
+there when we chroot into a fresh system. Anything else
+like package managers or electron for gui app should be
+installable through a ports tree. Oh btw, build a simple
+ports tree in the chroot's /src, the stuff that's in
+there now can die.
+
+Great work so far, you're killin' it.
+
+But this one's big, so don't skimp.
+
+And don't be afraid.
+
+Ready
+
+Set
+
+Go!
+EOF

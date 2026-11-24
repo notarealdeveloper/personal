@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+case ${1:-} in
+    -h|--help|'')
+        printf '%s\n' 'LD PROGRAM [ARG ...]   run a sudocode file, or use #!/bin/LD'
+        exit ;;
+esac
+export NSH_PROGRAM=$1
+shift
+exec lord -- "$@"

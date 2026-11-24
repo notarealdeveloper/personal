@@ -1,0 +1,79 @@
+A sketch of the system we need
+
+# @
+
+    1. LD (the ld.so of "Executable English" era)
+
+        Since /lib/ld.so is sort of the "shebang" of every binary,
+        our file LD is the "shebang" of all executable text.
+        That text could be:
+
+            1. english
+            2. bash
+            3. python
+            4. bash with an occasional english line in it!
+            5. python with an occasional english line in it!
+
+        However, we obviously don't want to use Software 2.0 ("tokens")
+        to execute *valid* lines of whatever Software 1.0 program or
+        programming language VM we're running.
+
+        So, we propose a functor of sorts, from all programming languages,
+        to two new categories.
+
+        Here's the idea, and here's what you need to implement:
+
+        For every old world language (let's start with three:
+        bash, python, & english)
+
+        I want you to implement a repl:
+
+---
+
+# THE OLD (OR SORTA NEW-ISH) WORLD
+
+Here's what we have currently. I'll allow myself to digress by going back and forth between the current implementations
+and what I want you to create now. I'll explain what I want half by explaining where we are now, and half by explaining
+how it's insufficient and what it needs to be by the time you finish creating the programs described below, from scratch
+or from the existing ones or whatever.
+
+WHAT'S IN CWD?
+
+    CONTEXT:
+
+        THE-CURRENT-AT-PROMPT.md:
+            This is the prompt used by the 'universal shell' @ in exec/bin/2.
+            We still need something like that, but we'll need to improve and
+            generalize and clean up the whole stack.
+
+        THE-CURRENT-AT-STACK:
+            The important parts of the system from exec/bin/2
+            That's what we need to clean up and improve
+            There's also something like a version of that
+            system in the chrooty situation in ./AT/
+
+    REPOS:
+
+        exec: The old workflow, which we're still using, but trying to
+            factor out the 'lord' system containing all the stuff in
+            THE-CURRENT-AT-STACK and move it elsewhere somehow,
+            but for now our workflow breaks too much if we do,
+            so we sort of have two copies of the 'lord' stuff
+            and LD and nhs type shit. We still want that, but
+            we want to (a) improve it all and slim it down by
+            doing the stuff below, (b) move it elsewhere, like
+            into its own new git repo that has a make develop,
+            make install, and make uninstall that just symlinks,
+            copies, or removes the relevant shell executables
+            into the user or system prefix, and (c) consolidate
+            the separate versions in the two REPOS/.
+
+    In exec/bin/2 we have _ and __ that are a sort of lazy half
+    implemented 'cat most recent stdout of a lord command' and 'save [ibid]'.
+
+    We need a more serious way of interacting with the stdin, stdout
+    and stderr of past lord commands, using the @ command.
+    Something like @1 cats the most recent stdout, @2 stderr,
+    @0 stdin, these should ALWAYS be saved, because we'll need
+    them to implement the 'ask' and 'fix' (etc) functionalities
+    in repls.
