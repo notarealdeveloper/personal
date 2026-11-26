@@ -172,13 +172,13 @@ fi
 ### PS1 and PS2 ###
 ###################
 
-if type -P emerge &>/dev/null; then
-    if [[ ${EUID} == 0 ]]; then
-        export PS1="${_red}root${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_blu} \w #${_end} "
-    else
-        export PS1="${_red}j${_yel}a${_cya}s${_blu}o${_pur}n${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_pur} \w ${_blu}\$${_end} "
-    fi
-fi
+#if type -P emerge &>/dev/null; then
+#    if [[ ${EUID} == 0 ]]; then
+#        export PS1="${_red}root${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_blu} \w #${_end} "
+#    else
+#        export PS1="${_red}j${_yel}a${_cya}s${_blu}o${_pur}n${_whi}@${_red}g${_yel}e${_cya}n${_blu}t${_pur}o${_whi}o${_pur} \w ${_blu}\$${_end} "
+#    fi
+#fi
 
 ###############
 ### aliases ###
@@ -243,22 +243,22 @@ set_up_pkg_config() {
 ###################################
 
 #export PS1="\n${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
-if [[ ${UID} == 0 ]]; then
-    export PS1="${_red}root${_whi}@${_red}world${_whi} \w ${_red}\$${_end} "
-else
-    export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
-fi
-
-if [[ -n $VIRTUAL_ENV ]]; then
-    true
-    #echo "$VIRTUAL_ENV"
-else
-    true
-    #shopt -q login_shell || penv master
-    #penv master
-fi
-# penv master
-venv mistress
+#if [[ ${UID} == 0 ]]; then
+#    export PS1="${_red}root${_whi}@${_red}world${_whi} \w ${_red}\$${_end} "
+#else
+#    export PS1="${_gre}user${_red}@${_blu}world${_pur} \w ${_blu}\$${_end} "
+#fi
+#
+#if [[ -n $VIRTUAL_ENV ]]; then
+#    true
+#    #echo "$VIRTUAL_ENV"
+#else
+#    true
+#    #shopt -q login_shell || penv master
+#    #penv master
+#fi
+penv master
+# venv mistress
 
 shorter_prompt # let's do this by default
 
